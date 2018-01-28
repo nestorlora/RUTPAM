@@ -112,7 +112,7 @@ class Ubicacion extends CI_Model{
 	
 	/**
 	 * Devuelve un arrray asociativo con todos los registros de la BBDD
-	 * @return type Array Asociativo
+	 * @return Array_Asociativo
 	 */
 	public function getList(){
 		// Generamos una consulta y devolvemos el resultado
