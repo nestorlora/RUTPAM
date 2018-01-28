@@ -116,7 +116,7 @@ class Ubicacion extends CI_Model{
 	 */
 	public function getList(){
 		// Generamos una consulta y devolvemos el resultado
-		$consulta = $this->db->get('productos');
+		$consulta = $this->db->get('ubicaciones');
 		return $consulta->result_array();
 	}
 }
