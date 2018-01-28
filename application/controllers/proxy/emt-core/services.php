@@ -44,4 +44,20 @@ class Services extends CI_Controller{
 			fclose($recurso);
 		}
 	}
+	
+	public function buses(){
+		if($this->input->get('codLinea') != null){
+			// Solicitar una línea en concreto
+			$this->output->set_content_type('application/json');
+			$recurso = fopen("http://www.emtmalaga.es/emt-core/services/buses/?codLinea=".$this->input->get('codLinea'),"r");
+			while(!feof($recurso)){
+				echo fgets($recurso);
+			}
+			fclose($recurso);
+		}else{
+			// Cuando no se especifica ninguna linea
+			$this->output->set_content_type('application/json');
+			echo "[]";
+		}
+	}
 }
