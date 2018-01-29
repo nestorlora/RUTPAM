@@ -57,4 +57,30 @@ class Ingest extends CI_Controller{
 			echo 'Bad Request';
 		}
 	}
+	
+	public function addUbicaciones(){
+		$this->load->model('Ubicacion');
+		if($this->input->post('token') != null){
+			// TO-DO: Token verification
+			if($this->input->post('token') == 0){
+				$data = json_decode($this->input->post('data'));
+				foreach($data as $var){
+					$ubicacion = new Ubicacion();
+					$ubicacion->codBus = $var->codBus;
+					$ubicacion->codLinea = $var->codLinea;
+					$ubicacion->codParIni = $var->codParIni;
+					$ubicacion->latitud = $var->latitud;
+					$ubicacion->longitud = $var->longitud;
+					$ubicacion->sentido = $var->sentido;
+					$ubicacion->save();
+				}
+			}else{
+				$this->output->set_status_header(401);
+				echo 'Authorization Required';
+			}
+		}else{
+			$this->output->set_status_header(400);
+			echo 'Bad Request';
+		}
+	}
 }

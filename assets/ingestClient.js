@@ -22,7 +22,10 @@
  * THE SOFTWARE.
  */
 
-var lineas_emt = new Array();
+var tokenKey = 0; // TO-DO: Update key
+var lineas_emt = [];
+var ubicaciones = [];
+var waiting = 0;
 var timer;
 
 function motorIndividual(){
@@ -32,8 +35,17 @@ function motorIndividual(){
 	}
 }
 
+function motorMasivo(){
+	clearlog();
+	ubicaciones = [];
+	for(var y = 0; y < lineas_emt.length; y++){
+		setTimeout(getListUbicaciones, y*80, lineas_emt[y].codLinea);
+		waiting++;
+	}
+}
+
 function getLineas(motor){
-	$.get({
+	$.getJSON({
 		url: '/rutpam/index.php/proxy/emt-core/services/lineas/'
 	}).done(function (response, status){
 		if(status === "success"){
@@ -46,11 +58,11 @@ function getLineas(motor){
 };
 
 function getUbicaciones(codLinea){
-	$.get({
+	$.getJSON({
 		url:'/rutpam/index.php/proxy/emt-core/services/buses/?codLinea='+codLinea
 	}).done(function (response, status){
 		if(status === "success"){
-			log("Obtenidas "+response.length+" ubicaciones en línea "+codLinea);
+			log("L"+codLinea+":"+response.length);
 			for(var x = 0; x < response.length; x++){
 				setTimeout(postUbicacion, x*200, response[x]);
 			}
@@ -58,9 +70,27 @@ function getUbicaciones(codLinea){
 	});
 };
 
+function getListUbicaciones(codLinea){
+	$.getJSON({
+		url:'/rutpam/index.php/proxy/emt-core/services/buses/?codLinea='+codLinea
+	}).done(function (response, status){
+		if(status === "success"){
+			log("L"+codLinea+":"+response.length);
+			while(response.length > 0){
+				ubicaciones.push(response.shift());
+			}
+		}		
+	}).always(function(){
+		waiting--;
+		if(waiting === 0){
+			postUbicaciones(ubicaciones);
+		}
+	});
+}
+
 function postUbicacion(ubicacion){
 	var var_data = {
-		token: 0,
+		token: tokenKey,
 		codBus: ubicacion.codBus,
 		codLinea: ubicacion.codLinea,
 		codParIni: ubicacion.codParIni,
@@ -72,9 +102,18 @@ function postUbicacion(ubicacion){
 		url: "/rutpam/index.php/api/ingest/addUbicacion",
 		data: var_data
 	}).done(function(response, status){
-		if(status === "success"){log("Enviada ubicación L"+var_data.codLinea+"/C"+var_data.codBus);}
+		if(status === "success"){log("L"+var_data.codLinea+"/C"+var_data.codBus);}
 	});
 };
+
+function postUbicaciones(ubicaciones){
+	$.post({
+		url: "/rutpam/index.php/api/ingest/addUbicaciones",
+		data: {token: tokenKey, data: JSON.stringify(ubicaciones)}
+	}).done(function(response, status){
+		if(status === "success"){log("Enviadas "+ubicaciones.length+" ubicaciones");}
+	});
+}
 
 function log(texto){
 	var elemento = $("<div>",{"text": texto});
@@ -83,4 +122,8 @@ function log(texto){
 
 function clearlog(){
 	$("#log").empty();
+}
+
+function stop(){
+	clearInterval(timer);
 }
