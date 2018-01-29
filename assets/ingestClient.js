@@ -39,7 +39,7 @@ function motorMasivo(){
 	clearlog();
 	ubicaciones = [];
 	for(var y = 0; y < lineas_emt.length; y++){
-		setTimeout(getListUbicaciones, y*80, lineas_emt[y].codLinea);
+		setTimeout(getListUbicaciones, y*100, lineas_emt[y].codLinea);
 		waiting++;
 	}
 }

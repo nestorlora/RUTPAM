@@ -64,6 +64,7 @@ class Ingest extends CI_Controller{
 			// TO-DO: Token verification
 			if($this->input->post('token') == 0){
 				$data = json_decode($this->input->post('data'));
+				$tiempo = date(TIEMPO);
 				foreach($data as $var){
 					$ubicacion = new Ubicacion();
 					$ubicacion->codBus = $var->codBus;
@@ -72,6 +73,7 @@ class Ingest extends CI_Controller{
 					$ubicacion->latitud = $var->latitud;
 					$ubicacion->longitud = $var->longitud;
 					$ubicacion->sentido = $var->sentido;
+					$ubicacion->ub_datetime = $tiempo;
 					$ubicacion->save();
 				}
 			}else{
