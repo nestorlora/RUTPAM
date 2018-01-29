@@ -28,13 +28,20 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Client extends CI_Controller{
+	/**
+	 * Muestra información del controlador y opciones disponibles
+	 */
 	public function index(){
-		echo 'RUTPAM Ingest API AJAX Client v0.1<br>';
-		echo 'at '.gethostname().'<br>';
-		echo date(TIEMPO);
+		echo '<h3>RUTPAM Ingest API AJAX Client v0.1</h3>';
+		echo date(TIEMPO).' at '.gethostname().'<br>';
+		echo '<a href="'.site_url('/api/client/ubicacionIndividual').'">Ubicacion Individual</a>';
 	}
 	
-	public function ubicacion(){
+	/**
+	 * Carga la vista con JS que envía un POST para cada ubicación por todos 
+	 * los autobuses en circulación en este momento
+	 */
+	public function ubicacionIndividual(){
 		$this->load->view('/apiClient/ubicacion.php');
 	}
 }
