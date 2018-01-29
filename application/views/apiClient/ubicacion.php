@@ -35,5 +35,12 @@
 	<h1>RUTPAM Ingest API unatended bot</h1>
 	<p id="log"></p>
 	<script src="<?=base_url('/assets/ingestClient.js')?>"></script>
+	<script>
+	$(document).ready(function (){
+		log("Solicitando líneas...");
+		log("MOTOR INDIVIDUAL");
+		getLineas(motorIndividual);
+	});
+	</script>
 </body>
 </html>

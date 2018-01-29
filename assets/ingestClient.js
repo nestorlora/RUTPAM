@@ -23,72 +23,64 @@
  */
 
 var lineas_emt = new Array();
-	var timer;
-	
-	$(document).ready(function (){
-		var elemento = $("<div>",{"text": "Solicitando líneas..."});
-		$("#log").prepend(elemento);
-		pedirLineas();
-	});
-	
-	function engine(){
-		$("#log").empty();
-		for(var y = 0; y < lineas_emt.length; y++){
-			setTimeout(pedirUbicaciones, y*150, lineas_emt[y].codLinea);
-		}
+var timer;
+
+function motorIndividual(){
+	clearlog();
+	for(var y = 0; y < lineas_emt.length; y++){
+		setTimeout(getUbicaciones, y*150, lineas_emt[y].codLinea);
 	}
-	
-	function pedirLineas(){
-		$.ajax({
-		type: 'GET',
-		url: '/rutpam/index.php/proxy/emt-core/services/lineas/',
-		dataType: 'json',
-		success: function (response){
+}
+
+function getLineas(motor){
+	$.get({
+		url: '/rutpam/index.php/proxy/emt-core/services/lineas/'
+	}).done(function (response, status){
+		if(status === "success"){
 			lineas_emt = response;
-			var elemento = $("<div>",{"text": "Obtenidas "+lineas_emt.length+" líneas"});
-			$("#log").prepend(elemento);
-			engine();
-			timer = setInterval(engine, 10000);
-			},
-		failure: function (response){
-			console.log(response);
+			log("Obtenidas "+lineas_emt.length+" líneas");
+			motor();
+			timer = setInterval(motor, 10000);
+		}
+	});
+};
+
+function getUbicaciones(codLinea){
+	$.get({
+		url:'/rutpam/index.php/proxy/emt-core/services/buses/?codLinea='+codLinea
+	}).done(function (response, status){
+		if(status === "success"){
+			log("Obtenidas "+response.length+" ubicaciones en línea "+codLinea);
+			for(var x = 0; x < response.length; x++){
+				setTimeout(postUbicacion, x*200, response[x]);
 			}
-		});
+		}		
+	});
+};
+
+function postUbicacion(ubicacion){
+	var var_data = {
+		token: 0,
+		codBus: ubicacion.codBus,
+		codLinea: ubicacion.codLinea,
+		codParIni: ubicacion.codParIni,
+		latitud: ubicacion.latitud,
+		longitud: ubicacion.longitud,
+		sentido: ubicacion.sentido
 	};
-	
-	function pedirUbicaciones(codLinea){
-		$.ajax({
-			type: 'GET',
-			url: '/rutpam/index.php/proxy/emt-core/services/buses/?codLinea='+codLinea,
-			dataType: 'json',
-			success: function (response){
-				var elemento = $("<div>",{"text": "Obtenidas "+response.length+" ubicaciones en línea "+codLinea});
-				$("#log").prepend(elemento);
-				for(var x = 0; x < response.length; x++){
-					setTimeout(enviarUbicaciones, x*200, response[x]);
-				}
-			},
-			failure: function (response){
-				console.log(response);
-			}
-		});
-	};
-	
-	function enviarUbicaciones(ubicacion){
-		var var_data = {
-			token: 0,
-			codBus: ubicacion.codBus,
-			codLinea: ubicacion.codLinea,
-			codParIni: ubicacion.codParIni,
-			latitud: ubicacion.latitud,
-			longitud: ubicacion.longitud,
-			sentido: ubicacion.sentido
-		};
-		$.ajax({
-			method: 'POST',
-			url: "/rutpam/index.php/api/ingest/addUbicacion",
-			data: var_data,
-		}).done(function(response, status){
-			if(status === "success"){$("#log").prepend($("<div>",{"text": "Enviada ubicación L"+var_data.codLinea+"/C"+var_data.codBus}));}
-		});
-	};
+	$.post({
+		url: "/rutpam/index.php/api/ingest/addUbicacion",
+		data: var_data
+	}).done(function(response, status){
+		if(status === "success"){log("Enviada ubicación L"+var_data.codLinea+"/C"+var_data.codBus);}
+	});
+};
+
+function log(texto){
+	var elemento = $("<div>",{"text": texto});
+	$("#log").prepend(elemento);
+}
+
+function clearlog(){
+	$("#log").empty();
+}
