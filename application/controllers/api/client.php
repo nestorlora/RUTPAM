@@ -43,7 +43,7 @@ class Client extends CI_Controller{
 	 * los autobuses en circulación en este momento
 	 */
 	public function ubicacionIndividual(){
-		$this->load->view('/apiClient/ubicacionIndividual.php');
+		$this->load->view('/api/ingestClient/ubicacionIndividual.php');
 	}
 	
 	/**
@@ -51,6 +51,6 @@ class Client extends CI_Controller{
 	 * los autobuses en circulación en este momento
 	 */
 	public function ubicacionMasiva(){
-		$this->load->view('/apiClient/ubicacionMasiva.php');
+		$this->load->view('/api/ingestClient/ubicacionMasiva.php');
 	}
 }
