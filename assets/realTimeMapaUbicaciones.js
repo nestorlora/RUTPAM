@@ -92,7 +92,8 @@ function getUbicaciones(codLinea){
 					data = {
 						marker: new google.maps.Marker({
 							position: coordenadas,
-							map: map
+							map: map,
+							icon: '/rutpam/assets/ico_bus.png'
 						}),
 						codBus: response[x].codBus,
 						ttl: default_ttl
