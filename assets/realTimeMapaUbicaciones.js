@@ -24,7 +24,7 @@
 
 var timer;
 var map;
-var default_ttl = 5;
+var default_ttl = 5; //Número de actualizaciones fallidas sin aparecer para darlo por muerto
 var lineas_emt;
 var autobuses = [];
 /* autobuses[].codBus
@@ -83,7 +83,9 @@ function getUbicaciones(codLinea){
 				pos = findBus(response[x].codBus);
 				if(pos !== null){
 					console.log("U "+response[x].codBus);
+					autobuses[pos].marker.setMap(null);
 					autobuses[pos].marker.setPosition(coordenadas);
+					autobuses[pos].marker.setMap(map);
 					autobuses[pos].ttl = default_ttl;
 				}else{
 					console.log("ADDED "+response[x].codBus);
