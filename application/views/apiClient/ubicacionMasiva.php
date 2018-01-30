@@ -24,33 +24,23 @@
  * THE SOFTWARE.
  */
 
-
-defined('BASEPATH') OR exit('No direct script access allowed');
-
-class Client extends CI_Controller{
-	/**
-	 * Muestra información del controlador y opciones disponibles
-	 */
-	public function index(){
-		echo '<h3>RUTPAM Ingest API AJAX Client v0.2</h3>';
-		echo date(TIEMPO).' at '.gethostname().'<br>';
-		echo '<a href="'.site_url('/api/client/ubicacionIndividual').'">Ubicacion Individual</a><br>';
-		echo '<a href="'.site_url('/api/client/ubicacionMasiva').'">Ubicación Masiva</a><br>';
-	}
-	
-	/**
-	 * Carga la vista con JS que envía un POST para cada ubicación por todos 
-	 * los autobuses en circulación en este momento
-	 */
-	public function ubicacionIndividual(){
-		$this->load->view('/apiClient/ubicacionIndividual.php');
-	}
-	
-	/**
-	 * Carga la vista con JS que envía un POST con todas las ubicaciones de todos 
-	 * los autobuses en circulación en este momento
-	 */
-	public function ubicacionMasiva(){
-		$this->load->view('/apiClient/ubicacionMasiva.php');
-	}
-}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>RUTPAM Ingest</title>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+</head>
+<body>
+	<h1>RUTPAM Ingest API unatended bot</h1>
+	<p id="log"></p>
+	<script src="<?=base_url('/assets/ingestClient.js')?>"></script>
+	<script>
+	$(document).ready(function (){
+		log("Solicitando líneas...");
+		log("MOTOR MASIVO");
+		getLineas(motorMasivo);
+	});
+	</script>
+</body>
+</html>

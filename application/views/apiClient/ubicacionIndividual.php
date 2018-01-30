@@ -39,7 +39,7 @@
 	$(document).ready(function (){
 		log("Solicitando líneas...");
 		log("MOTOR INDIVIDUAL");
-		getLineas(motorMasivo);
+		getLineas(motorIndividual);
 	});
 	</script>
 </body>
