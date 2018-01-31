@@ -24,6 +24,8 @@
  * THE SOFTWARE.
  */
 ?>
+<!DOCTYPE html>
+<html>
 <head>
     <title>RUTPAM Tiempo Real</title>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -69,4 +71,5 @@
     <script src="<?=base_url('/assets/realTimeMapaUbicaciones.js')?>"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPD4goi4Rqi6ZfeoaMyD_7LNYoW7fXn2A&callback=initMap"
     async defer></script>
-  </body>
+</body>
+</html>
