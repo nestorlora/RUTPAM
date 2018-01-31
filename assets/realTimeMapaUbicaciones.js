@@ -24,11 +24,12 @@
 
 var timer;
 var map;
-var default_ttl = 5; //Número de actualizaciones fallidas sin aparecer para darlo por muerto
+var default_ttl = 10; //Número de actualizaciones fallidas sin aparecer para darlo por muerto
 var lineas_emt;
 var autobuses = [];
 /* autobuses[].codBus
  * autobuses[].marker
+ * autobuses[].infoWindow
  * autobuses[].ttl
  */
 
@@ -56,14 +57,14 @@ function getLineas(){
 		if(status === "success"){
 			lineas_emt = response;
 			motor();
-			timer = setInterval(motor, 5000);
+			timer = setInterval(motor, 3000);
 		}
 	});
 };
 
 function motor(){
 	for(var y = 0; y < lineas_emt.length; y++){
-		setTimeout(getUbicaciones, y*60, lineas_emt[y].codLinea);
+		setTimeout(getUbicaciones, y*30, lineas_emt[y].codLinea);
 	}
 	reducirTTL();
 }
@@ -82,10 +83,12 @@ function getUbicaciones(codLinea){
 				var coordenadas = {lat: response[x].latitud , lng: response[x].longitud};
 				pos = findBus(response[x].codBus);
 				if(pos !== null){
-					console.log("U "+response[x].codBus);
-					autobuses[pos].marker.setMap(null);
-					autobuses[pos].marker.setPosition(coordenadas);
-					autobuses[pos].marker.setMap(map);
+					if(autobuses[pos].marker.getPosition() !== coordenadas){
+						//console.log("U "+response[x].codBus);
+						autobuses[pos].marker.setMap(null);
+						autobuses[pos].marker.setPosition(coordenadas);
+						autobuses[pos].marker.setMap(map);
+					}
 					autobuses[pos].ttl = default_ttl;
 				}else{
 					console.log("ADDED "+response[x].codBus);
@@ -94,6 +97,13 @@ function getUbicaciones(codLinea){
 							position: coordenadas,
 							map: map,
 							icon: '/rutpam/assets/ico_bus.png'
+						}),
+						infoWindow: new google.maps.InfoWindow({
+							content: 
+								"codBus: "+response[x].codBus+"<br>"+
+								"codLinea: "+response[x].codLinea+"<br>"+
+								"codParIni: "+response[x].codParIni+"<br>"+
+								"sentido: "+response[x].sentido
 						}),
 						codBus: response[x].codBus,
 						ttl: default_ttl
@@ -128,6 +138,7 @@ function reducirTTL(){
 		autobuses[pos].ttl--;
 		if(autobuses[pos].ttl <= 0){
 			console.log("DROP "+autobuses[pos].codBus);
+			autobuses[pos].marker.setMap(null);
 			autobuses.splice(pos, 1);
 		}
 		pos++;
