@@ -135,8 +135,12 @@ function reducirTTL(){
 			console.log("DROP "+autobuses[pos].codBus);
 			autobuses[pos].marker.setMap(null);
 			autobuses.splice(pos, 1);
+		}else if(!lineas_emt[findLinea(autobuses[pos].codLinea)].getBuses){
+			autobuses[pos].marker.setMap(null);
+			autobuses.splice(pos, 1);
+		}else{
+			pos++;
 		}
-		pos++;
 	}
 }
 
@@ -156,6 +160,7 @@ function addBus(Bus){
 				"codParIni: "+Bus.codParIni+"<br>"+
 				"sentido: "+Bus.sentido
 		}),
+		codLinea: Bus.codLinea,
 		codBus: Bus.codBus,
 		ttl: default_ttl
 	};
