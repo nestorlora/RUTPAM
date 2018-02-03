@@ -107,23 +107,6 @@ function getUbicaciones(codLinea){
 	});
 };
 
-function findBus(codBus){
-	var pos = 0;
-	var found = false;
-	while(pos < autobuses.length && !found){
-		if(autobuses[pos].codBus === codBus){
-			found = true;
-		}else{
-			pos++;
-		}
-	}
-	if(pos >= autobuses.length){
-		return null;
-	}else{
-		return pos;
-	}
-}
-
 function reducirTTL(){
 	var pos = 0;
 	while(pos < autobuses.length){
@@ -176,7 +159,7 @@ function addLinea(linea){
 		nombreLinea: linea.nombreLinea,
 		getIda: false,
 		getVta: false,
-		getBuses: true
+		getBuses: false
 	});
 	var fila = $("<tr>");
 	var botonIda = $("<input>", {
@@ -186,8 +169,11 @@ function addLinea(linea){
 		"type": "checkbox"
 	});
 	var botonBus = $("<input>", {
-		"type": "checkbox"
-	}).attr('checked', true);
+		"type": "checkbox",
+		"id": "botonBus"+linea.codLinea
+	}).attr('checked', false).click(function(){
+		enableBusUpdate(linea.codLinea);
+	});
 
 	$(fila).append($("<td>").append(botonIda));
 	$(fila).append($("<td>").append(botonVta));
@@ -201,6 +187,58 @@ function addLinea(linea){
 	$(fila).append($("<td>"));
 
 	$("#tablaLineas").append(fila);
+}
+
+function enableBusUpdate(codLinea){
+	lineas_emt[findLinea(codLinea)].getBuses = true;
+	$("#botonBus"+codLinea).attr("checked", true);
+	$("#botonBus"+codLinea).unbind("click");
+	$("#botonBus"+codLinea).click(function(){
+		disableBusUpdate(codLinea);
+	});
+}
+
+function disableBusUpdate(codLinea){
+	lineas_emt[findLinea(codLinea)].getBuses = false;
+	$("#botonBus"+codLinea).attr("checked", false);
+	$("#botonBus"+codLinea).unbind("click");
+	$("#botonBus"+codLinea).click(function(){
+		enableBusUpdate(codLinea);
+	});
+}
+
+function findLinea(codLinea){
+	var pos = 0;
+	var found = false;
+	while(pos < lineas_emt.length && !found){
+		if(lineas_emt[pos].codLinea === codLinea){
+			found = true;
+		}else{
+			pos++;
+		}
+	}
+	if(pos >= lineas_emt.length){
+		return null;
+	}else{
+		return pos;
+	}
+}
+
+function findBus(codBus){
+	var pos = 0;
+	var found = false;
+	while(pos < autobuses.length && !found){
+		if(autobuses[pos].codBus === codBus){
+			found = true;
+		}else{
+			pos++;
+		}
+	}
+	if(pos >= autobuses.length){
+		return null;
+	}else{
+		return pos;
+	}
 }
 
 function ControlRUTPAM(mapDiv){
