@@ -24,8 +24,6 @@
  * THE SOFTWARE.
  */
 ?>
-<!DOCTYPE html>
-<html>
 <head>
     <title>RUTPAM Tiempo Real</title>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -42,7 +40,7 @@
 		position: relative;
 	}
 	#map {
-		width: 100%;
+		height: 100%;
 	}
 	#over_map {
 		position: absolute;
@@ -61,14 +59,14 @@
 </head>
 <body>
 <div id="wrapper">
-	<div id="map">Aquí debería estar el mapa</div>
-	<div id="over_map" >
+	<div id="map">Aquí debería ir el mapa</div>
+	<div id="over_map">
 		<span class="padding">
 			<b>RUTPAM</b> Seguimiento buses EMT en tiempo real
 		</span>
 	</div>
 </div>
 <script src="<?=base_url('/assets/realTimeMapaUbicaciones.js')?>"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPD4goi4Rqi6ZfeoaMyD_7LNYoW7fXn2A&callback=initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPD4goi4Rqi6ZfeoaMyD_7LNYoW7fXn2A&callback=initMap"
+async defer></script>
 </body>
-</html>

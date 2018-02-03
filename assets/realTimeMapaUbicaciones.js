@@ -38,14 +38,18 @@ function initMap() {
 		center: {lat: 36.7121977, lng: -4.4370495},
 		zoom: 13,
 		scrollwheel: true,
-		mapTypeControl: false,
 		streeViewControl: false,
 		styles:[
 			{
 				featureType: "transit.station.bus",
 				stylers: [{visibility: "off"}]
 			}
-		]
+		],
+		mapTypeControlOptions: {
+			style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+			position: google.maps.ControlPosition.TOP_RIGHT
+			
+		}
 	});
 	getLineas();
 }
@@ -78,37 +82,13 @@ function getUbicaciones(codLinea){
 		url:'/rutpam/index.php/proxy/emt-core/services/buses/?codLinea='+codLinea
 	}).done(function (response, status){
 		if(status === "success"){
-			//console.log("L"+codLinea+":"+response.length);
 			for(var x = 0; x < response.length; x++){
 				var coordenadas = {lat: response[x].latitud , lng: response[x].longitud};
 				pos = findBus(response[x].codBus);
 				if(pos !== null){
-					if(autobuses[pos].marker.getPosition() !== coordenadas){
-						//console.log("U "+response[x].codBus);
-						autobuses[pos].marker.setMap(null);
-						autobuses[pos].marker.setPosition(coordenadas);
-						autobuses[pos].marker.setMap(map);
-					}
-					autobuses[pos].ttl = default_ttl;
+					updateBus(response[x], pos);
 				}else{
-					console.log("ADDED "+response[x].codBus);
-					data = {
-						marker: new google.maps.Marker({
-							position: coordenadas,
-							map: map,
-							icon: '/rutpam/assets/ico_bus.png'
-						}),
-						infoWindow: new google.maps.InfoWindow({
-							content: 
-								"codBus: "+response[x].codBus+"<br>"+
-								"codLinea: "+response[x].codLinea+"<br>"+
-								"codParIni: "+response[x].codParIni+"<br>"+
-								"sentido: "+response[x].sentido
-						}),
-						codBus: response[x].codBus,
-						ttl: default_ttl
-					};
-					autobuses.push(data);
+					addBus(response[x]);
 				}
 			}
 		}		
@@ -143,4 +123,36 @@ function reducirTTL(){
 		}
 		pos++;
 	}
+}
+
+function addBus(Bus){
+	console.log("ADDED "+Bus.codBus);
+	var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
+	var data = {
+		marker: new google.maps.Marker({
+			position: coordenadas,
+			map: map,
+			icon: '/rutpam/assets/ico_bus.png'
+		}),
+		infoWindow: new google.maps.InfoWindow({
+			content:
+				"codBus: "+Bus.codBus+"<br>"+
+				"codLinea: "+Bus.codLinea+"<br>"+
+				"codParIni: "+Bus.codParIni+"<br>"+
+				"sentido: "+Bus.sentido
+		}),
+		codBus: Bus.codBus,
+		ttl: default_ttl
+	};
+	autobuses.push(data);
+}
+
+function updateBus(Bus, pos){
+	var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
+	if(autobuses[pos].marker.getPosition() !== coordenadas){
+		autobuses[pos].marker.setMap(null);
+		autobuses[pos].marker.setPosition(coordenadas);
+		autobuses[pos].marker.setMap(map);
+	}
+	autobuses[pos].ttl = default_ttl;
 }
