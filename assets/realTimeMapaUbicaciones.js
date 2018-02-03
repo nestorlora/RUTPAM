@@ -151,7 +151,7 @@ function addBus(Bus){
 		marker: new google.maps.Marker({
 			position: coordenadas,
 			map: map,
-			icon: '/rutpam/assets/ico_bus.png'
+			icon: '/rutpam/assets/white_bus.png'
 		}),
 		infoWindow: new google.maps.InfoWindow({
 			content:
@@ -316,7 +316,7 @@ function ControlRUTPAM(mapDiv){
 	});
 	
 	var encabezado = $("<tr>");
-	$(encabezado).html('<th>Ida</th><th>Vta</th><th>Bus</th><th colspan="2">Línea</th><th>Siguiendo</th>');
+	$(encabezado).html('<th>Ida</th><th>Vta</th><th>Bus</th><th colspan="2">Línea</th><th>NºB.</th>');
 	
 	$(tabla).append(encabezado);
 	$(layer).append($("<div>", {"class": "scroll"}).append(tabla));
