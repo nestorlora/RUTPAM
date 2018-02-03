@@ -66,6 +66,7 @@ function getLineas(){
 			lineas_emt = response;
 			motor();
 			timer = setInterval(motor, 3000);
+			$("#getLineas").detach();
 		}
 	});
 };
@@ -162,15 +163,16 @@ function updateBus(Bus, pos){
 }
 
 function ControlLineas(mapDiv){
-	var titulo = $("<div>", {
-		"id": "layer"
-		}).append(
-		$("<p>").append($("<b>", {
-			"text": "RUTPAM"
-		})).append(
-		$("<p>", {
-			"text": "Seguimiento buses EMT en tiempo real"
-	})));
-	$(mapDiv).append(titulo);
+	var layer = $("<div>", {"id":"layer"});
+	var titulo = $("<p>").append($("<b>", {"text":"RUTPAM"}));
+	var descripcion = $("<p>", {"text":"Seguimiento buses EMT en tiempo real"});
+	var boton = $("<button>", {
+		"id": "getLineas",
+		"type": "button",
+		"text": "Obtener líneas"
+	});
+	boton.on("click", getLineas);
+	$(layer).append(titulo).append(descripcion).append(boton);
+	$(mapDiv).append(layer);
 	return mapDiv;
 }
