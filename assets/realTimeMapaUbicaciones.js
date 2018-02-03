@@ -50,10 +50,7 @@ function initMap() {
 			position: google.maps.ControlPosition.TOP_RIGHT	
 		}
 	});	
-	
-	var lineasLayer = ControlRUTPAM($("<div>"));
-	lineasLayer.index = 1;
-	map.controls[google.maps.ControlPosition.TOP_LEFT].push(lineasLayer[0]);
+	$("#over_map").html(ControlRUTPAM($("<div>")));
 }
 
 function getLineas(){
@@ -65,15 +62,7 @@ function getLineas(){
 			//console.log(response);
 			lineas_emt = [];
 			for(var i = 0; i<response.length; i++){
-				lineas_emt.push({
-					codLinea: response[i].codLinea,
-					userCodLinea: response[i].userCodLinea,
-					nombreLinea: response[i].nombreLinea,
-					getIda: false,
-					getVta: false,
-					getBuses: true
-				});
-				
+				addLinea(response[i]);
 			}
 			motor();
 			start();
@@ -180,6 +169,40 @@ function updateBus(Bus, pos){
 	autobuses[pos].ttl = default_ttl;
 }
 
+function addLinea(linea){
+	lineas_emt.push({
+		codLinea: linea.codLinea,
+		userCodLinea: linea.userCodLinea,
+		nombreLinea: linea.nombreLinea,
+		getIda: false,
+		getVta: false,
+		getBuses: true
+	});
+	var fila = $("<tr>");
+	var botonIda = $("<input>", {
+		"type": "checkbox"
+	});
+	var botonVta = $("<input>", {
+		"type": "checkbox"
+	});
+	var botonBus = $("<input>", {
+		"type": "checkbox"
+	}).attr('checked', true);
+
+	$(fila).append($("<td>").append(botonIda));
+	$(fila).append($("<td>").append(botonVta));
+	$(fila).append($("<td>").append(botonBus));
+	$(fila).append($("<td>", {
+		"text": linea.userCodLinea
+	}));
+	$(fila).append($("<td>", {
+		"text": linea.nombreLinea
+	}));
+	$(fila).append($("<td>"));
+
+	$("#tablaLineas").append(fila);
+}
+
 function ControlRUTPAM(mapDiv){
 	var layer = $("<div>", {"id":"layer"});
 	var titulo = $("<p>").append($("<b>", {"text":"RUTPAM"}));
@@ -214,6 +237,16 @@ function ControlRUTPAM(mapDiv){
 	});
 	pause.css("display", "none");
 	$(layer).append(obtenerLineas).append(play).append(pause);
+	
+	var tabla = $("<table>", {
+		"id": "tablaLineas"
+	});
+	
+	var encabezado = $("<tr>");
+	$(encabezado).html('<th>Ida</th><th>Vta</th><th>Bus</th><th colspan="2">Línea</th><th>Siguiendo</th>');
+	
+	$(tabla).append(encabezado);
+	$(layer).append($("<div>", {"class": "scroll"}).append(tabla));
 	
 	$(mapDiv).append(layer);
 	return mapDiv;
