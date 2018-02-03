@@ -50,6 +50,11 @@
 		padding: 5px;
 		background-color: white;
 	}
+	.boton{
+		background-color: white;
+		border: 1px solid lightgray;
+		padding: 3px;
+	}
     </style>
 </head>
 <body>

@@ -51,11 +51,9 @@ function initMap() {
 		}
 	});	
 	
-	var lineasLayer = ControlLineas($("<div>"));
+	var lineasLayer = ControlRUTPAM($("<div>"));
 	lineasLayer.index = 1;
 	map.controls[google.maps.ControlPosition.TOP_LEFT].push(lineasLayer[0]);
-	
-	//getLineas();
 }
 
 function getLineas(){
@@ -63,17 +61,34 @@ function getLineas(){
 		url: '/rutpam/index.php/proxy/emt-core/services/lineas/'
 	}).done(function (response, status){
 		if(status === "success"){
-			lineas_emt = response;
+			//lineas_emt = response;
+			//console.log(response);
+			lineas_emt = [];
+			for(var i = 0; i<response.length; i++){
+				lineas_emt.push({
+					codLinea: response[i].codLinea,
+					userCodLinea: response[i].userCodLinea,
+					nombreLinea: response[i].nombreLinea,
+					getIda: false,
+					getVta: false,
+					getBuses: true
+				});
+				
+			}
 			motor();
-			timer = setInterval(motor, 3000);
-			$("#getLineas").detach();
+			start();
+			$("#getLineas").remove();
+			$("#play").css("display", "inline-block");
+			$("#pause").css("display", "inline-block");
 		}
 	});
 };
 
 function motor(){
 	for(var y = 0; y < lineas_emt.length; y++){
-		setTimeout(getUbicaciones, y*30, lineas_emt[y].codLinea);
+		if(lineas_emt[y].getBuses){
+			setTimeout(getUbicaciones, y*30, lineas_emt[y].codLinea);
+		}
 	}
 	reducirTTL();
 }
@@ -82,13 +97,16 @@ function stop(){
 	clearInterval(timer);
 }
 
+function start(){
+	timer = setInterval(motor, 3000);
+}
+
 function getUbicaciones(codLinea){
 	$.getJSON({
 		url:'/rutpam/index.php/proxy/emt-core/services/buses/?codLinea='+codLinea
 	}).done(function (response, status){
 		if(status === "success"){
 			for(var x = 0; x < response.length; x++){
-				var coordenadas = {lat: response[x].latitud , lng: response[x].longitud};
 				pos = findBus(response[x].codBus);
 				if(pos !== null){
 					updateBus(response[x], pos);
@@ -162,17 +180,41 @@ function updateBus(Bus, pos){
 	autobuses[pos].ttl = default_ttl;
 }
 
-function ControlLineas(mapDiv){
+function ControlRUTPAM(mapDiv){
 	var layer = $("<div>", {"id":"layer"});
 	var titulo = $("<p>").append($("<b>", {"text":"RUTPAM"}));
 	var descripcion = $("<p>", {"text":"Seguimiento buses EMT en tiempo real"});
-	var boton = $("<button>", {
+	$(layer).append(titulo).append(descripcion);
+	
+	var obtenerLineas = $("<button>", {
 		"id": "getLineas",
 		"type": "button",
+		"class": "boton",
 		"text": "Obtener líneas"
 	});
-	boton.on("click", getLineas);
-	$(layer).append(titulo).append(descripcion).append(boton);
+	obtenerLineas.on("click", getLineas);
+	var play = $("<button>", {
+		"id": "play",
+		"type": "button",
+		"class": "boton",
+		"text": "Play"
+	});
+	play.on("click", function(){
+		start();
+	});
+	play.css("display", "none");
+	var pause = $("<button>", {
+		"id": "pause",
+		"type": "button",
+		"class": "boton",
+		"text": "Pausa"
+	});
+	pause.on("click", function(){
+		stop();
+	});
+	pause.css("display", "none");
+	$(layer).append(obtenerLineas).append(play).append(pause);
+	
 	$(mapDiv).append(layer);
 	return mapDiv;
 }
