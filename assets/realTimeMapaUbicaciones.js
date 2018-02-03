@@ -68,6 +68,7 @@ function getLineas(){
 			start();
 			$("#getLineas").remove();
 			$("#play").css("display", "inline-block");
+			$("#refresh").css("display", "inline-block");
 			$("#pause").css("display", "inline-block");
 		}
 	});
@@ -84,10 +85,16 @@ function motor(){
 
 function stop(){
 	clearInterval(timer);
+	$("#pause").attr("disabled", true);
+	$("#play").attr("disabled", false);
+	$("#refresh").attr("disabled", false);
 }
 
 function start(){
 	timer = setInterval(motor, 3000);
+	$("#pause").attr("disabled", false);
+	$("#play").attr("disabled", true);
+	$("#refresh").attr("disabled", true);
 }
 
 function getUbicaciones(codLinea){
@@ -264,6 +271,16 @@ function ControlRUTPAM(mapDiv){
 		start();
 	});
 	play.css("display", "none");
+	var refresh = $("<button>", {
+		"id": "refresh",
+		"type": "button",
+		"class": "boton",
+		"text": "Refrescar"
+	});
+	refresh.on("click", function(){
+		motor();
+	});
+	refresh.css("display", "none");
 	var pause = $("<button>", {
 		"id": "pause",
 		"type": "button",
@@ -274,7 +291,7 @@ function ControlRUTPAM(mapDiv){
 		stop();
 	});
 	pause.css("display", "none");
-	$(layer).append(obtenerLineas).append(play).append(pause);
+	$(layer).append(obtenerLineas).append(play).append(refresh).append(pause);
 	
 	var tabla = $("<table>", {
 		"id": "tablaLineas"
