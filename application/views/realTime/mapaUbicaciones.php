@@ -36,9 +36,6 @@
 		margin: 0;
 		padding: 0;
 	}
-	#wrapper {
-		position: relative;
-	}
 	#map {
 		height: 100%;
 	}
@@ -47,25 +44,16 @@
 		top: 10px;
 		left: 10px;
 		z-index: 99;
-
-		background-color: white;
-		border: 1px solid black;
-		border-radius: 5px;
 	}
-	.padding{
+	#layer{
+		margin: 10px;
 		padding: 5px;
+		background-color: white;
 	}
     </style>
 </head>
 <body>
-<div id="wrapper">
-	<div id="map">Aquí debería ir el mapa</div>
-	<div id="over_map">
-		<span class="padding">
-			<b>RUTPAM</b> Seguimiento buses EMT en tiempo real
-		</span>
-	</div>
-</div>
+<div id="map">Aquí debería ir el mapa</div>
 <script src="<?=base_url('/assets/realTimeMapaUbicaciones.js')?>"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPD4goi4Rqi6ZfeoaMyD_7LNYoW7fXn2A&callback=initMap"
 async defer></script>

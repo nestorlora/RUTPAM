@@ -47,11 +47,15 @@ function initMap() {
 		],
 		mapTypeControlOptions: {
 			style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-			position: google.maps.ControlPosition.TOP_RIGHT
-			
+			position: google.maps.ControlPosition.TOP_RIGHT	
 		}
-	});
-	getLineas();
+	});	
+	
+	var lineasLayer = ControlLineas($("<div>"));
+	lineasLayer.index = 1;
+	map.controls[google.maps.ControlPosition.TOP_LEFT].push(lineasLayer[0]);
+	
+	//getLineas();
 }
 
 function getLineas(){
@@ -155,4 +159,18 @@ function updateBus(Bus, pos){
 		autobuses[pos].marker.setMap(map);
 	}
 	autobuses[pos].ttl = default_ttl;
+}
+
+function ControlLineas(mapDiv){
+	var titulo = $("<div>", {
+		"id": "layer"
+		}).append(
+		$("<p>").append($("<b>", {
+			"text": "RUTPAM"
+		})).append(
+		$("<p>", {
+			"text": "Seguimiento buses EMT en tiempo real"
+	})));
+	$(mapDiv).append(titulo);
+	return mapDiv;
 }
