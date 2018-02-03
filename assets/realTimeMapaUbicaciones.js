@@ -25,13 +25,26 @@
 var timer;
 var map;
 var default_ttl = 10; //Número de actualizaciones fallidas sin aparecer para darlo por muerto
-var lineas_emt;
-var autobuses = [];
+
+/* lineas_emt[].codLinea
+ * lineas_emt[].userCodLinea
+ * lineas_emt[].nombreLinea
+ * lineas_emt[].getIda
+ * lineas_emt[].getVta
+ * lineas_emt[].getBuses
+ * 
+ * @type Array
+ */
+var lineas_emt = [];
+
 /* autobuses[].codBus
  * autobuses[].marker
  * autobuses[].infoWindow
  * autobuses[].ttl
+ * 
+ * @type Array
  */
+var autobuses = [];
 
 function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), {
