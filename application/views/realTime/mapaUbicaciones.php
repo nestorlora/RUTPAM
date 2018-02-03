@@ -42,7 +42,7 @@
 		position: relative;
 	}
 	#map {
-		height: 100%;
+		width: 100%;
 	}
 	#over_map {
 		position: absolute;
@@ -54,22 +54,21 @@
 		border: 1px solid black;
 		border-radius: 5px;
 	}
-	#over_map .texto{
+	.padding{
 		padding: 5px;
 	}
     </style>
 </head>
 <body>
-	<div id="wrapper">
-		<div id="map"></div>
-		<div id="over_map">
-			<span class="texto">
-				<b>RUTPAM</b> Seguimiento buses EMT en tiempo real
-			</span>
-		</div>
+<div id="wrapper">
+	<div id="map">Aquí debería estar el mapa</div>
+	<div id="over_map" >
+		<span class="padding">
+			<b>RUTPAM</b> Seguimiento buses EMT en tiempo real
+		</span>
 	</div>
-    <script src="<?=base_url('/assets/realTimeMapaUbicaciones.js')?>"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPD4goi4Rqi6ZfeoaMyD_7LNYoW7fXn2A&callback=initMap"
-    async defer></script>
+</div>
+<script src="<?=base_url('/assets/realTimeMapaUbicaciones.js')?>"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPD4goi4Rqi6ZfeoaMyD_7LNYoW7fXn2A&callback=initMap" async defer></script>
 </body>
 </html>
