@@ -22,6 +22,8 @@
  * THE SOFTWARE.
  */
 
+/* global google */
+
 var timer;
 var map;
 var default_ttl = 10; //Número de actualizaciones fallidas sin aparecer para darlo por muerto
