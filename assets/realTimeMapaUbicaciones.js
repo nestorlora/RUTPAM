@@ -26,6 +26,7 @@
 
 var timer;
 var map;
+var ttl_new = 35; //Tiempo de vida para buses nuevos (naranjas)(al alcanzar default_ttl se vuelven blancos)
 var default_ttl = 30; //Número de actualizaciones fallidas sin aparecer para darlo por muerto
 var ttl_old = 25; //Número de actualizaciones fallidas sin aparecer para indicar que el bus probablemente haya desaparecido (color rojo)
 var url_white_icon = '/rutpam/assets/white_bus.png';
@@ -158,7 +159,7 @@ function addBus(Bus){
 		marker: new google.maps.Marker({
 			position: coordenadas,
 			map: map,
-			icon: '/rutpam/assets/white_bus.png'
+			icon: url_orange_icon
 		}),
 		infoWindow: new google.maps.InfoWindow({
 			content:
@@ -169,7 +170,7 @@ function addBus(Bus){
 		}),
 		codLinea: Bus.codLinea,
 		codBus: Bus.codBus,
-		ttl: default_ttl
+		ttl: ttl_new
 	};
 	autobuses.push(data);
 }
