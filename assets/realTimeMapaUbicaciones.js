@@ -26,27 +26,27 @@
 
 var timer;
 var map;
-var default_ttl = 10; //Número de actualizaciones fallidas sin aparecer para darlo por muerto
-
-/* lineas_emt[].codLinea
+var default_ttl = 30; //Número de actualizaciones fallidas sin aparecer para darlo por muerto
+var ttl_old = 25; //Número de actualizaciones fallidas sin aparecer para indicar que el bus probablemente haya desaparecido (color rojo)
+var url_white_icon = '/rutpam/assets/white_bus.png';
+var url_red_icon = '/rutpam/assets/red_bus.png';
+var url_orange_icon = '/rutpam/assets/orange_bus.png';
+var lineas_emt = [];
+/* 
+ * lineas_emt[].codLinea
  * lineas_emt[].userCodLinea
  * lineas_emt[].nombreLinea
  * lineas_emt[].getIda
  * lineas_emt[].getVta
  * lineas_emt[].getBuses
- * 
- * @type Array
  */
-var lineas_emt = [];
-
-/* autobuses[].codBus
+var autobuses = [];
+/* 
+ * autobuses[].codBus
  * autobuses[].marker
  * autobuses[].infoWindow
  * autobuses[].ttl
- * 
- * @type Array
  */
-var autobuses = [];
 
 function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), {
@@ -139,7 +139,12 @@ function reducirTTL(){
 			autobuses.splice(pos, 1);
 		}else if(!lineas_emt[findLinea(autobuses[pos].codLinea)].getBuses){
 			autobuses[pos].marker.setMap(null);
-			autobuses.splice(pos, 1);
+			pos++;
+		}else if(autobuses[pos].ttl <= ttl_old){
+			autobuses[pos].marker.setMap(null);
+			autobuses[pos].marker.setIcon(url_red_icon);
+			autobuses[pos].marker.setMap(map);
+			pos++;
 		}else{
 			pos++;
 		}
@@ -176,7 +181,12 @@ function updateBus(Bus, pos){
 		autobuses[pos].marker.setPosition(coordenadas);
 		autobuses[pos].marker.setMap(map);
 	}
-	autobuses[pos].ttl = default_ttl;
+	if(autobuses[pos].ttl < default_ttl){
+		autobuses[pos].ttl = default_ttl;
+		autobuses[pos].marker.setMap(null);
+		autobuses[pos].marker.setIcon(url_white_icon);
+		autobuses[pos].marker.setMap(map);
+	}
 }
 
 function addLinea(linea){
