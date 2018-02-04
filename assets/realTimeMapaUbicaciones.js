@@ -22,13 +22,13 @@
  * THE SOFTWARE.
  */
 
-/* global google */
+/* global google, emt_proxy_url, url_red_icon, url_orange_icon, url_white_icon, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old */
 
 var timer;
 var map;
-var ttl_new = 35; //Tiempo de vida para buses nuevos (naranjas)(al alcanzar default_ttl se vuelven blancos)
-var default_ttl = 30; //Número de actualizaciones fallidas sin aparecer para darlo por muerto
-var ttl_old = 25; //Número de actualizaciones fallidas sin aparecer para indicar que el bus probablemente haya desaparecido (color rojo)
+var ttl_new = ttl_rate_new/refresh_rate; //Tiempo de vida para buses nuevos (naranjas)(al alcanzar default_ttl se vuelven blancos)
+var default_ttl = ttl_rate_default/refresh_rate; //Número de actualizaciones fallidas sin aparecer para darlo por muerto
+var ttl_old = ttl_rate_old/refresh_rate; //Número de actualizaciones fallidas sin aparecer para indicar que el bus probablemente haya desaparecido (color rojo)
 var lineas_emt = [];
 /* 
  * lineas_emt[].codLinea
@@ -104,7 +104,7 @@ function stop(){
 }
 
 function start(){
-	timer = setInterval(motor, 3000);
+	timer = setInterval(motor, refresh_rate*1000);
 	$("#pause").attr("disabled", false);
 	$("#play").attr("disabled", true);
 	$("#refresh").attr("disabled", true);

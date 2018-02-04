@@ -81,6 +81,9 @@ var url_white_icon = '<?= base_url('/assets/white_bus.png') ?>';
 var url_red_icon = '<?=  base_url('/assets/red_bus.png') ?>';
 var url_orange_icon = '<?= base_url('/assets/orange_bus.png')?>';
 var emt_proxy_url = '<?= ($this->config->item('proxy_url'))!=null?$this->config->item('proxy_url').'/emt-core':site_url('/proxy/emt-core') ?>';
+var ttl_rate_default = 60;
+var ttl_rate_new = ttl_rate_default+30;
+var ttl_rate_old = ttl_rate_default-15;
 </script>
 <script src="<?=base_url('/assets/realTimeMapaUbicaciones.js')?>"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPD4goi4Rqi6ZfeoaMyD_7LNYoW7fXn2A&callback=initMap"

@@ -26,7 +26,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $config['base_url'] = 'http://localhost/rutpam';
 /*
  * If you set the apache proxy as showed in installation instructions, 
- * you may uncomment the follow line
+ * you may uncomment the follow line.
  */
 $config['proxy_url'] = 'http://localhost/proxy';
 
