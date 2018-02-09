@@ -34,8 +34,6 @@ var lineas_emt = [];
  * lineas_emt[].codLinea
  * lineas_emt[].userCodLinea
  * lineas_emt[].nombreLinea
- * lineas_emt[].getIda
- * lineas_emt[].getVta
  * lineas_emt[].getBuses
  * lineas_emt[].trazadoIda
  * lineas_emt[].trazadoVta
@@ -118,8 +116,6 @@ function getLineas(){
 		url: emt_proxy_url+'/services/lineas/'
 	}).done(function (response, status){
 		if(status === "success"){
-			//lineas_emt = response;
-			//console.log(response);
 			lineas_emt = [];
 			for(var i = 0; i<response.length; i++){
 				addLinea(response[i]);
