@@ -27,7 +27,8 @@
 <head>
     <title>RUTPAM Tiempo Real</title>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <meta name="viewport" content="initial-scale=1.0">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+	<meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <style>
 	/* Makes the sample page fill the window. */
