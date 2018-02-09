@@ -89,6 +89,28 @@ function start(){
 	$("#refresh").attr("disabled", true);
 }
 
+function reducirTTL(){
+	var pos = 0;
+	while(pos < autobuses.length){
+		autobuses[pos].ttl--;
+		if(autobuses[pos].ttl <= 0){
+			console.log("DROP "+autobuses[pos].codBus);
+			autobuses[pos].marker.setMap(null);
+			autobuses.splice(pos, 1);
+		}else if(!lineas_emt[findLinea(autobuses[pos].codLinea)].getBuses){
+			autobuses[pos].marker.setMap(null);
+			pos++;
+		}else if(autobuses[pos].ttl <= ttl_old){
+			autobuses[pos].marker.setMap(null);
+			autobuses[pos].marker.setIcon(url_red_icon);
+			autobuses[pos].marker.setMap(map);
+			pos++;
+		}else{
+			pos++;
+		}
+	}
+}
+
 function getLineas(){
 	$.getJSON({
 		url: emt_proxy_url+'/services/lineas/'
@@ -126,28 +148,6 @@ function getUbicaciones(codLinea){
 		}		
 	});
 };
-
-function reducirTTL(){
-	var pos = 0;
-	while(pos < autobuses.length){
-		autobuses[pos].ttl--;
-		if(autobuses[pos].ttl <= 0){
-			console.log("DROP "+autobuses[pos].codBus);
-			autobuses[pos].marker.setMap(null);
-			autobuses.splice(pos, 1);
-		}else if(!lineas_emt[findLinea(autobuses[pos].codLinea)].getBuses){
-			autobuses[pos].marker.setMap(null);
-			pos++;
-		}else if(autobuses[pos].ttl <= ttl_old){
-			autobuses[pos].marker.setMap(null);
-			autobuses[pos].marker.setIcon(url_red_icon);
-			autobuses[pos].marker.setMap(map);
-			pos++;
-		}else{
-			pos++;
-		}
-	}
-}
 
 function addBus(Bus){
 	console.log("ADDED "+Bus.codBus);
