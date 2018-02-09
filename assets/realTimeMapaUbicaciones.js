@@ -66,27 +66,6 @@ function initMap() {
 	$("#over_map").html(ControlRUTPAM($("<div>")));
 }
 
-function getLineas(){
-	$.getJSON({
-		url: emt_proxy_url+'/services/lineas/'
-	}).done(function (response, status){
-		if(status === "success"){
-			//lineas_emt = response;
-			//console.log(response);
-			lineas_emt = [];
-			for(var i = 0; i<response.length; i++){
-				addLinea(response[i]);
-			}
-			motor();
-			start();
-			$("#getLineas").remove();
-			$("#play").css("display", "inline-block");
-			$("#refresh").css("display", "inline-block");
-			$("#pause").css("display", "inline-block");
-		}
-	});
-};
-
 function motor(){
 	for(var y = 0; y < lineas_emt.length; y++){
 		if(lineas_emt[y].getBuses){
@@ -109,6 +88,27 @@ function start(){
 	$("#play").attr("disabled", true);
 	$("#refresh").attr("disabled", true);
 }
+
+function getLineas(){
+	$.getJSON({
+		url: emt_proxy_url+'/services/lineas/'
+	}).done(function (response, status){
+		if(status === "success"){
+			//lineas_emt = response;
+			//console.log(response);
+			lineas_emt = [];
+			for(var i = 0; i<response.length; i++){
+				addLinea(response[i]);
+			}
+			motor();
+			start();
+			$("#getLineas").remove();
+			$("#play").css("display", "inline-block");
+			$("#refresh").css("display", "inline-block");
+			$("#pause").css("display", "inline-block");
+		}
+	});
+};
 
 function getUbicaciones(codLinea){
 	$.getJSON({
