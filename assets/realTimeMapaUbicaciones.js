@@ -261,7 +261,7 @@ function addLinea(linea){
 		enableBusUpdate(linea.codLinea);
 	});
 	var id = $('<span>').addClass('fa-layers fa-fw fa-2x');
-	id.append($('<i>').addClass('fas fa-circle'));
+	id.append($('<i>').addClass('fas fa-circle').css("color", "262C72"));
 	id.append($('<span>').addClass("fa-layers-text fa-inverse").text(linea.userCodLinea).attr("data-fa-transform", "shrink-6"));
 	console.log(id);
 	$(fila).append($("<td>").append(botonIda));
