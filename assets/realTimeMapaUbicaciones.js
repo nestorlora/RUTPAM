@@ -135,7 +135,6 @@ function getTrazados(codLinea){
 		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea+'&sentido=1'
 	}).done(function (response, status){
 		if(status === "success" && response.length > 0){
-			//console.log("Línea "+codLinea+" Ida: "+response.length);
 			var posLinea = findLinea(codLinea);
 			var trazado = [];
 			for(var a = 0; a < response.length; a++){
@@ -147,7 +146,6 @@ function getTrazados(codLinea){
 				strokeOpacity: 1.0,
 				strokeWeight: 3
 			});
-			//lineas_emt[posLinea].trazadoIda.setMap(map);
 			$("#botonIda"+codLinea).attr("disabled", false);
 			$("#botonIda"+codLinea).click(function(){
 				showTrazado(codLinea, 1);
@@ -263,7 +261,6 @@ function addLinea(linea){
 	var id = $('<span>').addClass('fa-layers fa-fw fa-2x');
 	id.append($('<i>').addClass('fas fa-circle').css("color", "262C72"));
 	id.append($('<span>').addClass("fa-layers-text fa-inverse").text(linea.userCodLinea).attr("data-fa-transform", "shrink-6"));
-	console.log(id);
 	$(fila).append($("<td>").append(botonIda));
 	$(fila).append($("<td>").append(botonVta));
 	$(fila).append($("<td>").append(botonBus));
