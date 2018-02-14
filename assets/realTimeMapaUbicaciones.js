@@ -101,9 +101,11 @@ function reducirTTL(){
 			autobuses[pos].marker.setMap(null);
 			pos++;
 		}else if(autobuses[pos].ttl <= ttl_old){
-			autobuses[pos].marker.setMap(null);
-			autobuses[pos].marker.setIcon(url_red_icon);
-			autobuses[pos].marker.setMap(map);
+			if(autobuses[pos].marker.getIcon() !== url_red_icon){
+				autobuses[pos].marker.setMap(null);
+				autobuses[pos].marker.setIcon(url_red_icon);
+				autobuses[pos].marker.setMap(map);
+			}
 			pos++;
 		}else{
 			pos++;
@@ -219,17 +221,15 @@ function addBus(Bus){
 }
 
 function updateBus(Bus, pos){
-	var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
-	if(autobuses[pos].marker.getPosition() !== coordenadas){
-		autobuses[pos].marker.setMap(null);
+	var coordenadas = new google.maps.LatLng({lat: Bus.latitud , lng: Bus.longitud});
+	if(!coordenadas.equals(autobuses[pos].marker.position)){
 		autobuses[pos].marker.setPosition(coordenadas);
-		autobuses[pos].marker.setMap(map);
 	}
 	if(autobuses[pos].ttl < default_ttl){
 		autobuses[pos].ttl = default_ttl;
-		autobuses[pos].marker.setMap(null);
-		autobuses[pos].marker.setIcon(url_white_icon);
-		autobuses[pos].marker.setMap(map);
+		if(autobuses[pos].marker.icon !== url_white_icon){
+			autobuses[pos].marker.setIcon(url_white_icon);
+		}
 	}
 }
 
