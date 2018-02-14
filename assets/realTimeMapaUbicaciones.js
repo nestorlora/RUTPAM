@@ -190,6 +190,7 @@ function getUbicaciones(codLinea){
 					addBus(response[x]);
 				}
 			}
+			$("#cont"+codLinea).text(response.length);
 		}		
 	});
 };
@@ -268,7 +269,7 @@ function addLinea(linea){
 	$(fila).append($("<td>", {
 		"text": linea.nombreLinea
 	}));
-	$(fila).append($("<td>"));
+	$(fila).append($("<td>").append($("<p>").attr('id', "cont"+linea.codLinea)));
 
 	$("#tablaLineas").append(fila);
 	getTrazados(linea.codLinea);
