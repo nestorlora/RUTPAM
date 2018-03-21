@@ -10,7 +10,7 @@
     #
     #
 	ProxyPass "/proxy/emt-core/" "http://www.emtmalaga.es/emt-core/"
-    ProxyPassReverse "/proxy/emt-core/" "http://www.emtmalaga.es/emt-core/"
+	ProxyPassReverse "/proxy/emt-core/" "http://www.emtmalaga.es/emt-core/"
     #
 </VirtualHost>
 ```
