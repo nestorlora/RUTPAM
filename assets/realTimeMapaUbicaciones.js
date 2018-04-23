@@ -207,11 +207,7 @@ function addBus(Bus){
 			icon: url_orange_icon
 		}),
 		info: new google.maps.InfoWindow({
-			content:
-				"codBus: "+Bus.codBus+"<br>"+
-				"codLinea: "+Bus.codLinea+"<br>"+
-				"codParIni: "+Bus.codParIni+"<br>"+
-				"sentido: "+Bus.sentido
+			content: busInfoContent(Bus)
 		}),
 		codLinea: Bus.codLinea,
 		codBus: Bus.codBus,
@@ -230,6 +226,7 @@ function updateBus(Bus, pos){
 	if(!coordenadas.equals(autobuses[pos].marker.position)){
 		autobuses[pos].marker.setPosition(coordenadas);
 	}
+	autobuses[pos].info.setContent(busInfoContent(Bus));
 	if(autobuses[pos].ttl < default_ttl){
 		autobuses[pos].ttl = default_ttl;
 		if(autobuses[pos].marker.icon !== url_white_icon){
@@ -366,6 +363,25 @@ function findBus(codBus){
 	}else{
 		return pos;
 	}
+}
+
+function busInfoContent(Bus){
+	var linea = lineas_emt[findLinea(Bus.codLinea)].userCodLinea;
+	var sentido;
+	switch(Bus.sentido){
+		case 1:
+			sentido = "Ida";
+			break;
+		case 2:
+			sentido = "Vuelta";
+			break;
+		default:
+			sentido = "Desconocido";
+	}
+	return "Bus: "+Bus.codBus+"<br>"+
+	"Línea: "+linea+"<br>"+
+	"Última parada realizada: "+Bus.codParIni+"<br>"+
+	"Sentido: "+sentido;
 }
 
 function ControlRUTPAM(mapDiv){
