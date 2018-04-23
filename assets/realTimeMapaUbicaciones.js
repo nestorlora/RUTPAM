@@ -206,7 +206,7 @@ function addBus(Bus){
 			map: map,
 			icon: url_orange_icon
 		}),
-		infoWindow: new google.maps.InfoWindow({
+		info: new google.maps.InfoWindow({
 			content:
 				"codBus: "+Bus.codBus+"<br>"+
 				"codLinea: "+Bus.codLinea+"<br>"+
@@ -217,6 +217,11 @@ function addBus(Bus){
 		codBus: Bus.codBus,
 		ttl: ttl_new
 	};
+	data.marker.addListener('click', function(){
+		//console.log("Mirame");
+		pos = findBus(Bus.codBus);
+		autobuses[pos].info.open(map, autobuses[pos].marker);
+	});
 	autobuses.push(data);
 }
 
