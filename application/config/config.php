@@ -23,7 +23,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = '';
+$config['base_url'] = 'http://localhost/rutpam';
+/*
+ * If you set the apache proxy as showed in installation instructions, 
+ * you may uncomment the follow line.
+ */
+$config['proxy_url'] = 'http://localhost/proxy';
 
 /*
 |--------------------------------------------------------------------------
