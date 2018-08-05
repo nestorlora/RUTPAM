@@ -25,48 +25,12 @@
  */
 ?>
 <head>
-    <title>RUTPAM Tiempo Real</title>
+    <title>RUTPAM v3.1</title>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 	<meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
-    <style>
-	/* Makes the sample page fill the window. */
-	html, body {
-		height: 100%;
-		margin: 0;
-		padding: 0;
-		font-family: 'Roboto', sans-serif;
-	}
-	table{
-		font-size: 11px;
-	}
-	p{
-		margin: 3px;
-	}
-	#map {
-		height: 100%;
-	}
-	#over_map {
-		position: absolute;
-		top: 10px;
-		left: 10px;
-		z-index: 99;
-		
-		background-color: white;
-		padding: 5px;
-		overflow-y: auto;
-		max-height: 90%;
-	}
-	.boton{
-		background-color: white;
-		border: 1px solid lightgray;
-		padding: 3px;
-	}
-	.scroll{
-		
-	}
-    </style>
+	<link rel="stylesheet" href="./assets/styles.css">
 </head>
 <body>
 <div id="wrapper">
