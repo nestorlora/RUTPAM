@@ -237,15 +237,15 @@ function updateBus(Bus, pos){
 	}
 }
 
-function addLinea(linea){
-	lineas_emt.push({
 		codLinea: linea.codLinea,
 		userCodLinea: linea.userCodLinea,
 		nombreLinea: linea.nombreLinea,
+function addLinea(lin){
+	var linea = {
 		getIda: false,
 		getVta: false,
 		getBuses: false
-	});
+	};
 	var fila = $("<tr>");
 	var botonIda = $("<input>", {
 		"type": "checkbox",
@@ -276,6 +276,7 @@ function addLinea(linea){
 	$(fila).append($("<td>").append($("<p>").attr('id', "cont"+linea.codLinea)));
 
 	$("#tablaLineas").append(fila);
+	lineas_emt.push(linea);
 	getTrazados(linea.codLinea);
 }
 
