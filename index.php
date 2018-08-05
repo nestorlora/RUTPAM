@@ -25,7 +25,8 @@
  */
 ?>
 <head>
-    <title>RUTPAM v3.2</title>
+    <title>RUTPAM v3.3</title>
+	<link rel="shorcut icon" type="image/png" href="./assets/favicon.png">
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 	<meta name="viewport" content="initial-scale=1.0">
