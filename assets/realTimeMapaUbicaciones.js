@@ -42,7 +42,7 @@ var autobuses = [];
 /* 
  * autobuses[].codBus
  * autobuses[].marker
- * autobuses[].infoWindow
+ * autobuses[].info
  * autobuses[].ttl
  */
 
@@ -97,7 +97,7 @@ function reducirTTL(){
 			console.log("DROP "+autobuses[pos].codBus);
 			autobuses[pos].marker.setMap(null);
 			autobuses.splice(pos, 1);
-		}else if(!lineas_emt[findLinea(autobuses[pos].codLinea)].getBuses){
+		}else if(lineas_emt[findLinea(autobuses[pos].codLinea)].getBuses === false){
 			autobuses[pos].marker.setMap(null);
 			pos++;
 		}else if(autobuses[pos].ttl <= ttl_old){
@@ -214,7 +214,6 @@ function addBus(Bus){
 		ttl: ttl_new
 	};
 	data.marker.addListener('click', function(){
-		//console.log("Mirame");
 		pos = findBus(Bus.codBus);
 		autobuses[pos].info.open(map, autobuses[pos].marker);
 	});
