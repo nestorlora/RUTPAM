@@ -25,13 +25,14 @@
  */
 ?>
 <head>
-    <title>RUTPAM v3.3</title>
+    <title>RUTPAM v3.4</title>
 	<link rel="shorcut icon" type="image/png" href="./assets/favicon.png">
+	<link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+	<link rel="stylesheet" href="./assets/styles.css">
 	<meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
-	<link rel="stylesheet" href="./assets/styles.css">
 </head>
 <body>
 <div id="wrapper">
