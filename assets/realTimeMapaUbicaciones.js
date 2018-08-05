@@ -226,6 +226,7 @@ function updateBus(Bus, pos){
 		autobuses[pos].marker.setPosition(coordenadas);
 	}
 	autobuses[pos].info.setContent(busInfoContent(Bus));
+	autobuses[pos].marker.setMap(map);
 	if(autobuses[pos].ttl < default_ttl){
 		autobuses[pos].ttl = default_ttl;
 		if(autobuses[pos].marker.icon !== url_white_icon){
