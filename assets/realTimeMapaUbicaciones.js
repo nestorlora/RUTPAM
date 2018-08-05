@@ -42,7 +42,7 @@ var autobuses = [];
 /* 
  * autobuses[].codBus
  * autobuses[].marker
- * autobuses[].infoWindow
+ * autobuses[].info
  * autobuses[].ttl
  */
 
@@ -97,7 +97,7 @@ function reducirTTL(){
 			console.log("DROP "+autobuses[pos].codBus);
 			autobuses[pos].marker.setMap(null);
 			autobuses.splice(pos, 1);
-		}else if(!lineas_emt[findLinea(autobuses[pos].codLinea)].getBuses){
+		}else if(lineas_emt[findLinea(autobuses[pos].codLinea)].getBuses === false){
 			autobuses[pos].marker.setMap(null);
 			pos++;
 		}else if(autobuses[pos].ttl <= ttl_old){
@@ -114,6 +114,7 @@ function reducirTTL(){
 }
 
 function getLineas(){
+	$("#getLineas").remove();
 	$.getJSON({
 		url: emt_proxy_url+'/services/lineas/'
 	}).done(function (response, status){
@@ -124,7 +125,6 @@ function getLineas(){
 			}
 			motor();
 			start();
-			$("#getLineas").remove();
 			$("#play").css("display", "inline-block");
 			$("#refresh").css("display", "inline-block");
 			$("#pause").css("display", "inline-block");
@@ -214,7 +214,6 @@ function addBus(Bus){
 		ttl: ttl_new
 	};
 	data.marker.addListener('click', function(){
-		//console.log("Mirame");
 		pos = findBus(Bus.codBus);
 		autobuses[pos].info.open(map, autobuses[pos].marker);
 	});
@@ -227,6 +226,9 @@ function updateBus(Bus, pos){
 		autobuses[pos].marker.setPosition(coordenadas);
 	}
 	autobuses[pos].info.setContent(busInfoContent(Bus));
+	if(autobuses[pos].marker.getMap() == null){
+		autobuses[pos].marker.setMap(map);
+	}
 	if(autobuses[pos].ttl < default_ttl){
 		autobuses[pos].ttl = default_ttl;
 		if(autobuses[pos].marker.icon !== url_white_icon){
@@ -235,15 +237,15 @@ function updateBus(Bus, pos){
 	}
 }
 
-function addLinea(linea){
-	lineas_emt.push({
-		codLinea: linea.codLinea,
-		userCodLinea: linea.userCodLinea,
-		nombreLinea: linea.nombreLinea,
+function addLinea(lin){
+	var linea = {
+		codLinea: lin.codLinea,
+		userCodLinea: lin.userCodLinea.replace(/^F-/, "F"),
+		nombreLinea: lin.nombreLinea.replace(/(\(F\))|(\(?F-[0-9A-Z]{1,2}\)$)/, ""),
 		getIda: false,
 		getVta: false,
 		getBuses: false
-	});
+	};
 	var fila = $("<tr>");
 	var botonIda = $("<input>", {
 		"type": "checkbox",
@@ -261,9 +263,25 @@ function addLinea(linea){
 	}).attr('checked', false).click(function(){
 		enableBusUpdate(linea.codLinea);
 	});
-	var id = $('<span>').addClass('fa-layers fa-fw fa-2x');
-	id.append($('<i>').addClass('fas fa-circle').css("color", "262C72"));
-	id.append($('<span>').addClass("fa-layers-text fa-inverse").text(linea.userCodLinea).attr("data-fa-transform", "shrink-6"));
+	var id = $('<span>').addClass('fa-layers fa-fw fa-3x');
+	if(/^C[1-9]/.test(linea.userCodLinea)){ // Circulares
+		id.append($('<i>').addClass('fas fa-circle').css("color", "F77F00"));
+	}else if(/^N[1-9]/.test(linea.userCodLinea)){ // Nocturno
+		id.append($('<i>').addClass('fas fa-circle').css("color", "04151F"));
+	}else if(/^A$|^E$|^L$/.test(linea.userCodLinea)){ // Lineas Exprés y Lanzaderas
+		id.append($('<i>').addClass('fas fa-circle').css("color", "AA1155"));
+	}else if(/^91$|^92$/.test(linea.userCodLinea)){ // Servicios Turísticos
+		id.append($('<i>').addClass('fas fa-circle').css("color", "62A87C"));
+	}else if(/^64$|^[A-Z]/.test(linea.userCodLinea)){ // Servicios Especiales
+		id.append($('<i>').addClass('fas fa-circle').css("color", "D62828"));
+	}else{ // Líneas Convencionales
+		id.append($('<i>').addClass('fas fa-circle').css("color", "262C72"));
+	}
+	if(linea.userCodLinea.length < 3){
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(linea.userCodLinea).attr("data-fa-transform", "shrink-6"));
+	}else{
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(linea.userCodLinea).attr("data-fa-transform", "shrink-8"));
+	}
 	$(fila).append($("<td>").append(botonIda));
 	$(fila).append($("<td>").append(botonVta));
 	$(fila).append($("<td>").append(botonBus));
@@ -274,6 +292,7 @@ function addLinea(linea){
 	$(fila).append($("<td>").append($("<p>").attr('id', "cont"+linea.codLinea)));
 
 	$("#tablaLineas").append(fila);
+	lineas_emt.push(linea);
 	getTrazados(linea.codLinea);
 }
 
