@@ -265,7 +265,11 @@ function addLinea(lin){
 	});
 	var id = $('<span>').addClass('fa-layers fa-fw fa-2x');
 	id.append($('<i>').addClass('fas fa-circle').css("color", "262C72"));
-	id.append($('<span>').addClass("fa-layers-text fa-inverse").text(linea.userCodLinea).attr("data-fa-transform", "shrink-6"));
+	if(linea.userCodLinea.length < 3){
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(linea.userCodLinea).attr("data-fa-transform", "shrink-6"));
+	}else{
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(linea.userCodLinea).attr("data-fa-transform", "shrink-8"));
+	}
 	$(fila).append($("<td>").append(botonIda));
 	$(fila).append($("<td>").append(botonVta));
 	$(fila).append($("<td>").append(botonBus));
