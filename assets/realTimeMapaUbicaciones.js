@@ -237,11 +237,11 @@ function updateBus(Bus, pos){
 	}
 }
 
-		codLinea: linea.codLinea,
-		userCodLinea: linea.userCodLinea,
-		nombreLinea: linea.nombreLinea,
 function addLinea(lin){
 	var linea = {
+		codLinea: lin.codLinea,
+		userCodLinea: lin.userCodLinea.replace(/^F-/, "F"),
+		nombreLinea: lin.nombreLinea.replace(/(\(F\))|(\(?F-[0-9A-Z]{1,2}\)$)/, ""),
 		getIda: false,
 		getVta: false,
 		getBuses: false
