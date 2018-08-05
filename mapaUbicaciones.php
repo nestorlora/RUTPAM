@@ -89,7 +89,7 @@ var ttl_rate_default = 60;
 var ttl_rate_new = ttl_rate_default+30;
 var ttl_rate_old = ttl_rate_default-15;
 </script>
-<script src="<?=base_url('/assets/realTimeMapaUbicaciones.js')?>"></script>
+<script src="./assets/realTimeMapaUbicaciones.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPD4goi4Rqi6ZfeoaMyD_7LNYoW7fXn2A&callback=initMap"
 async defer></script>
 </body>
