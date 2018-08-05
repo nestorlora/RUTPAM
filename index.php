@@ -44,7 +44,7 @@
 </div>
 <script>
 var base_url = 'http://localhost';
-var site_url = base_url+'/rutpam';
+var site_url = '/rutpam';
 var url_white_icon = site_url+'/assets/img/white_bus.png';
 var url_red_icon = site_url+'/assets/img/red_bus.png';
 var url_orange_icon = site_url+'/assets/img/orange_bus.png';
