@@ -263,7 +263,7 @@ function addLinea(lin){
 	}).attr('checked', false).click(function(){
 		enableBusUpdate(linea.codLinea);
 	});
-	var id = $('<span>').addClass('fa-layers fa-fw fa-2x');
+	var id = $('<span>').addClass('fa-layers fa-fw fa-3x');
 	if(/^C[1-9]/.test(linea.userCodLinea)){ // Circulares
 		id.append($('<i>').addClass('fas fa-circle').css("color", "F77F00"));
 	}else if(/^N[1-9]/.test(linea.userCodLinea)){ // Nocturno
