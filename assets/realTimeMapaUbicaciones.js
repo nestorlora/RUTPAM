@@ -114,6 +114,7 @@ function reducirTTL(){
 }
 
 function getLineas(){
+	$("#getLineas").remove();
 	$.getJSON({
 		url: emt_proxy_url+'/services/lineas/'
 	}).done(function (response, status){
@@ -124,7 +125,6 @@ function getLineas(){
 			}
 			motor();
 			start();
-			$("#getLineas").remove();
 			$("#play").css("display", "inline-block");
 			$("#refresh").css("display", "inline-block");
 			$("#pause").css("display", "inline-block");
