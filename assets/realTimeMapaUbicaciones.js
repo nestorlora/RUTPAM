@@ -264,7 +264,19 @@ function addLinea(lin){
 		enableBusUpdate(linea.codLinea);
 	});
 	var id = $('<span>').addClass('fa-layers fa-fw fa-2x');
-	id.append($('<i>').addClass('fas fa-circle').css("color", "262C72"));
+	if(/^C[1-9]/.test(linea.userCodLinea)){ // Circulares
+		id.append($('<i>').addClass('fas fa-circle').css("color", "F77F00"));
+	}else if(/^N[1-9]/.test(linea.userCodLinea)){ // Nocturno
+		id.append($('<i>').addClass('fas fa-circle').css("color", "04151F"));
+	}else if(/^A$|^E$|^L$/.test(linea.userCodLinea)){ // Lineas Exprés y Lanzaderas
+		id.append($('<i>').addClass('fas fa-circle').css("color", "AA1155"));
+	}else if(/^91$|^92$/.test(linea.userCodLinea)){ // Servicios Turísticos
+		id.append($('<i>').addClass('fas fa-circle').css("color", "62A87C"));
+	}else if(/^64$|^[A-Z]/.test(linea.userCodLinea)){ // Servicios Especiales
+		id.append($('<i>').addClass('fas fa-circle').css("color", "D62828"));
+	}else{ // Líneas Convencionales
+		id.append($('<i>').addClass('fas fa-circle').css("color", "262C72"));
+	}
 	if(linea.userCodLinea.length < 3){
 		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(linea.userCodLinea).attr("data-fa-transform", "shrink-6"));
 	}else{
