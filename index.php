@@ -44,12 +44,11 @@
 	</div>
 </div>
 <script>
-var base_url = 'http://localhost';
 var site_url = '/rutpam';
 var url_white_icon = site_url+'/assets/img/white_bus.png';
 var url_red_icon = site_url+'/assets/img/red_bus.png';
 var url_orange_icon = site_url+'/assets/img/orange_bus.png';
-var emt_proxy_url = base_url+'/proxy/emt-core';
+var emt_proxy_url = '/proxy/emt-core';
 var refresh_rate = 1;
 var ttl_rate_default = 60;
 var ttl_rate_new = ttl_rate_default+30;
