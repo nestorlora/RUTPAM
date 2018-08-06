@@ -342,6 +342,11 @@ function disableBusUpdate(codLinea){
 	});
 }
 
+/**
+ * Al ser llamada, añade al mapa el trazado de la línea indicada y prepara el botón para realizar la acción contraria cuando vuelva a ser llamado
+ * @param {Number} codLinea
+ * @param {Number} sentido
+ */
 function showTrazado(codLinea, sentido){
 	if(sentido === 1){
 		lineas_emt[findLinea(codLinea)].trazadoIda.addTo(map);
@@ -360,6 +365,11 @@ function showTrazado(codLinea, sentido){
 	}
 }
 
+/**
+ * Al ser llamada, borra del mapa el trazado de la línea indicada y prepara el botón para realizar la acción contraria cuando vuelva a ser llamado
+ * @param {Number} codLinea
+ * @param {Number} sentido
+ */
 function hideTrazado(codLinea, sentido){
 	if(sentido === 1){
 		lineas_emt[findLinea(codLinea)].trazadoIda.remove();
@@ -378,6 +388,11 @@ function hideTrazado(codLinea, sentido){
 	}
 }
 
+/**
+ * Busca la posición de una línea dentro de lineas_emt[]
+ * @param {Number} codLinea
+ * @returns {Number} Posición en lineas_emt[]
+ */
 function findLinea(codLinea){
 	var pos = 0;
 	var found = false;
@@ -395,6 +410,11 @@ function findLinea(codLinea){
 	}
 }
 
+/**
+ * Busca la posición de un coche dentro de autobuses[]
+ * @param {Number} codBus
+ * @returns {Number} Posición en autobuses[]
+ */
 function findBus(codBus){
 	var pos = 0;
 	var found = false;
@@ -412,6 +432,11 @@ function findBus(codBus){
 	}
 }
 
+/**
+ * Devuelve el contenido HTML de una ventana de información adicional de autobús
+ * @param {Bus} Bus
+ * @returns {String}
+ */
 function busInfoContent(Bus){
 	var linea = lineas_emt[findLinea(Bus.codLinea)].userCodLinea;
 	var sentido;
@@ -431,6 +456,11 @@ function busInfoContent(Bus){
 	"Sentido: "+sentido;
 }
 
+/**
+ * Recoge un elemento del DOM y lo devuelve rellenado con el HTML adecuado de la barra de control
+ * @param {DOM Element} mapDiv
+ * @returns {DOM Element}
+ */
 function ControlRUTPAM(mapDiv){
 	var layer = $("<div>", {"id":"layer"});
 	var titulo = $("<p>").append($("<b>", {"text":"RUTPAM"})).append($("<span>", {"text":" v4.0"}));
