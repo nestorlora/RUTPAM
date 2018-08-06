@@ -71,7 +71,7 @@ function initMap() {
 		preferCanvas: true
 	});
 	var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-	var osmAttrib = 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
+	var osmAttrib = 'RUTPAM v3.4 © Néstor Lora - 2018 | Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
 	var osm = new L.TileLayer(osmUrl, {/*minZoom: 8, maxZoom: 12,*/ attribution: osmAttrib});
 	map.addLayer(osm);
 	
