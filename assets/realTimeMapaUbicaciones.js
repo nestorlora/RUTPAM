@@ -113,10 +113,10 @@ function reducirTTL(){
 			autobuses[pos].marker.remove();
 			pos++;
 		}else if(autobuses[pos].ttl <= ttl_old){
-			if(autobuses[pos].marker.getIcon() !== url_red_icon){
-				autobuses[pos].marker.setMap(null);
-				autobuses[pos].marker.setIcon(url_red_icon);
-				autobuses[pos].marker.setMap(map);
+			if(autobuses[pos].marker.options.icon.options.iconUrl !== url_red_icon){
+				autobuses[pos].marker.setIcon(L.icon({
+					iconUrl: url_red_icon
+				}));
 			}
 			pos++;
 		}else{
