@@ -84,7 +84,8 @@ function initMap() {
 	map = L.map('map', {
 		center: [36.7121977, -4.4370495],
 		zoom: 13,
-		preferCanvas: true
+		preferCanvas: true,
+		closePopupOnClick: false
 	});
 	var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 	var osmAttrib = 'RUTPAM v3.4 © Néstor Lora - 2018 | Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
@@ -247,7 +248,7 @@ function addBus(Bus){
 		/*info: new google.maps.InfoWindow({
 			content: busInfoContent(Bus)
 		}),*/
-		popup: L.popup().setContent(busInfoContent(Bus)),
+		popup: L.popup({autoPan: false, autoClose: false}).setContent(busInfoContent(Bus)),
 		codLinea: Bus.codLinea,
 		codBus: Bus.codBus,
 		ttl: ttl_new
