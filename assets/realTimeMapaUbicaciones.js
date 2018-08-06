@@ -433,7 +433,7 @@ function busInfoContent(Bus){
 
 function ControlRUTPAM(mapDiv){
 	var layer = $("<div>", {"id":"layer"});
-	var titulo = $("<p>").append($("<b>", {"text":"RUTPAM"}));
+	var titulo = $("<p>").append($("<b>", {"text":"RUTPAM"})).append($("<span>", {"text":" v4.0"}));
 	var descripcion = $("<p>", {"text":"Seguimiento buses EMT en tiempo real"});
 	$(layer).append(titulo).append(descripcion);
 	
