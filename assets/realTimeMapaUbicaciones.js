@@ -222,23 +222,30 @@ function addBus(Bus){
 	console.log("ADDED "+Bus.codBus);
 	var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
 	var data = {
-		marker: new google.maps.Marker({
+		/*marker: new google.maps.Marker({
 			position: coordenadas,
 			map: map,
 			icon: url_orange_icon
+		}),*/
+		marker: L.marker(coordenadas, {
+			icon: L.icon({
+				iconUrl: url_orange_icon
+			})
 		}),
-		info: new google.maps.InfoWindow({
+		/*info: new google.maps.InfoWindow({
 			content: busInfoContent(Bus)
-		}),
+		}),*/
+		popup: L.popup().setContent(busInfoContent(Bus)),
 		codLinea: Bus.codLinea,
 		codBus: Bus.codBus,
 		ttl: ttl_new
 	};
-	data.marker.addListener('click', function(){
+	/*data.marker.addListener('click', function(){
 		pos = findBus(Bus.codBus);
 		autobuses[pos].info.open(map, autobuses[pos].marker);
-	});
-	autobuses.push(data);
+	})*/;
+	var pos = autobuses.push(data)-1;
+	autobuses[pos].marker.bindPopup(autobuses[pos].popup);
 }
 
 function updateBus(Bus, pos){
