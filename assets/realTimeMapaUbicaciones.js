@@ -337,14 +337,14 @@ function disableBusUpdate(codLinea){
 
 function showTrazado(codLinea, sentido){
 	if(sentido === 1){
-		lineas_emt[findLinea(codLinea)].trazadoIda.setMap(map);
+		lineas_emt[findLinea(codLinea)].trazadoIda.addTo(map);
 		$("#botonIda"+codLinea).attr("checked", true);
 		$("#botonIda"+codLinea).unbind("click");
 		$("#botonIda"+codLinea).click(function(){
 			hideTrazado(codLinea, sentido);
 		});
 	}else if(sentido === 2){
-		lineas_emt[findLinea(codLinea)].trazadoVta.setMap(map);
+		lineas_emt[findLinea(codLinea)].trazadoVta.addTo(map);
 		$("#botonVta"+codLinea).attr("checked", true);
 		$("#botonVta"+codLinea).unbind("click");
 		$("#botonVta"+codLinea).click(function(){
