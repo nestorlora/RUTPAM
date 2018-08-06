@@ -192,7 +192,6 @@ function getTrazados(codLinea){
 				opacity: 1.0,
 				weight: 3
 			});
-			//lineas_emt[posLinea].trazadoVta.setMap(map);
 			$("#botonVta"+codLinea).attr("disabled", false);
 			$("#botonVta"+codLinea).click(function(){
 				showTrazado(codLinea, 2);
