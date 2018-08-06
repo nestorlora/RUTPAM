@@ -46,6 +46,8 @@ var autobuses = [];
  * autobuses[].ttl
  */
 
+$(document).ready(initMap());
+
 function initMap() {
 	/*map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 36.7121977, lng: -4.4370495},
