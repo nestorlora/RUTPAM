@@ -249,19 +249,19 @@ function addBus(Bus){
 }
 
 function updateBus(Bus, pos){
-	var coordenadas = new google.maps.LatLng({lat: Bus.latitud , lng: Bus.longitud});
-	if(!coordenadas.equals(autobuses[pos].marker.position)){
-		autobuses[pos].marker.setPosition(coordenadas);
+	var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
+	if(!autobuses[pos].marker.getLatLng().equals(coordenadas)){
+		autobuses[pos].marker.setLatLng(coordenadas);
 	}
-	autobuses[pos].info.setContent(busInfoContent(Bus));
-	if(autobuses[pos].marker.getMap() == null){
-		autobuses[pos].marker.setMap(map);
-	}
+	autobuses[pos].popup.setContent(busInfoContent(Bus));
+	autobuses[pos].marker.addTo(map);
 	if(autobuses[pos].ttl < default_ttl){
 		autobuses[pos].ttl = default_ttl;
-		if(autobuses[pos].marker.icon !== url_white_icon){
-			autobuses[pos].marker.setIcon(url_white_icon);
-		}
+		if(autobuses[pos].marker.options.icon.options.iconUrl !== url_white_icon){
+				autobuses[pos].marker.setIcon(L.icon({
+					iconUrl: url_white_icon
+				}));
+			}
 	}
 }
 
