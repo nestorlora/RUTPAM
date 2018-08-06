@@ -27,7 +27,7 @@
 <head>
     <title>RUTPAM v3.4</title>
 	<link rel="shorcut icon" type="image/png" href="./assets/favicon.png">
-	<link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik">
 	<link rel="stylesheet" href="assets/leaflet.css"/>
 	<script src="assets/leaflet.js"></script>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -44,7 +44,7 @@
 	</span>
 </div>
 <script>
-var site_url = '/rutpam';
+var site_url = '/RUTPAM';
 var url_white_icon = site_url+'/assets/img/white_bus.png';
 var url_red_icon = site_url+'/assets/img/red_bus.png';
 var url_orange_icon = site_url+'/assets/img/orange_bus.png';
