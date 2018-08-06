@@ -107,10 +107,10 @@ function reducirTTL(){
 		autobuses[pos].ttl--;
 		if(autobuses[pos].ttl <= 0){
 			console.log("DROP "+autobuses[pos].codBus);
-			autobuses[pos].marker.setMap(null);
+			autobuses[pos].marker.remove();
 			autobuses.splice(pos, 1);
 		}else if(lineas_emt[findLinea(autobuses[pos].codLinea)].getBuses === false){
-			autobuses[pos].marker.setMap(null);
+			autobuses[pos].marker.remove();
 			pos++;
 		}else if(autobuses[pos].ttl <= ttl_old){
 			if(autobuses[pos].marker.getIcon() !== url_red_icon){
