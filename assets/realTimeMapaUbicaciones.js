@@ -300,7 +300,7 @@ function addLinea(lin){
 		id.append($('<i>').addClass('fas fa-circle').css("color", "AA1155"));
 	}else if(/^91$|^92$/.test(linea.userCodLinea)){ // Servicios Turísticos
 		id.append($('<i>').addClass('fas fa-circle').css("color", "62A87C"));
-	}else if(/^64$|^[A-Z]/.test(linea.userCodLinea)){ // Servicios Especiales
+	}else if(/^12$|^16$|^26$|^64$|^[A-Z]/.test(linea.userCodLinea)){ // Servicios Especiales
 		id.append($('<i>').addClass('fas fa-circle').css("color", "D62828"));
 	}else{ // Líneas Convencionales
 		id.append($('<i>').addClass('fas fa-circle').css("color", "262C72"));
