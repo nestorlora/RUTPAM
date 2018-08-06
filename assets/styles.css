@@ -40,17 +40,18 @@ p{
 }
 #map {
 	height: 100%;
+	z-index: 1;
 }
 #over_map {
 	position: absolute;
 	top: 10px;
-	left: 10px;
-	z-index: 99;
+	right: 10px;
+	z-index: 200;
 
 	background-color: white;
 	padding: 5px;
 	overflow-y: auto;
-	max-height: 90%;
+	max-height: 93%;
 }
 .boton{
 	background-color: white;

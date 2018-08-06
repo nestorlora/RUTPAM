@@ -25,9 +25,11 @@
  */
 ?>
 <head>
-    <title>RUTPAM v3.4</title>
+    <title>RUTPAM 4.1 Beta</title>
 	<link rel="shorcut icon" type="image/png" href="./assets/favicon.png">
-	<link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik">
+	<link rel="stylesheet" href="assets/leaflet.css"/>
+	<script src="assets/leaflet.js"></script>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 	<link rel="stylesheet" href="./assets/styles.css">
@@ -35,16 +37,11 @@
     <meta charset="utf-8">
 </head>
 <body>
-<div id="wrapper">
-	<div id="map">Aquí debería ir el mapa</div>
-	<div id="over_map">
-		<span class="padding">
-			<b>RUTPAM</b> Seguimiento buses EMT en tiempo real
-		</span>
-	</div>
+<div id="map">Aquí debería ir el mapa</div>
+<div id="over_map" class="padding">
 </div>
 <script>
-var site_url = '/rutpam';
+var site_url = '/RUTPAM';
 var url_white_icon = site_url+'/assets/img/white_bus.png';
 var url_red_icon = site_url+'/assets/img/red_bus.png';
 var url_orange_icon = site_url+'/assets/img/orange_bus.png';
@@ -55,6 +52,4 @@ var ttl_rate_new = ttl_rate_default+30;
 var ttl_rate_old = ttl_rate_default-15;
 </script>
 <script src="./assets/realTimeMapaUbicaciones.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPD4goi4Rqi6ZfeoaMyD_7LNYoW7fXn2A&callback=initMap"
-async defer></script>
 </body>
