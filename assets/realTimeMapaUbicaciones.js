@@ -41,6 +41,11 @@ var lineas_emt = [];
 var autobuses = [];
 /* 
  * autobuses[].codBus
+ * autobuses[].codLinea
+ * autobuses[].sentido
+ * autobuses[].codParIni
+ * autobuses[].latitud
+ * autobuses[].longitud
  * autobuses[].marker
  * autobuses[].info
  * autobuses[].ttl
@@ -249,8 +254,12 @@ function addBus(Bus){
 			content: busInfoContent(Bus)
 		}),*/
 		popup: L.popup({autoPan: false, autoClose: false}).setContent(busInfoContent(Bus)),
-		codLinea: Bus.codLinea,
 		codBus: Bus.codBus,
+		codLinea: Bus.codLinea,
+		sentido: Bus.sentido,
+		codParIni: Bus.codParIni,
+		latitud: Bus.latitud,
+		longitud: Bus.longitud,
 		ttl: ttl_new
 	};
 	/*data.marker.addListener('click', function(){
@@ -266,6 +275,11 @@ function updateBus(Bus, pos){
 	if(!autobuses[pos].marker.getLatLng().equals(coordenadas)){
 		autobuses[pos].marker.setLatLng(coordenadas);
 	}
+	autobuses[pos].codLinea = Bus.codLinea;
+	autobuses[pos].sentido = Bus.sentido;
+	autobuses[pos].codParIni = Bus.codParIni;
+	autobuses[pos].latitud = Bus.latitud;
+	autobuses[pos].longitud = Bus.longitud;
 	autobuses[pos].popup.setContent(busInfoContent(Bus));
 	autobuses[pos].marker.addTo(map);
 	if(autobuses[pos].ttl < default_ttl){
