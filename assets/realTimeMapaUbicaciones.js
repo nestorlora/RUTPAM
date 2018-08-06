@@ -67,7 +67,8 @@ function initMap() {
 	});*/
 	map = L.map('map', {
 		center: [36.7121977, -4.4370495],
-		zoom: 13
+		zoom: 13,
+		preferCanvas: true
 	});
 	var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 	var osmAttrib = 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
