@@ -42,12 +42,30 @@ var autobuses = [];
 /* 
  * autobuses[].codBus
  * autobuses[].marker
- * autobuses[].infoWindow
+ * autobuses[].info
  * autobuses[].ttl
  */
 
+var bus_icon_white = L.icon({
+		iconUrl: url_white_icon,
+		iconAnchor: [15,35],
+		popupAnchor: [0, -35]
+	});
+var bus_icon_red = L.icon({
+		iconUrl: url_red_icon,
+		iconAnchor: [15,35],
+		popupAnchor: [0, -35]
+	});;
+var bus_icon_orange = L.icon({
+		iconUrl: url_orange_icon,
+		iconAnchor: [15,35],
+		popupAnchor: [0, -35]
+	});;
+
+$(document).ready(initMap());
+
 function initMap() {
-	map = new google.maps.Map(document.getElementById('map'), {
+	/*map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 36.7121977, lng: -4.4370495},
 		zoom: 13,
 		scrollwheel: true,
@@ -62,7 +80,18 @@ function initMap() {
 			style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
 			position: google.maps.ControlPosition.TOP_RIGHT
 		}
-	});	
+	});*/
+	map = L.map('map', {
+		center: [36.7121977, -4.4370495],
+		zoom: 13,
+		preferCanvas: true,
+		closePopupOnClick: false
+	});
+	var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+	var osmAttrib = 'RUTPAM v3.4 © Néstor Lora - 2018 | Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
+	var osm = new L.TileLayer(osmUrl, {/*minZoom: 8,*/ maxZoom: 18, attribution: osmAttrib});
+	map.addLayer(osm);
+	
 	$("#over_map").html(ControlRUTPAM($("<div>")));
 }
 
@@ -95,16 +124,14 @@ function reducirTTL(){
 		autobuses[pos].ttl--;
 		if(autobuses[pos].ttl <= 0){
 			console.log("DROP "+autobuses[pos].codBus);
-			autobuses[pos].marker.setMap(null);
+			autobuses[pos].marker.remove();
 			autobuses.splice(pos, 1);
-		}else if(!lineas_emt[findLinea(autobuses[pos].codLinea)].getBuses){
-			autobuses[pos].marker.setMap(null);
+		}else if(lineas_emt[findLinea(autobuses[pos].codLinea)].getBuses === false){
+			autobuses[pos].marker.remove();
 			pos++;
 		}else if(autobuses[pos].ttl <= ttl_old){
-			if(autobuses[pos].marker.getIcon() !== url_red_icon){
-				autobuses[pos].marker.setMap(null);
-				autobuses[pos].marker.setIcon(url_red_icon);
-				autobuses[pos].marker.setMap(map);
+			if(autobuses[pos].marker.options.icon.options.iconUrl !== url_red_icon){
+				autobuses[pos].marker.setIcon(bus_icon_red);
 			}
 			pos++;
 		}else{
@@ -114,6 +141,7 @@ function reducirTTL(){
 }
 
 function getLineas(){
+	$("#getLineas").remove();
 	$.getJSON({
 		url: emt_proxy_url+'/services/lineas/'
 	}).done(function (response, status){
@@ -124,7 +152,6 @@ function getLineas(){
 			}
 			motor();
 			start();
-			$("#getLineas").remove();
 			$("#play").css("display", "inline-block");
 			$("#refresh").css("display", "inline-block");
 			$("#pause").css("display", "inline-block");
@@ -142,11 +169,16 @@ function getTrazados(codLinea){
 			for(var a = 0; a < response.length; a++){
 				trazado.push({lat: response[a].latitud, lng: response[a].longitud});
 			}
-			lineas_emt[posLinea].trazadoIda = new google.maps.Polyline({
+			/*lineas_emt[posLinea].trazadoIda = new google.maps.Polyline({
 				path: trazado,
 				strokeColor: '#1E3180',
 				strokeOpacity: 1.0,
 				strokeWeight: 3
+			});*/
+			lineas_emt[posLinea].trazadoIda = L.polyline(trazado, {
+				color: '#1E3180',
+				opacity: 1.0,
+				weight: 3
 			});
 			$("#botonIda"+codLinea).attr("disabled", false);
 			$("#botonIda"+codLinea).click(function(){
@@ -164,13 +196,17 @@ function getTrazados(codLinea){
 			for(var a = 0; a < response.length; a++){
 				trazado.push({lat: response[a].latitud, lng: response[a].longitud});
 			}
-			lineas_emt[posLinea].trazadoVta = new google.maps.Polyline({
+			/*lineas_emt[posLinea].trazadoVta = new google.maps.Polyline({
 				path: trazado,
 				strokeColor: '#4876FE',
 				strokeOpacity: 1.0,
 				strokeWeight: 3
+			});*/
+			lineas_emt[posLinea].trazadoVta = L.polyline(trazado, {
+				color: '#4876FE',
+				opacity: 1.0,
+				weight: 3
 			});
-			//lineas_emt[posLinea].trazadoVta.setMap(map);
 			$("#botonVta"+codLinea).attr("disabled", false);
 			$("#botonVta"+codLinea).click(function(){
 				showTrazado(codLinea, 2);
@@ -201,49 +237,54 @@ function addBus(Bus){
 	console.log("ADDED "+Bus.codBus);
 	var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
 	var data = {
-		marker: new google.maps.Marker({
+		/*marker: new google.maps.Marker({
 			position: coordenadas,
 			map: map,
 			icon: url_orange_icon
+		}),*/
+		marker: L.marker(coordenadas, {
+			icon: bus_icon_orange
 		}),
-		info: new google.maps.InfoWindow({
+		/*info: new google.maps.InfoWindow({
 			content: busInfoContent(Bus)
-		}),
+		}),*/
+		popup: L.popup({autoPan: false, autoClose: false}).setContent(busInfoContent(Bus)),
 		codLinea: Bus.codLinea,
 		codBus: Bus.codBus,
 		ttl: ttl_new
 	};
-	data.marker.addListener('click', function(){
-		//console.log("Mirame");
+	/*data.marker.addListener('click', function(){
 		pos = findBus(Bus.codBus);
 		autobuses[pos].info.open(map, autobuses[pos].marker);
-	});
-	autobuses.push(data);
+	})*/;
+	var pos = autobuses.push(data)-1;
+	autobuses[pos].marker.bindPopup(autobuses[pos].popup);
 }
 
 function updateBus(Bus, pos){
-	var coordenadas = new google.maps.LatLng({lat: Bus.latitud , lng: Bus.longitud});
-	if(!coordenadas.equals(autobuses[pos].marker.position)){
-		autobuses[pos].marker.setPosition(coordenadas);
+	var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
+	if(!autobuses[pos].marker.getLatLng().equals(coordenadas)){
+		autobuses[pos].marker.setLatLng(coordenadas);
 	}
-	autobuses[pos].info.setContent(busInfoContent(Bus));
+	autobuses[pos].popup.setContent(busInfoContent(Bus));
+	autobuses[pos].marker.addTo(map);
 	if(autobuses[pos].ttl < default_ttl){
 		autobuses[pos].ttl = default_ttl;
-		if(autobuses[pos].marker.icon !== url_white_icon){
-			autobuses[pos].marker.setIcon(url_white_icon);
-		}
+		if(autobuses[pos].marker.options.icon.options.iconUrl !== url_white_icon){
+				autobuses[pos].marker.setIcon(bus_icon_white);
+			}
 	}
 }
 
-function addLinea(linea){
-	lineas_emt.push({
-		codLinea: linea.codLinea,
-		userCodLinea: linea.userCodLinea,
-		nombreLinea: linea.nombreLinea,
+function addLinea(lin){
+	var linea = {
+		codLinea: lin.codLinea,
+		userCodLinea: lin.userCodLinea.replace(/^F-/, "F"),
+		nombreLinea: lin.nombreLinea.replace(/(\(F\))|(\(?F-[0-9A-Z]{1,2}\)$)/, ""),
 		getIda: false,
 		getVta: false,
 		getBuses: false
-	});
+	};
 	var fila = $("<tr>");
 	var botonIda = $("<input>", {
 		"type": "checkbox",
@@ -261,9 +302,25 @@ function addLinea(linea){
 	}).attr('checked', false).click(function(){
 		enableBusUpdate(linea.codLinea);
 	});
-	var id = $('<span>').addClass('fa-layers fa-fw fa-2x');
-	id.append($('<i>').addClass('fas fa-circle').css("color", "262C72"));
-	id.append($('<span>').addClass("fa-layers-text fa-inverse").text(linea.userCodLinea).attr("data-fa-transform", "shrink-6"));
+	var id = $('<span>').addClass('fa-layers fa-fw fa-3x');
+	if(/^C[1-9]/.test(linea.userCodLinea)){ // Circulares
+		id.append($('<i>').addClass('fas fa-circle').css("color", "F77F00"));
+	}else if(/^N[1-9]/.test(linea.userCodLinea)){ // Nocturno
+		id.append($('<i>').addClass('fas fa-circle').css("color", "04151F"));
+	}else if(/^A$|^E$|^L$/.test(linea.userCodLinea)){ // Lineas Exprés y Lanzaderas
+		id.append($('<i>').addClass('fas fa-circle').css("color", "AA1155"));
+	}else if(/^91$|^92$/.test(linea.userCodLinea)){ // Servicios Turísticos
+		id.append($('<i>').addClass('fas fa-circle').css("color", "62A87C"));
+	}else if(/^12$|^16$|^26$|^64$|^[A-Z]/.test(linea.userCodLinea)){ // Servicios Especiales
+		id.append($('<i>').addClass('fas fa-circle').css("color", "D62828"));
+	}else{ // Líneas Convencionales
+		id.append($('<i>').addClass('fas fa-circle').css("color", "262C72"));
+	}
+	if(linea.userCodLinea.length < 3){
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(linea.userCodLinea).attr("data-fa-transform", "shrink-6"));
+	}else{
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(linea.userCodLinea).attr("data-fa-transform", "shrink-8"));
+	}
 	$(fila).append($("<td>").append(botonIda));
 	$(fila).append($("<td>").append(botonVta));
 	$(fila).append($("<td>").append(botonBus));
@@ -274,6 +331,7 @@ function addLinea(linea){
 	$(fila).append($("<td>").append($("<p>").attr('id', "cont"+linea.codLinea)));
 
 	$("#tablaLineas").append(fila);
+	lineas_emt.push(linea);
 	getTrazados(linea.codLinea);
 }
 
@@ -295,16 +353,21 @@ function disableBusUpdate(codLinea){
 	});
 }
 
+/**
+ * Al ser llamada, añade al mapa el trazado de la línea indicada y prepara el botón para realizar la acción contraria cuando vuelva a ser llamado
+ * @param {Number} codLinea
+ * @param {Number} sentido
+ */
 function showTrazado(codLinea, sentido){
 	if(sentido === 1){
-		lineas_emt[findLinea(codLinea)].trazadoIda.setMap(map);
+		lineas_emt[findLinea(codLinea)].trazadoIda.addTo(map);
 		$("#botonIda"+codLinea).attr("checked", true);
 		$("#botonIda"+codLinea).unbind("click");
 		$("#botonIda"+codLinea).click(function(){
 			hideTrazado(codLinea, sentido);
 		});
 	}else if(sentido === 2){
-		lineas_emt[findLinea(codLinea)].trazadoVta.setMap(map);
+		lineas_emt[findLinea(codLinea)].trazadoVta.addTo(map);
 		$("#botonVta"+codLinea).attr("checked", true);
 		$("#botonVta"+codLinea).unbind("click");
 		$("#botonVta"+codLinea).click(function(){
@@ -313,16 +376,21 @@ function showTrazado(codLinea, sentido){
 	}
 }
 
+/**
+ * Al ser llamada, borra del mapa el trazado de la línea indicada y prepara el botón para realizar la acción contraria cuando vuelva a ser llamado
+ * @param {Number} codLinea
+ * @param {Number} sentido
+ */
 function hideTrazado(codLinea, sentido){
 	if(sentido === 1){
-		lineas_emt[findLinea(codLinea)].trazadoIda.setMap(null);
+		lineas_emt[findLinea(codLinea)].trazadoIda.remove();
 		$("#botonIda"+codLinea).attr("checked", false);
 		$("#botonIda"+codLinea).unbind("click");
 		$("#botonIda"+codLinea).click(function(){
 			showTrazado(codLinea, sentido);
 		});
 	}else if(sentido === 2){
-		lineas_emt[findLinea(codLinea)].trazadoVta.setMap(null);
+		lineas_emt[findLinea(codLinea)].trazadoVta.remove();
 		$("#botonVta"+codLinea).attr("checked", false);
 		$("#botonVta"+codLinea).unbind("click");
 		$("#botonVta"+codLinea).click(function(){
@@ -331,6 +399,11 @@ function hideTrazado(codLinea, sentido){
 	}
 }
 
+/**
+ * Busca la posición de una línea dentro de lineas_emt[]
+ * @param {Number} codLinea
+ * @returns {Number} Posición en lineas_emt[]
+ */
 function findLinea(codLinea){
 	var pos = 0;
 	var found = false;
@@ -348,6 +421,11 @@ function findLinea(codLinea){
 	}
 }
 
+/**
+ * Busca la posición de un coche dentro de autobuses[]
+ * @param {Number} codBus
+ * @returns {Number} Posición en autobuses[]
+ */
 function findBus(codBus){
 	var pos = 0;
 	var found = false;
@@ -365,6 +443,11 @@ function findBus(codBus){
 	}
 }
 
+/**
+ * Devuelve el contenido HTML de una ventana de información adicional de autobús
+ * @param {Bus} Bus
+ * @returns {String}
+ */
 function busInfoContent(Bus){
 	var linea = lineas_emt[findLinea(Bus.codLinea)].userCodLinea;
 	var sentido;
@@ -384,9 +467,14 @@ function busInfoContent(Bus){
 	"Sentido: "+sentido;
 }
 
+/**
+ * Recoge un elemento del DOM y lo devuelve rellenado con el HTML adecuado de la barra de control
+ * @param {DOM Element} mapDiv
+ * @returns {DOM Element}
+ */
 function ControlRUTPAM(mapDiv){
 	var layer = $("<div>", {"id":"layer"});
-	var titulo = $("<p>").append($("<b>", {"text":"RUTPAM"}));
+	var titulo = $("<p>").append($("<b>", {"text":"RUTPAM"})).append($("<span>", {"text":" v4.1 Beta"}));
 	var descripcion = $("<p>", {"text":"Seguimiento buses EMT en tiempo real"});
 	$(layer).append(titulo).append(descripcion);
 	
