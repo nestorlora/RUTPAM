@@ -47,7 +47,7 @@ var autobuses = [];
  */
 
 function initMap() {
-	map = new google.maps.Map(document.getElementById('map'), {
+	/*map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 36.7121977, lng: -4.4370495},
 		zoom: 13,
 		scrollwheel: true,
@@ -62,7 +62,16 @@ function initMap() {
 			style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
 			position: google.maps.ControlPosition.TOP_RIGHT
 		}
-	});	
+	});*/
+	map = L.map('map', {
+		center: [36.7121977, -4.4370495],
+		zoom: 13
+	});
+	var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+	var osmAttrib = 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
+	var osm = new L.TileLayer(osmUrl, {/*minZoom: 8, maxZoom: 12,*/ attribution: osmAttrib});
+	map.addLayer(osm);
+	
 	$("#over_map").html(ControlRUTPAM($("<div>")));
 }
 
