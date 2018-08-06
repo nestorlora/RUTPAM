@@ -40,13 +40,13 @@ p{
 }
 #map {
 	height: 100%;
-	z-index: 10;
+	z-index: 1;
 }
 #over_map {
 	position: absolute;
 	top: 10px;
 	right: 10px;
-	z-index: 50;
+	z-index: 200;
 
 	background-color: white;
 	padding: 5px;
