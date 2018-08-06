@@ -46,6 +46,22 @@ var autobuses = [];
  * autobuses[].ttl
  */
 
+var bus_icon_white = L.icon({
+		iconUrl: url_white_icon,
+		iconAnchor: [15,35],
+		popupAnchor: [0, -35]
+	});
+var bus_icon_red = L.icon({
+		iconUrl: url_red_icon,
+		iconAnchor: [15,35],
+		popupAnchor: [0, -35]
+	});;
+var bus_icon_orange = L.icon({
+		iconUrl: url_orange_icon,
+		iconAnchor: [15,35],
+		popupAnchor: [0, -35]
+	});;
+
 $(document).ready(initMap());
 
 function initMap() {
@@ -114,9 +130,7 @@ function reducirTTL(){
 			pos++;
 		}else if(autobuses[pos].ttl <= ttl_old){
 			if(autobuses[pos].marker.options.icon.options.iconUrl !== url_red_icon){
-				autobuses[pos].marker.setIcon(L.icon({
-					iconUrl: url_red_icon
-				}));
+				autobuses[pos].marker.setIcon(bus_icon_red);
 			}
 			pos++;
 		}else{
@@ -228,9 +242,7 @@ function addBus(Bus){
 			icon: url_orange_icon
 		}),*/
 		marker: L.marker(coordenadas, {
-			icon: L.icon({
-				iconUrl: url_orange_icon
-			})
+			icon: bus_icon_orange
 		}),
 		/*info: new google.maps.InfoWindow({
 			content: busInfoContent(Bus)
@@ -258,9 +270,7 @@ function updateBus(Bus, pos){
 	if(autobuses[pos].ttl < default_ttl){
 		autobuses[pos].ttl = default_ttl;
 		if(autobuses[pos].marker.options.icon.options.iconUrl !== url_white_icon){
-				autobuses[pos].marker.setIcon(L.icon({
-					iconUrl: url_white_icon
-				}));
+				autobuses[pos].marker.setIcon(bus_icon_white);
 			}
 	}
 }
