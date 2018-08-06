@@ -154,11 +154,16 @@ function getTrazados(codLinea){
 			for(var a = 0; a < response.length; a++){
 				trazado.push({lat: response[a].latitud, lng: response[a].longitud});
 			}
-			lineas_emt[posLinea].trazadoIda = new google.maps.Polyline({
+			/*lineas_emt[posLinea].trazadoIda = new google.maps.Polyline({
 				path: trazado,
 				strokeColor: '#1E3180',
 				strokeOpacity: 1.0,
 				strokeWeight: 3
+			});*/
+			lineas_emt[posLinea].trazadoIda = L.polyline(trazado, {
+				color: '#1E3180',
+				opacity: 1.0,
+				weight: 3
 			});
 			$("#botonIda"+codLinea).attr("disabled", false);
 			$("#botonIda"+codLinea).click(function(){
@@ -176,11 +181,16 @@ function getTrazados(codLinea){
 			for(var a = 0; a < response.length; a++){
 				trazado.push({lat: response[a].latitud, lng: response[a].longitud});
 			}
-			lineas_emt[posLinea].trazadoVta = new google.maps.Polyline({
+			/*lineas_emt[posLinea].trazadoVta = new google.maps.Polyline({
 				path: trazado,
 				strokeColor: '#4876FE',
 				strokeOpacity: 1.0,
 				strokeWeight: 3
+			});*/
+			lineas_emt[posLinea].trazadoVta = L.polyline(trazado, {
+				color: '#4876FE',
+				opacity: 1.0,
+				weight: 3
 			});
 			//lineas_emt[posLinea].trazadoVta.setMap(map);
 			$("#botonVta"+codLinea).attr("disabled", false);
@@ -346,14 +356,14 @@ function showTrazado(codLinea, sentido){
 
 function hideTrazado(codLinea, sentido){
 	if(sentido === 1){
-		lineas_emt[findLinea(codLinea)].trazadoIda.setMap(null);
+		lineas_emt[findLinea(codLinea)].trazadoIda.remove();
 		$("#botonIda"+codLinea).attr("checked", false);
 		$("#botonIda"+codLinea).unbind("click");
 		$("#botonIda"+codLinea).click(function(){
 			showTrazado(codLinea, sentido);
 		});
 	}else if(sentido === 2){
-		lineas_emt[findLinea(codLinea)].trazadoVta.setMap(null);
+		lineas_emt[findLinea(codLinea)].trazadoVta.remove();
 		$("#botonVta"+codLinea).attr("checked", false);
 		$("#botonVta"+codLinea).unbind("click");
 		$("#botonVta"+codLinea).click(function(){
