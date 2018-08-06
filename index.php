@@ -38,10 +38,7 @@
 </head>
 <body>
 <div id="map">Aquí debería ir el mapa</div>
-<div id="over_map">
-	<span class="padding">
-		<b>RUTPAM</b> Seguimiento buses EMT en tiempo real
-	</span>
+<div id="over_map" class="padding">
 </div>
 <script>
 var site_url = '/RUTPAM';
