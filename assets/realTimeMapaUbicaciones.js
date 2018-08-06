@@ -72,7 +72,7 @@ function initMap() {
 	});
 	var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 	var osmAttrib = 'RUTPAM v3.4 © Néstor Lora - 2018 | Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
-	var osm = new L.TileLayer(osmUrl, {/*minZoom: 8, maxZoom: 12,*/ attribution: osmAttrib});
+	var osm = new L.TileLayer(osmUrl, {/*minZoom: 8,*/ maxZoom: 18, attribution: osmAttrib});
 	map.addLayer(osm);
 	
 	$("#over_map").html(ControlRUTPAM($("<div>")));
