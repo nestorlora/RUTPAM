@@ -316,10 +316,30 @@ function addLinea(lin){
 		codLinea: lin.codLinea,
 		userCodLinea: lin.userCodLinea.replace(/^F-/, "F"),
 		nombreLinea: lin.nombreLinea.replace(/(\(F\))|(\(?F-[0-9A-Z]{1,2}\)$)/, ""),
+		paradasIda: [],
+		paradasVta: [],
 		getIda: false,
 		getVta: false,
 		getBuses: false
 	};
+	for(var a = 0; a < lin.paradas.length; a++){
+		addParada(lin.paradas[a].parada, linea.codLinea, lin.paradas[a].sentido);
+		if(lin.paradas[a].sentido === 1){
+			linea.paradasIda.push({
+				codPar: lin.paradas[a].parada.codParada,
+				orden: lin.paradas[a].orden
+			});
+		}
+		if(lin.paradas[a].sentido === 2){
+			linea.paradasVta.push({
+				codPar: lin.paradas[a].parada.codParada,
+				orden: lin.paradas[a].orden
+			});
+		}
+	}
+	lineas_emt.push(linea);
+	getTrazados(linea.codLinea);
+	
 	var fila = $("<tr>");
 	var botonIda = $("<input>", {
 		"type": "checkbox",
