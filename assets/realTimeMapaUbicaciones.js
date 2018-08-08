@@ -34,6 +34,8 @@ var lineas_emt = [];
  * lineas_emt[].codLinea
  * lineas_emt[].userCodLinea
  * lineas_emt[].nombreLinea
+ * lineas_emt[].cabeceraIda
+ * lineas_emt[].cabeceraVta
  * lineas_emt[].paradasIda[]{codPar, orden}
  * lineas_emt[].paradasVta[]{codPar, orden}
  * lineas_emt[].trazadoIda
@@ -319,6 +321,8 @@ function addLinea(lin){
 		codLinea: lin.codLinea,
 		userCodLinea: lin.userCodLinea.replace(/^F-/, "F"),
 		nombreLinea: lin.nombreLinea.replace(/(\(F\))|(\(?F-[0-9A-Z]{1,2}\)$)/, ""),
+		cabeceraIda: lin.cabeceraIda, 
+		cabeceraVta: lin.cabeceraVuelta,
 		paradasIda: [],
 		paradasVta: [],
 		getIda: false,
@@ -389,8 +393,6 @@ function addLinea(lin){
 	$(fila).append($("<td>").append($("<p>").attr('id', "cont"+linea.codLinea)));
 
 	$("#tablaLineas").append(fila);
-	lineas_emt.push(linea);
-	getTrazados(linea.codLinea);
 }
 
 function addParada(parada, codLinea, sentido){
