@@ -478,6 +478,23 @@ function findBus(codBus){
 	}
 }
 
+function findParada(codPar){
+	var pos = 0;
+	var found = false;
+	while(pos < paradas.length && !found){
+		if(paradas[pos].codPar === codPar){
+			found = true;
+		}else{
+			pos++;
+		}
+	}
+	if(pos >= paradas.length){
+		return null;
+	}else{
+		return pos;
+	}
+}
+
 /**
  * Devuelve el contenido HTML de una ventana de información adicional de autobús
  * @param {Bus} Bus
