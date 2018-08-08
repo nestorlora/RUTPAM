@@ -190,6 +190,14 @@ function getLineas(){
 };
 
 function getTrazados(codLinea){
+	$("#botonIda"+codLinea).prop("indeterminate", false);
+	$("#botonIda"+codLinea).prop("disabled", true);
+	$("#botonIda"+codLinea).prop("checked", false);
+	$("#botonIda"+codLinea).off('click');
+	$("#botonVta"+codLinea).prop("indeterminate", false);
+	$("#botonVta"+codLinea).prop("disabled", true);
+	$("#botonVta"+codLinea).prop("checked", false);
+	$("#botonVta"+codLinea).off('click');
 	$.getJSON({
 		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea+'&sentido=1'
 	}).done(function (response, status){
@@ -210,9 +218,15 @@ function getTrazados(codLinea){
 				opacity: 1.0,
 				weight: 3
 			});
-			$("#botonIda"+codLinea).attr("disabled", false);
-			$("#botonIda"+codLinea).click(function(){
-				showTrazado(codLinea, 1);
+			$("#botonIda"+codLinea).prop("disabled", false);
+			$("#botonIda"+codLinea).prop("checked", false);
+			$("#botonIda"+codLinea).change(function(){
+				var isChecked = $(this).is(':checked');
+				if(isChecked){
+					showTrazado(codLinea, 1);
+				}else{
+					hideTrazado(codLinea, 1);
+				}
 			});
 		}
 	});
@@ -237,9 +251,15 @@ function getTrazados(codLinea){
 				opacity: 1.0,
 				weight: 3
 			});
-			$("#botonVta"+codLinea).attr("disabled", false);
-			$("#botonVta"+codLinea).click(function(){
-				showTrazado(codLinea, 2);
+			$("#botonVta"+codLinea).prop("disabled", false);
+			$("#botonVta"+codLinea).prop("checked", false);
+			$("#botonVta"+codLinea).change(function(){
+				var isChecked = $(this).is(':checked');
+				if(isChecked){
+					showTrazado(codLinea, 2);
+				}else{
+					hideTrazado(codLinea, 2);
+				}
 			});
 		}		
 	});
@@ -345,18 +365,21 @@ function addLinea(lin){
 		}
 	}
 	lineas_emt.push(linea);
-	getTrazados(linea.codLinea);
+	//getTrazados(linea.codLinea);
 	
 	var fila = $("<tr>");
 	var botonIda = $("<input>", {
 		"type": "checkbox",
-		"id": "botonIda"+linea.codLinea,
-		"disabled": true
+		"id": "botonIda"+linea.codLinea
+	}).prop('checked', true).prop("indeterminate", true).click(function(){
+		getTrazados(linea.codLinea);
 	});
 	var botonVta = $("<input>", {
 		"type": "checkbox",
 		"id": "botonVta"+linea.codLinea,
-		"disabled": true
+		"checked": true
+	}).prop('checked', true).prop("indeterminate", true).click(function(){
+		getTrazados(linea.codLinea);
 	});
 	var botonBus = $("<input>", {
 		"type": "checkbox",
@@ -449,18 +472,18 @@ function disableBusUpdate(codLinea){
 function showTrazado(codLinea, sentido){
 	if(sentido === 1){
 		lineas_emt[findLinea(codLinea)].trazadoIda.addTo(map);
-		$("#botonIda"+codLinea).attr("checked", true);
+		/*$("#botonIda"+codLinea).attr("checked", true);
 		$("#botonIda"+codLinea).unbind("click");
 		$("#botonIda"+codLinea).click(function(){
 			hideTrazado(codLinea, sentido);
-		});
+		});*/
 	}else if(sentido === 2){
 		lineas_emt[findLinea(codLinea)].trazadoVta.addTo(map);
-		$("#botonVta"+codLinea).attr("checked", true);
+		/*$("#botonVta"+codLinea).attr("checked", true);
 		$("#botonVta"+codLinea).unbind("click");
 		$("#botonVta"+codLinea).click(function(){
 			hideTrazado(codLinea, sentido);
-		});
+		});*/
 	}
 }
 
