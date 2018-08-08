@@ -384,7 +384,7 @@ function addLinea(lin){
 	var botonBus = $("<input>", {
 		"type": "checkbox",
 		"id": "botonBus"+linea.codLinea
-	}).attr('checked', false).click(function(){
+	}).prop('checked', false).click(function(){
 		enableBusUpdate(linea.codLinea);
 	});
 	var id = $('<span>').addClass('fa-layers fa-fw fa-3x');
