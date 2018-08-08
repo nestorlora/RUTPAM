@@ -86,6 +86,9 @@ var bus_icon_orange = L.icon({
 		/*iconAnchor: [15,35],
 		popupAnchor: [0, -35]*/
 	});
+var bus_stop_icon = L.divIcon({
+	html: '<i class="fas fa-bus"></i>'
+})
 
 $(document).ready(initMap());
 
