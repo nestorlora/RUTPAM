@@ -53,19 +53,25 @@ var autobuses = [];
 
 var bus_icon_white = L.icon({
 		iconUrl: url_white_icon,
-		iconAnchor: [15,35],
-		popupAnchor: [0, -35]
+		iconAnchor: [15, 15],
+		popupAnchor: [0, -15]
+		/*iconAnchor: [15,35],*/
+		/*popupAnchor: [0, -35]*/
 	});
 var bus_icon_red = L.icon({
 		iconUrl: url_red_icon,
-		iconAnchor: [15,35],
-		popupAnchor: [0, -35]
-	});;
+		iconAnchor: [15, 15],
+		popupAnchor: [0, -15]
+		/*iconAnchor: [15,35],
+		popupAnchor: [0, -35]*/
+	});
 var bus_icon_orange = L.icon({
 		iconUrl: url_orange_icon,
-		iconAnchor: [15,35],
-		popupAnchor: [0, -35]
-	});;
+		iconAnchor: [15, 15],
+		popupAnchor: [0, -15]
+		/*iconAnchor: [15,35],
+		popupAnchor: [0, -35]*/
+	});
 
 $(document).ready(initMap());
 
