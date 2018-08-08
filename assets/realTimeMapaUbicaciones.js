@@ -370,6 +370,34 @@ function addLinea(lin){
 	getTrazados(linea.codLinea);
 }
 
+function addParada(parada, codLinea, sentido){
+	var pos = findParada(parada.codParada);
+	if(pos !== null){
+		paradas[pos].servicios.push({
+			codLinea: codLinea,
+			sentido: sentido,
+			espera: null
+		});
+	}else{
+		pos = paradas.push({
+			codPar: parada.codParada,
+			nombreParada: parada.nombreParada,
+			servicios: [],
+			latitud: parada.latitud,
+			longitud: parada.longitud,
+			marker: L.marker({lat: parada.latitud, lng: parada.longitud}/*, {
+				icon: bus_stop_icon
+			}*/)
+		})-1;
+		paradas[pos].servicios.push({
+			codLinea: codLinea,
+			sentido: sentido,
+			espera: null
+		});
+		//paradas[pos].marker.addTo(map);
+	}
+}
+
 function enableBusUpdate(codLinea){
 	lineas_emt[findLinea(codLinea)].getBuses = true;
 	$("#botonBus"+codLinea).attr("checked", true);
