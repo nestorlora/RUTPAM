@@ -274,6 +274,7 @@ function addBus(Bus){
 	})*/;
 	var pos = autobuses.push(data)-1;
 	autobuses[pos].marker.bindPopup(autobuses[pos].popup);
+	autobuses[pos].marker.addTo(map);
 }
 
 function updateBus(Bus, pos){
