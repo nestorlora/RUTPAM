@@ -34,9 +34,13 @@ var lineas_emt = [];
  * lineas_emt[].codLinea
  * lineas_emt[].userCodLinea
  * lineas_emt[].nombreLinea
- * lineas_emt[].getBuses
+ * lineas_emt[].paradasIda[]{codPar, orden}
+ * lineas_emt[].paradasVta[]{codPar, orden}
  * lineas_emt[].trazadoIda
  * lineas_emt[].trazadoVta
+ * lineas_emt[].getBuses
+ * lineas_emt[].getIda
+ * lineas_emt[].getVta
  */
 var autobuses = [];
 /* 
@@ -49,6 +53,16 @@ var autobuses = [];
  * autobuses[].marker
  * autobuses[].popup
  * autobuses[].ttl
+ */
+var paradas = [];
+/*
+ * paradas[].codPar
+ * paradas[].nombreParada
+ * paradas[].servicios[]{codLinea, sentido, espera}
+ * paradas[].latitud
+ * paradas[].longitud
+ * paradas[].marker
+ * paradas[].popup
  */
 
 var bus_icon_white = L.icon({
