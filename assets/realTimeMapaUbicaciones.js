@@ -47,7 +47,7 @@ var autobuses = [];
  * autobuses[].latitud
  * autobuses[].longitud
  * autobuses[].marker
- * autobuses[].info
+ * autobuses[].popup
  * autobuses[].ttl
  */
 
