@@ -68,29 +68,22 @@ var paradas = [];
  */
 
 var bus_icon_white = L.icon({
-		iconUrl: url_white_icon,
-		iconAnchor: [15, 15],
-		popupAnchor: [0, -15]
-		/*iconAnchor: [15,35],*/
-		/*popupAnchor: [0, -35]*/
-	});
+	iconUrl: url_white_icon,
+	iconAnchor: [15, 15],
+	popupAnchor: [0, -15]
+});
 var bus_icon_red = L.icon({
-		iconUrl: url_red_icon,
-		iconAnchor: [15, 15],
-		popupAnchor: [0, -15]
-		/*iconAnchor: [15,35],
-		popupAnchor: [0, -35]*/
-	});
+	iconUrl: url_red_icon,
+	iconAnchor: [15, 15],
+	popupAnchor: [0, -15]
+});
 var bus_icon_orange = L.icon({
-		iconUrl: url_orange_icon,
-		iconAnchor: [15, 15],
-		popupAnchor: [0, -15]
-		/*iconAnchor: [15,35],
-		popupAnchor: [0, -35]*/
-	});
-var bus_stop_icon = L.divIcon({
-	html: '<i class="fas fa-bus"></i>'
-})
+	iconUrl: url_orange_icon,
+	iconAnchor: [15, 15],
+	popupAnchor: [0, -15]
+});
+var bus_stop_icon = L.icon({
+});
 
 $(document).ready(initMap());
 
