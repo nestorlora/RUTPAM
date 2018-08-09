@@ -200,12 +200,6 @@ function getTrazados(codLinea){
 			for(var a = 0; a < response.length; a++){
 				trazado.push({lat: response[a].latitud, lng: response[a].longitud});
 			}
-			/*lineas_emt[posLinea].trazadoIda = new google.maps.Polyline({
-				path: trazado,
-				strokeColor: '#1E3180',
-				strokeOpacity: 1.0,
-				strokeWeight: 3
-			});*/
 			lineas_emt[posLinea].trazadoIda = L.polyline(trazado, {
 				color: '#1E3180',
 				opacity: 1.0,
@@ -233,12 +227,6 @@ function getTrazados(codLinea){
 			for(var a = 0; a < response.length; a++){
 				trazado.push({lat: response[a].latitud, lng: response[a].longitud});
 			}
-			/*lineas_emt[posLinea].trazadoVta = new google.maps.Polyline({
-				path: trazado,
-				strokeColor: '#4876FE',
-				strokeOpacity: 1.0,
-				strokeWeight: 3
-			});*/
 			lineas_emt[posLinea].trazadoVta = L.polyline(trazado, {
 				color: '#4876FE',
 				opacity: 1.0,
@@ -280,17 +268,9 @@ function addBus(Bus){
 	console.log("ADDED "+Bus.codBus);
 	var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
 	var data = {
-		/*marker: new google.maps.Marker({
-			position: coordenadas,
-			map: map,
-			icon: url_orange_icon
-		}),*/
 		marker: L.marker(coordenadas, {
 			icon: bus_icon_orange
 		}),
-		/*info: new google.maps.InfoWindow({
-			content: busInfoContent(Bus)
-		}),*/
 		popup: L.popup({autoPan: false, autoClose: false}).setContent(busInfoContent(Bus)),
 		codBus: Bus.codBus,
 		codLinea: Bus.codLinea,
@@ -300,10 +280,6 @@ function addBus(Bus){
 		longitud: Bus.longitud,
 		ttl: ttl_new
 	};
-	/*data.marker.addListener('click', function(){
-		pos = findBus(Bus.codBus);
-		autobuses[pos].info.open(map, autobuses[pos].marker);
-	})*/;
 	var pos = autobuses.push(data)-1;
 	autobuses[pos].marker.bindPopup(autobuses[pos].popup);
 	autobuses[pos].marker.addTo(map);
