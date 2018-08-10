@@ -564,6 +564,41 @@ function busInfoContent(Bus){
 	"Sentido: "+sentido;
 }
 
+function busIconContent(Bus, estado){
+	var linea = lineas_emt[findLinea(Bus.codLinea)].userCodLinea;
+	var html = linea+"<br>"+Bus.codBus;
+	var clase;
+	switch (Bus.sentido){
+		case 1:
+			clase = 'bus-marker bus-ida';
+			break;
+		case 2:
+			clase = 'bus-marker bus-vta';
+			break;
+		default:
+			clase = 'bus-marker bus-other';
+			break;
+	}
+	switch (estado){
+		case 1:
+			clase += ' bus-new';
+			break;
+		case 2:
+			clase += ' bus-lost';
+			break;
+		default:
+			clase += ' bus-normal';
+			break;
+	}
+	return L.divIcon({
+		className: clase,
+		iconSize: [37, 34],
+		iconAnchor: [5, 2],
+		popupAnchor: [13, -2],
+		html: html
+	});
+}
+
 /**
  * Recoge un elemento del DOM y lo devuelve rellenado con el HTML adecuado de la barra de control
  * @param {DOM Element} mapDiv
