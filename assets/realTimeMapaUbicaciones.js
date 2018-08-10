@@ -83,7 +83,7 @@ var bus_icon_orange = L.icon({
 	popupAnchor: [0, -15]
 });
 var bus_stop_icon = L.icon({
-});
+});*/
 
 $(document).ready(initMap());
 
