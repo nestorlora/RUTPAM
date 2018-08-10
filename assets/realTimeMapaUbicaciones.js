@@ -67,7 +67,7 @@ var paradas = [];
  * paradas[].popup
  */
 
-var bus_icon_white = L.icon({
+/*var bus_icon_white = L.icon({
 	iconUrl: url_white_icon,
 	iconAnchor: [15, 15],
 	popupAnchor: [0, -15]
@@ -107,7 +107,7 @@ function initMap() {
 	map = L.map('map', {
 		center: [36.7121977, -4.4370495],
 		zoom: 13,
-		preferCanvas: true,
+		preferCanvas: false,
 		closePopupOnClick: false
 	});
 	var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -603,7 +603,7 @@ function busIconContent(Bus, estado){
  */
 function ControlRUTPAM(mapDiv){
 	var layer = $("<div>", {"id":"layer"});
-	var titulo = $("<p>").append($("<b>", {"text":"RUTPAM"})).append($("<span>", {"text":" v4.2"}));
+	var titulo = $("<p>").append($("<b>", {"text":"RUTPAM"})).append($("<span>", {"text":" v4.3"}));
 	var descripcion = $("<p>", {"text":"Seguimiento buses EMT en tiempo real"});
 	$(layer).append(titulo).append(descripcion);
 	
