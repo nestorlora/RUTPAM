@@ -153,9 +153,7 @@ function reducirTTL(){
 			autobuses[pos].marker.remove();
 			pos++;
 		}else if(autobuses[pos].ttl <= ttl_old){
-			if(autobuses[pos].marker.options.icon.options.iconUrl !== url_red_icon){
-				autobuses[pos].marker.setIcon(bus_icon_red);
-			}
+			autobuses[pos].marker.setIcon(busIconContent(autobuses[pos], 2));
 			pos++;
 		}else{
 			pos++;
@@ -269,7 +267,8 @@ function addBus(Bus){
 	var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
 	var data = {
 		marker: L.marker(coordenadas, {
-			icon: bus_icon_orange
+			//icon: bus_icon_orange
+			icon: busIconContent(Bus, 1)
 		}),
 		popup: L.popup({autoPan: false, autoClose: false}).setContent(busInfoContent(Bus)),
 		codBus: Bus.codBus,
@@ -299,9 +298,7 @@ function updateBus(Bus, pos){
 	autobuses[pos].marker.addTo(map);
 	if(autobuses[pos].ttl < default_ttl){
 		autobuses[pos].ttl = default_ttl;
-		if(autobuses[pos].marker.options.icon.options.iconUrl !== url_white_icon){
-				autobuses[pos].marker.setIcon(bus_icon_white);
-			}
+		autobuses[pos].marker.setIcon(busIconContent(autobuses[pos], 0));
 	}
 }
 
