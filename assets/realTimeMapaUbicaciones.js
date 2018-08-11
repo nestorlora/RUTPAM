@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-/* global google, emt_proxy_url, url_red_icon, url_orange_icon, url_white_icon, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old */
+/* global emt_proxy_url, url_red_icon, url_orange_icon, url_white_icon, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L */
 
 var timer;
 var map;
@@ -34,33 +34,56 @@ var lineas_emt = [];
  * lineas_emt[].codLinea
  * lineas_emt[].userCodLinea
  * lineas_emt[].nombreLinea
- * lineas_emt[].getBuses
+ * lineas_emt[].cabeceraIda
+ * lineas_emt[].cabeceraVta
+ * lineas_emt[].paradasIda[]{codPar, orden}
+ * lineas_emt[].paradasVta[]{codPar, orden}
  * lineas_emt[].trazadoIda
  * lineas_emt[].trazadoVta
+ * lineas_emt[].getBuses
+ * lineas_emt[].getIda
+ * lineas_emt[].getVta
  */
 var autobuses = [];
 /* 
  * autobuses[].codBus
+ * autobuses[].codLinea
+ * autobuses[].sentido
+ * autobuses[].codParIni
+ * autobuses[].latitud
+ * autobuses[].longitud
  * autobuses[].marker
- * autobuses[].info
+ * autobuses[].popup
  * autobuses[].ttl
  */
+var paradas = [];
+/*
+ * paradas[].codPar
+ * paradas[].nombreParada
+ * paradas[].servicios[]{codLinea, sentido, espera}
+ * paradas[].latitud
+ * paradas[].longitud
+ * paradas[].marker
+ * paradas[].popup
+ */
 
-var bus_icon_white = L.icon({
-		iconUrl: url_white_icon,
-		iconAnchor: [15,35],
-		popupAnchor: [0, -35]
-	});
+/*var bus_icon_white = L.icon({
+	iconUrl: url_white_icon,
+	iconAnchor: [15, 15],
+	popupAnchor: [0, -15]
+});
 var bus_icon_red = L.icon({
-		iconUrl: url_red_icon,
-		iconAnchor: [15,35],
-		popupAnchor: [0, -35]
-	});;
+	iconUrl: url_red_icon,
+	iconAnchor: [15, 15],
+	popupAnchor: [0, -15]
+});
 var bus_icon_orange = L.icon({
-		iconUrl: url_orange_icon,
-		iconAnchor: [15,35],
-		popupAnchor: [0, -35]
-	});;
+	iconUrl: url_orange_icon,
+	iconAnchor: [15, 15],
+	popupAnchor: [0, -15]
+});
+var bus_stop_icon = L.icon({
+});*/
 
 $(document).ready(initMap());
 
@@ -84,7 +107,7 @@ function initMap() {
 	map = L.map('map', {
 		center: [36.7121977, -4.4370495],
 		zoom: 13,
-		preferCanvas: true,
+		preferCanvas: false,
 		closePopupOnClick: false
 	});
 	var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -130,9 +153,7 @@ function reducirTTL(){
 			autobuses[pos].marker.remove();
 			pos++;
 		}else if(autobuses[pos].ttl <= ttl_old){
-			if(autobuses[pos].marker.options.icon.options.iconUrl !== url_red_icon){
-				autobuses[pos].marker.setIcon(bus_icon_red);
-			}
+			autobuses[pos].marker.setIcon(busIconContent(autobuses[pos], 2));
 			pos++;
 		}else{
 			pos++;
@@ -160,6 +181,14 @@ function getLineas(){
 };
 
 function getTrazados(codLinea){
+	$("#botonIda"+codLinea).prop("indeterminate", false);
+	$("#botonIda"+codLinea).prop("disabled", true);
+	$("#botonIda"+codLinea).prop("checked", false);
+	$("#botonIda"+codLinea).off('click');
+	$("#botonVta"+codLinea).prop("indeterminate", false);
+	$("#botonVta"+codLinea).prop("disabled", true);
+	$("#botonVta"+codLinea).prop("checked", false);
+	$("#botonVta"+codLinea).off('click');
 	$.getJSON({
 		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea+'&sentido=1'
 	}).done(function (response, status){
@@ -169,20 +198,20 @@ function getTrazados(codLinea){
 			for(var a = 0; a < response.length; a++){
 				trazado.push({lat: response[a].latitud, lng: response[a].longitud});
 			}
-			/*lineas_emt[posLinea].trazadoIda = new google.maps.Polyline({
-				path: trazado,
-				strokeColor: '#1E3180',
-				strokeOpacity: 1.0,
-				strokeWeight: 3
-			});*/
 			lineas_emt[posLinea].trazadoIda = L.polyline(trazado, {
 				color: '#1E3180',
 				opacity: 1.0,
 				weight: 3
 			});
-			$("#botonIda"+codLinea).attr("disabled", false);
-			$("#botonIda"+codLinea).click(function(){
-				showTrazado(codLinea, 1);
+			$("#botonIda"+codLinea).prop("disabled", false);
+			$("#botonIda"+codLinea).prop("checked", false);
+			$("#botonIda"+codLinea).change(function(){
+				var isChecked = $(this).is(':checked');
+				if(isChecked){
+					showTrazado(codLinea, 1);
+				}else{
+					hideTrazado(codLinea, 1);
+				}
 			});
 		}
 	});
@@ -196,20 +225,20 @@ function getTrazados(codLinea){
 			for(var a = 0; a < response.length; a++){
 				trazado.push({lat: response[a].latitud, lng: response[a].longitud});
 			}
-			/*lineas_emt[posLinea].trazadoVta = new google.maps.Polyline({
-				path: trazado,
-				strokeColor: '#4876FE',
-				strokeOpacity: 1.0,
-				strokeWeight: 3
-			});*/
 			lineas_emt[posLinea].trazadoVta = L.polyline(trazado, {
 				color: '#4876FE',
 				opacity: 1.0,
 				weight: 3
 			});
-			$("#botonVta"+codLinea).attr("disabled", false);
-			$("#botonVta"+codLinea).click(function(){
-				showTrazado(codLinea, 2);
+			$("#botonVta"+codLinea).prop("disabled", false);
+			$("#botonVta"+codLinea).prop("checked", false);
+			$("#botonVta"+codLinea).change(function(){
+				var isChecked = $(this).is(':checked');
+				if(isChecked){
+					showTrazado(codLinea, 2);
+				}else{
+					hideTrazado(codLinea, 2);
+				}
 			});
 		}		
 	});
@@ -237,28 +266,22 @@ function addBus(Bus){
 	console.log("ADDED "+Bus.codBus);
 	var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
 	var data = {
-		/*marker: new google.maps.Marker({
-			position: coordenadas,
-			map: map,
-			icon: url_orange_icon
-		}),*/
 		marker: L.marker(coordenadas, {
-			icon: bus_icon_orange
+			//icon: bus_icon_orange
+			icon: busIconContent(Bus, 1)
 		}),
-		/*info: new google.maps.InfoWindow({
-			content: busInfoContent(Bus)
-		}),*/
 		popup: L.popup({autoPan: false, autoClose: false}).setContent(busInfoContent(Bus)),
-		codLinea: Bus.codLinea,
 		codBus: Bus.codBus,
+		codLinea: Bus.codLinea,
+		sentido: Bus.sentido,
+		codParIni: Bus.codParIni,
+		latitud: Bus.latitud,
+		longitud: Bus.longitud,
 		ttl: ttl_new
 	};
-	/*data.marker.addListener('click', function(){
-		pos = findBus(Bus.codBus);
-		autobuses[pos].info.open(map, autobuses[pos].marker);
-	})*/;
 	var pos = autobuses.push(data)-1;
 	autobuses[pos].marker.bindPopup(autobuses[pos].popup);
+	autobuses[pos].marker.addTo(map);
 }
 
 function updateBus(Bus, pos){
@@ -266,13 +289,16 @@ function updateBus(Bus, pos){
 	if(!autobuses[pos].marker.getLatLng().equals(coordenadas)){
 		autobuses[pos].marker.setLatLng(coordenadas);
 	}
+	autobuses[pos].codLinea = Bus.codLinea;
+	autobuses[pos].sentido = Bus.sentido;
+	autobuses[pos].codParIni = Bus.codParIni;
+	autobuses[pos].latitud = Bus.latitud;
+	autobuses[pos].longitud = Bus.longitud;
 	autobuses[pos].popup.setContent(busInfoContent(Bus));
 	autobuses[pos].marker.addTo(map);
 	if(autobuses[pos].ttl < default_ttl){
 		autobuses[pos].ttl = default_ttl;
-		if(autobuses[pos].marker.options.icon.options.iconUrl !== url_white_icon){
-				autobuses[pos].marker.setIcon(bus_icon_white);
-			}
+		autobuses[pos].marker.setIcon(busIconContent(autobuses[pos], 0));
 	}
 }
 
@@ -281,25 +307,50 @@ function addLinea(lin){
 		codLinea: lin.codLinea,
 		userCodLinea: lin.userCodLinea.replace(/^F-/, "F"),
 		nombreLinea: lin.nombreLinea.replace(/(\(F\))|(\(?F-[0-9A-Z]{1,2}\)$)/, ""),
+		cabeceraIda: lin.cabeceraIda, 
+		cabeceraVta: lin.cabeceraVuelta,
+		paradasIda: [],
+		paradasVta: [],
 		getIda: false,
 		getVta: false,
 		getBuses: false
 	};
+	for(var a = 0; a < lin.paradas.length; a++){
+		addParada(lin.paradas[a].parada, linea.codLinea, lin.paradas[a].sentido);
+		if(lin.paradas[a].sentido === 1){
+			linea.paradasIda.push({
+				codPar: lin.paradas[a].parada.codParada,
+				orden: lin.paradas[a].orden
+			});
+		}
+		if(lin.paradas[a].sentido === 2){
+			linea.paradasVta.push({
+				codPar: lin.paradas[a].parada.codParada,
+				orden: lin.paradas[a].orden
+			});
+		}
+	}
+	lineas_emt.push(linea);
+	//getTrazados(linea.codLinea);
+	
 	var fila = $("<tr>");
 	var botonIda = $("<input>", {
 		"type": "checkbox",
-		"id": "botonIda"+linea.codLinea,
-		"disabled": true
+		"id": "botonIda"+linea.codLinea
+	}).prop('checked', true).prop("indeterminate", true).click(function(){
+		getTrazados(linea.codLinea);
 	});
 	var botonVta = $("<input>", {
 		"type": "checkbox",
 		"id": "botonVta"+linea.codLinea,
-		"disabled": true
+		"checked": true
+	}).prop('checked', true).prop("indeterminate", true).click(function(){
+		getTrazados(linea.codLinea);
 	});
 	var botonBus = $("<input>", {
 		"type": "checkbox",
 		"id": "botonBus"+linea.codLinea
-	}).attr('checked', false).click(function(){
+	}).prop('checked', false).click(function(){
 		enableBusUpdate(linea.codLinea);
 	});
 	var id = $('<span>').addClass('fa-layers fa-fw fa-3x');
@@ -331,8 +382,34 @@ function addLinea(lin){
 	$(fila).append($("<td>").append($("<p>").attr('id', "cont"+linea.codLinea)));
 
 	$("#tablaLineas").append(fila);
-	lineas_emt.push(linea);
-	getTrazados(linea.codLinea);
+}
+
+function addParada(parada, codLinea, sentido){
+	var pos = findParada(parada.codParada);
+	if(pos !== null){
+		paradas[pos].servicios.push({
+			codLinea: codLinea,
+			sentido: sentido,
+			espera: null
+		});
+	}else{
+		pos = paradas.push({
+			codPar: parada.codParada,
+			nombreParada: parada.nombreParada,
+			servicios: [],
+			latitud: parada.latitud,
+			longitud: parada.longitud,
+			marker: L.marker({lat: parada.latitud, lng: parada.longitud}/*, {
+				icon: bus_stop_icon
+			}*/)
+		})-1;
+		paradas[pos].servicios.push({
+			codLinea: codLinea,
+			sentido: sentido,
+			espera: null
+		});
+		//paradas[pos].marker.addTo(map);
+	}
 }
 
 function enableBusUpdate(codLinea){
@@ -361,18 +438,18 @@ function disableBusUpdate(codLinea){
 function showTrazado(codLinea, sentido){
 	if(sentido === 1){
 		lineas_emt[findLinea(codLinea)].trazadoIda.addTo(map);
-		$("#botonIda"+codLinea).attr("checked", true);
+		/*$("#botonIda"+codLinea).attr("checked", true);
 		$("#botonIda"+codLinea).unbind("click");
 		$("#botonIda"+codLinea).click(function(){
 			hideTrazado(codLinea, sentido);
-		});
+		});*/
 	}else if(sentido === 2){
 		lineas_emt[findLinea(codLinea)].trazadoVta.addTo(map);
-		$("#botonVta"+codLinea).attr("checked", true);
+		/*$("#botonVta"+codLinea).attr("checked", true);
 		$("#botonVta"+codLinea).unbind("click");
 		$("#botonVta"+codLinea).click(function(){
 			hideTrazado(codLinea, sentido);
-		});
+		});*/
 	}
 }
 
@@ -443,6 +520,23 @@ function findBus(codBus){
 	}
 }
 
+function findParada(codPar){
+	var pos = 0;
+	var found = false;
+	while(pos < paradas.length && !found){
+		if(paradas[pos].codPar === codPar){
+			found = true;
+		}else{
+			pos++;
+		}
+	}
+	if(pos >= paradas.length){
+		return null;
+	}else{
+		return pos;
+	}
+}
+
 /**
  * Devuelve el contenido HTML de una ventana de información adicional de autobús
  * @param {Bus} Bus
@@ -467,6 +561,41 @@ function busInfoContent(Bus){
 	"Sentido: "+sentido;
 }
 
+function busIconContent(Bus, estado){
+	var linea = lineas_emt[findLinea(Bus.codLinea)].userCodLinea;
+	var html = linea+"<br>"+Bus.codBus;
+	var clase;
+	switch (Bus.sentido){
+		case 1:
+			clase = 'bus-marker bus-ida';
+			break;
+		case 2:
+			clase = 'bus-marker bus-vta';
+			break;
+		default:
+			clase = 'bus-marker bus-other';
+			break;
+	}
+	switch (estado){
+		case 1:
+			clase += ' bus-new';
+			break;
+		case 2:
+			clase += ' bus-lost';
+			break;
+		default:
+			clase += ' bus-normal';
+			break;
+	}
+	return L.divIcon({
+		className: clase,
+		iconSize: [37, 34],
+		iconAnchor: [5, 2],
+		popupAnchor: [13, -2],
+		html: html
+	});
+}
+
 /**
  * Recoge un elemento del DOM y lo devuelve rellenado con el HTML adecuado de la barra de control
  * @param {DOM Element} mapDiv
@@ -474,7 +603,7 @@ function busInfoContent(Bus){
  */
 function ControlRUTPAM(mapDiv){
 	var layer = $("<div>", {"id":"layer"});
-	var titulo = $("<p>").append($("<b>", {"text":"RUTPAM"})).append($("<span>", {"text":" v4.1 Beta"}));
+	var titulo = $("<p>").append($("<b>", {"text":"RUTPAM"})).append($("<span>", {"text":" v4.3"}));
 	var descripcion = $("<p>", {"text":"Seguimiento buses EMT en tiempo real"});
 	$(layer).append(titulo).append(descripcion);
 	

@@ -25,7 +25,7 @@
  */
 ?>
 <head>
-    <title>RUTPAM 4.1 Beta</title>
+    <title>RUTPAM 4.3</title>
 	<link rel="shorcut icon" type="image/png" href="./assets/favicon.png">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik">
 	<link rel="stylesheet" href="assets/leaflet.css"/>
@@ -37,9 +37,8 @@
     <meta charset="utf-8">
 </head>
 <body>
-<div id="map">Aquí debería ir el mapa</div>
-<div id="over_map" class="padding">
-</div>
+<div id="map"></div>
+<div id="over_map" class="padding"></div>
 <script>
 var site_url = '/RUTPAM';
 var url_white_icon = site_url+'/assets/img/white_bus.png';

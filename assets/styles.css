@@ -52,9 +52,38 @@ p{
 	padding: 5px;
 	overflow-y: auto;
 	max-height: 93%;
+	width: 300px
 }
 .boton{
 	background-color: white;
 	border: 1px solid lightgray;
 	padding: 3px;
+}
+input[type=checkbox]{
+	transform: scale(1.5);
+	/*margin: 0;*/
+}
+.bus-marker{
+	text-align: center;
+	border-width: 5px;
+	border-color: black;
+	border-radius: 15%;
+}
+.bus-new{
+	color: lime;
+}
+.bus-normal{
+	color: white;
+}
+.bus-lost{
+	color: #ff4747;
+}
+.bus-ida{
+	background-color: #262C72;
+}
+.bus-vta{
+	background-color: #4876FE;
+}
+.bus-other{
+	background-color: black;
 }
