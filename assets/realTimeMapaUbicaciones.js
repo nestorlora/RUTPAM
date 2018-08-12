@@ -543,20 +543,20 @@ function findParada(codPar){
  * @returns {String}
  */
 function busInfoContent(Bus){
-	var linea = lineas_emt[findLinea(Bus.codLinea)].userCodLinea;
+	var linea = lineas_emt[findLinea(Bus.codLinea)];
 	var sentido;
 	switch(Bus.sentido){
-		case 1:
-			sentido = "Ida";
+		case 1: // Ida
+			sentido = linea.cabeceraVta;
 			break;
-		case 2:
-			sentido = "Vuelta";
+		case 2: // Vuelta
+			sentido = linea.cabeceraIda;
 			break;
 		default:
-			sentido = "Desconocido";
+			sentido = "¿? Desconocido ¿?";
 	}
 	return "Bus: "+Bus.codBus+"<br>"+
-	"Línea: "+linea+"<br>"+
+	"Línea: "+linea.userCodLinea+"<br>"+
 	"Última parada realizada: "+Bus.codParIni+"<br>"+
 	"Sentido: "+sentido;
 }
@@ -603,7 +603,7 @@ function busIconContent(Bus, estado){
  */
 function ControlRUTPAM(mapDiv){
 	var layer = $("<div>", {"id":"layer"});
-	var titulo = $("<p>").append($("<b>", {"text":"RUTPAM"})).append($("<span>", {"text":" v4.3"}));
+	var titulo = $("<p>").append($("<b>", {"text":"RUTPAM"})).append($("<span>", {"text":" v4.4"}));
 	var descripcion = $("<p>", {"text":"Seguimiento buses EMT en tiempo real"});
 	$(layer).append(titulo).append(descripcion);
 	
