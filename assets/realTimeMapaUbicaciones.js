@@ -25,6 +25,7 @@
 /* global emt_proxy_url, url_red_icon, url_orange_icon, url_white_icon, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L */
 
 var rutpam_version = "4.5";
+var rutpam_credits = 'R.U.T.P.A.M. v'+rutpam_version+'  © Néstor M. Lora - 2018<br>Datos cartográficos © Colaboradores de <a href="https://openstreetmap.org">OpenStreetMap</a><br>Información de líneas © Empresa Malagueña de Transportes S.A.M.';
 var timer;
 var map;
 var ttl_new = ttl_rate_new/refresh_rate; //Tiempo de vida para buses nuevos (naranjas)(al alcanzar default_ttl se vuelven blancos)
@@ -108,16 +109,14 @@ function initMap() {
 			position: google.maps.ControlPosition.TOP_RIGHT
 		}
 	});*/
+	var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+	var osm = new L.TileLayer(osmUrl, {attribution: rutpam_credits});
 	map = L.map('map', {
 		center: [36.7121977, -4.4370495],
 		zoom: 13,
-		preferCanvas: false,
-		closePopupOnClick: false
+		closePopupOnClick: false,
+		layers: osm
 	});
-	var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-	var osmAttrib = 'RUTPAM v3.4 © Néstor Lora - 2018 | Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
-	var osm = new L.TileLayer(osmUrl, {/*minZoom: 8,*/ maxZoom: 18, attribution: osmAttrib});
-	map.addLayer(osm);
 	
 	$("#over_map").html(ControlRUTPAM($("<div>")));
 }
