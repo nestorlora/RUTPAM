@@ -25,7 +25,6 @@
  */
 ?>
 <head>
-    <title>RUTPAM 4.4</title>
 	<link rel="shorcut icon" type="image/png" href="./assets/favicon.png">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik">
 	<link rel="stylesheet" href="assets/leaflet.css"/>

@@ -24,6 +24,7 @@
 
 /* global emt_proxy_url, url_red_icon, url_orange_icon, url_white_icon, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L */
 
+var rutpam_version = "4.5";
 var timer;
 var map;
 var ttl_new = ttl_rate_new/refresh_rate; //Tiempo de vida para buses nuevos (naranjas)(al alcanzar default_ttl se vuelven blancos)
@@ -85,7 +86,10 @@ var bus_icon_orange = L.icon({
 var bus_stop_icon = L.icon({
 });*/
 
-$(document).ready(initMap());
+$(document).ready(function(){
+	initMap();
+	document.title = "RUTPAM "+rutpam_version;
+});
 
 function initMap() {
 	/*map = new google.maps.Map(document.getElementById('map'), {
@@ -603,7 +607,7 @@ function busIconContent(Bus, estado){
  */
 function ControlRUTPAM(mapDiv){
 	var layer = $("<div>", {"id":"layer"});
-	var titulo = $("<p>").append($("<b>", {"text":"RUTPAM"})).append($("<span>", {"text":" v4.4"}));
+	var titulo = $("<p>").append($("<b>", {"text":"RUTPAM"}));
 	var descripcion = $("<p>", {"text":"Seguimiento buses EMT en tiempo real"});
 	$(layer).append(titulo).append(descripcion);
 	
