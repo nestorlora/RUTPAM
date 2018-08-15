@@ -69,23 +69,6 @@ var paradas = [];
  * paradas[].popup
  */
 
-/*var bus_icon_white = L.icon({
-	iconUrl: url_white_icon,
-	iconAnchor: [15, 15],
-	popupAnchor: [0, -15]
-});
-var bus_icon_red = L.icon({
-	iconUrl: url_red_icon,
-	iconAnchor: [15, 15],
-	popupAnchor: [0, -15]
-});
-var bus_icon_orange = L.icon({
-	iconUrl: url_orange_icon,
-	iconAnchor: [15, 15],
-	popupAnchor: [0, -15]
-});
-var bus_stop_icon = L.icon({
-});*/
 
 $(document).ready(function(){
 	initMap();
@@ -93,22 +76,6 @@ $(document).ready(function(){
 });
 
 function initMap() {
-	/*map = new google.maps.Map(document.getElementById('map'), {
-		center: {lat: 36.7121977, lng: -4.4370495},
-		zoom: 13,
-		scrollwheel: true,
-		streeViewControl: false,
-		styles:[
-			{
-				featureType: "transit.station.bus",
-				stylers: [{visibility: "off"}]
-			}
-		],
-		mapTypeControlOptions: {
-			style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-			position: google.maps.ControlPosition.TOP_RIGHT
-		}
-	});*/
 	var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 	var osm = new L.TileLayer(osmUrl, {attribution: rutpam_credits});
 	map = L.map('map', {
@@ -270,7 +237,6 @@ function addBus(Bus){
 	var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
 	var data = {
 		marker: L.marker(coordenadas, {
-			//icon: bus_icon_orange
 			icon: busIconContent(Bus, 1)
 		}),
 		popup: L.popup({autoPan: false, autoClose: false}).setContent(busInfoContent(Bus)),
