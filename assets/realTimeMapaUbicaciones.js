@@ -633,3 +633,7 @@ function ControlRUTPAM(mapDiv){
 	$(mapDiv).append(layer);
 	return mapDiv;
 }
+
+function closeInfo(){
+	$("#ventana").hide();
+}
