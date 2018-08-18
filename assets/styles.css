@@ -62,7 +62,6 @@ p{
 }
 input[type=checkbox]{
 	transform: scale(1.5);
-	/*margin: 0;*/
 }
 .bus-marker{
 	text-align: center;
