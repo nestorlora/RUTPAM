@@ -85,7 +85,7 @@ function initMap() {
 		layers: osm
 	});
 	
-	$("#over_map").html(ControlRUTPAM($("<div>")));
+	$("#lineas").html(ControlRUTPAM($("<div>")));
 }
 
 function motor(){

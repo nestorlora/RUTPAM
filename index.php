@@ -37,7 +37,7 @@
 </head>
 <body>
 <div id="map"></div>
-<div id="over_map" class="padding"></div>
+<div id="lineas" class="cuadroFlotante panelLineas"></div>
 <script>
 var site_url = '/RUTPAM';
 var url_white_icon = site_url+'/assets/img/white_bus.png';
