@@ -489,6 +489,11 @@ function findBus(codBus){
 	}
 }
 
+/**
+ * Busca la posición de ua parada dentro de paradas[]
+ * @param {Number} codPar
+ * @returns {Number} Posición en paradas[]
+ */
 function findParada(codPar){
 	var pos = 0;
 	var found = false;
