@@ -37,6 +37,16 @@
 </head>
 <body>
 <div id="map"></div>
+<div id="ventana" class="cuadroFlotante panelInfo">
+	<button style="position: inherit; right: 0px; margin-left: 10px;" class="fa-layers fa-fw" onclick="closeInfo();">
+		<i class="fas fa-circle" style="color: black"></i>
+		<span class="fa-layers-text fa-inverse" data-fa-transform="shrink-4">X</span>
+	</button> 
+	<div id="infoContent">
+		<b>Título</b><br>
+		Contenido
+	</div>
+</div>
 <div id="lineas" class="cuadroFlotante panelLineas"></div>
 <script>
 var site_url = '/RUTPAM';

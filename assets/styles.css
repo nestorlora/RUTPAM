@@ -55,6 +55,12 @@ p{
 	z-index: 200;
 	width: 300px
 }
+.panelInfo {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	z-index: 300;
+}
 .boton{
 	background-color: white;
 	border: 1px solid lightgray;
