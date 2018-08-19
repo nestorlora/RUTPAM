@@ -1,7 +1,7 @@
 /* 
  * The MIT License
  *
- * Copyright 2018 Nestor Manuel Lora Romero <nestorlora@gmail.com>.
+ * Copyright 2018 Nestor Manuel Lora Romero <nestorlora@geeklab.es>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,8 @@
 
 /* global emt_proxy_url, url_red_icon, url_orange_icon, url_white_icon, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L */
 
+var rutpam_version = "4.5";
+var rutpam_credits = 'R.U.T.P.A.M. v'+rutpam_version+'  © Néstor M. Lora - 2018<br>Datos cartográficos © Colaboradores de <a href="https://openstreetmap.org">OpenStreetMap</a><br>Información de líneas © Empresa Malagueña de Transportes S.A.M.';
 var timer;
 var map;
 var ttl_new = ttl_rate_new/refresh_rate; //Tiempo de vida para buses nuevos (naranjas)(al alcanzar default_ttl se vuelven blancos)
@@ -67,55 +69,23 @@ var paradas = [];
  * paradas[].popup
  */
 
-/*var bus_icon_white = L.icon({
-	iconUrl: url_white_icon,
-	iconAnchor: [15, 15],
-	popupAnchor: [0, -15]
-});
-var bus_icon_red = L.icon({
-	iconUrl: url_red_icon,
-	iconAnchor: [15, 15],
-	popupAnchor: [0, -15]
-});
-var bus_icon_orange = L.icon({
-	iconUrl: url_orange_icon,
-	iconAnchor: [15, 15],
-	popupAnchor: [0, -15]
-});
-var bus_stop_icon = L.icon({
-});*/
 
-$(document).ready(initMap());
+$(document).ready(function(){
+	initMap();
+	document.title = "RUTPAM "+rutpam_version;
+});
 
 function initMap() {
-	/*map = new google.maps.Map(document.getElementById('map'), {
-		center: {lat: 36.7121977, lng: -4.4370495},
-		zoom: 13,
-		scrollwheel: true,
-		streeViewControl: false,
-		styles:[
-			{
-				featureType: "transit.station.bus",
-				stylers: [{visibility: "off"}]
-			}
-		],
-		mapTypeControlOptions: {
-			style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-			position: google.maps.ControlPosition.TOP_RIGHT
-		}
-	});*/
+	var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+	var osm = new L.TileLayer(osmUrl, {attribution: rutpam_credits});
 	map = L.map('map', {
 		center: [36.7121977, -4.4370495],
 		zoom: 13,
-		preferCanvas: false,
-		closePopupOnClick: false
+		closePopupOnClick: false,
+		layers: osm
 	});
-	var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-	var osmAttrib = 'RUTPAM v3.4 © Néstor Lora - 2018 | Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
-	var osm = new L.TileLayer(osmUrl, {/*minZoom: 8,*/ maxZoom: 18, attribution: osmAttrib});
-	map.addLayer(osm);
 	
-	$("#over_map").html(ControlRUTPAM($("<div>")));
+	$("#lineas").html(ControlRUTPAM($("<div>")));
 }
 
 function motor(){
@@ -267,7 +237,6 @@ function addBus(Bus){
 	var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
 	var data = {
 		marker: L.marker(coordenadas, {
-			//icon: bus_icon_orange
 			icon: busIconContent(Bus, 1)
 		}),
 		popup: L.popup({autoPan: false, autoClose: false}).setContent(busInfoContent(Bus)),
@@ -376,9 +345,7 @@ function addLinea(lin){
 	$(fila).append($("<td>").append(botonVta));
 	$(fila).append($("<td>").append(botonBus));
 	$(fila).append($("<td>").append(id));
-	$(fila).append($("<td>", {
-		"text": linea.nombreLinea
-	}));
+	$(fila).append($("<td>").append($("<a>", {text: linea.nombreLinea, href: "#!"})).click(function(){verInfoLínea(linea.codLinea);}));
 	$(fila).append($("<td>").append($("<p>").attr('id', "cont"+linea.codLinea)));
 
 	$("#tablaLineas").append(fila);
@@ -410,6 +377,51 @@ function addParada(parada, codLinea, sentido){
 		});
 		//paradas[pos].marker.addTo(map);
 	}
+}
+
+function verInfoLínea(id){
+	var linea = lineas_emt[findLinea(id)];
+	$("#ventana").hide();
+	$("#infoContent").empty();
+	$("#infoContent").append($("<p>").css("text-align", "center").append($("<b>", {text: "Información línea "+linea.userCodLinea})));
+	$("#infoContent").append($("<p>", {text: linea.nombreLinea}).css("text-align", "center"));
+	var tabla = $("<table>");
+	var cabecera = $("<tr>");
+	if(linea.cabeceraVta !== null){
+		cabecera.append($("<th>", {text: "Sentido"}).append($("<br>")).append(linea.cabeceraVta));
+		cabecera.append($("<th>", {text: "Sentido"}).append($("<br>")).append(linea.cabeceraIda));
+	}else{
+		cabecera.append($("<th>", {text: "Sentido"}).append($("<br>")).append(linea.cabeceraIda));
+	}
+	tabla.append(cabecera);
+	for(var a = 0; a <= Math.max(linea.paradasIda.length, linea.paradasVta.length); a++){
+		var fila = $("<tr>");
+		if(a < linea.paradasIda.length){
+			var codPar = linea.paradasIda[a].codPar;
+			var nombre = paradas[findParada(codPar)].nombreParada;
+			fila.append($("<td>", {text: codPar+" - "+nombre}));
+		}else if(a === linea.paradasIda.length && linea.cabeceraVta !== null){
+			var codPar = linea.paradasVta[0].codPar;
+			var nombre = paradas[findParada(codPar)].nombreParada;
+			fila.append($("<td>", {text: codPar+" - "+nombre}));
+		}else{
+			fila.append($("<td>"));
+		}
+		if(a < linea.paradasVta.length){
+			var codPar = linea.paradasVta[a].codPar;
+			var nombre = paradas[findParada(codPar)].nombreParada;
+			fila.append($("<td>", {text: codPar+" - "+nombre}));
+		}else if(a === linea.paradasVta.length && linea.cabeceraVta !== null){
+			var codPar = linea.paradasIda[0].codPar;
+			var nombre = paradas[findParada(codPar)].nombreParada;
+			fila.append($("<td>", {text: codPar+" - "+nombre}));
+		}else{
+			fila.append($("<td>"));
+		}
+		tabla.append(fila);
+	}
+	$("#infoContent").append(tabla);
+	$("#ventana").show();
 }
 
 function enableBusUpdate(codLinea){
@@ -520,6 +532,11 @@ function findBus(codBus){
 	}
 }
 
+/**
+ * Busca la posición de ua parada dentro de paradas[]
+ * @param {Number} codPar
+ * @returns {Number} Posición en paradas[]
+ */
 function findParada(codPar){
 	var pos = 0;
 	var found = false;
@@ -603,7 +620,7 @@ function busIconContent(Bus, estado){
  */
 function ControlRUTPAM(mapDiv){
 	var layer = $("<div>", {"id":"layer"});
-	var titulo = $("<p>").append($("<b>", {"text":"RUTPAM"})).append($("<span>", {"text":" v4.4"}));
+	var titulo = $("<p>").append($("<b>", {"text":"RUTPAM"}));
 	var descripcion = $("<p>", {"text":"Seguimiento buses EMT en tiempo real"});
 	$(layer).append(titulo).append(descripcion);
 	
@@ -658,4 +675,8 @@ function ControlRUTPAM(mapDiv){
 	
 	$(mapDiv).append(layer);
 	return mapDiv;
+}
+
+function closeInfo(){
+	$("#ventana").hide();
 }

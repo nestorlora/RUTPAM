@@ -3,7 +3,7 @@
 /*
  * The MIT License
  *
- * Copyright 2018 Nestor Manuel Lora Romero <nestorlora@gmail.com>.
+ * Copyright 2018 Nestor Manuel Lora Romero <nestorlora@geeklab.es>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@
  */
 ?>
 <head>
-    <title>RUTPAM 4.4</title>
 	<link rel="shorcut icon" type="image/png" href="./assets/favicon.png">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik">
 	<link rel="stylesheet" href="assets/leaflet.css"/>
@@ -38,7 +37,14 @@
 </head>
 <body>
 <div id="map"></div>
-<div id="over_map" class="padding"></div>
+<div id="ventana" class="cuadroFlotante panelInfo">
+	<button style="position: inherit; right: 0px; margin-left: 10px;" class="fa-layers fa-fw" onclick="closeInfo();">
+		<i class="fas fa-circle" style="color: black"></i>
+		<span class="fa-layers-text fa-inverse" data-fa-transform="shrink-4">X</span>
+	</button> 
+	<div id="infoContent"></div>
+</div>
+<div id="lineas" class="cuadroFlotante panelLineas"></div>
 <script>
 var site_url = '/RUTPAM';
 var url_white_icon = site_url+'/assets/img/white_bus.png';
@@ -50,5 +56,5 @@ var ttl_rate_default = 60;
 var ttl_rate_new = ttl_rate_default+30;
 var ttl_rate_old = ttl_rate_default-15;
 </script>
-<script src="./assets/realTimeMapaUbicaciones.js"></script>
+<script src="./assets/rutpam.js"></script>
 </body>
