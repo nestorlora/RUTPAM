@@ -64,11 +64,19 @@ a{
 	top: 10px;
 	left: 10px;
 	z-index: 300;
+	display:none;
 }
 .boton{
 	background-color: white;
 	border: 1px solid lightgray;
 	padding: 3px;
+}
+.botonCierre{
+	position: inherit;
+	right: 0px;
+	margin-left: 10px;
+	border: none;
+	background-color: transparent;
 }
 input[type=checkbox]{
 	transform: scale(1.5);
