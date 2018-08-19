@@ -30,7 +30,7 @@
 	<link rel="stylesheet" href="assets/leaflet.css"/>
 	<script src="assets/leaflet.js"></script>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.11/js/all.js"></script>
 	<link rel="stylesheet" href="./assets/styles.css">
 	<meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
