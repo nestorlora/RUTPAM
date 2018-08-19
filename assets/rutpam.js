@@ -25,7 +25,6 @@
 /* global emt_proxy_url, url_red_icon, url_orange_icon, url_white_icon, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L */
 
 var rutpam_version = "4.5";
-var rutpam_credits = 'R.U.T.P.A.M. v'+rutpam_version+'  © Néstor M. Lora - 2018<br>Datos cartográficos © Colaboradores de <a href="https://openstreetmap.org">OpenStreetMap</a><br>Información de líneas © Empresa Malagueña de Transportes S.A.M.';
 var timer;
 var map;
 var ttl_new = ttl_rate_new/refresh_rate; //Tiempo de vida para buses nuevos (naranjas)(al alcanzar default_ttl se vuelven blancos)
@@ -77,15 +76,17 @@ $(document).ready(function(){
 
 function initMap() {
 	var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-	var osm = new L.TileLayer(osmUrl, {attribution: rutpam_credits});
+	var osm = new L.TileLayer(osmUrl);
 	map = L.map('map', {
 		center: [36.7121977, -4.4370495],
 		zoom: 13,
 		closePopupOnClick: false,
-		layers: osm
+		layers: osm,
+		attributionControl: false
 	});
 	
 	$("#lineas").html(ControlRUTPAM($("<div>")));
+	verCopyright();
 }
 
 function motor(){
@@ -675,6 +676,28 @@ function ControlRUTPAM(mapDiv){
 	
 	$(mapDiv).append(layer);
 	return mapDiv;
+}
+
+function verCopyright(){
+	var rutpam_credits = 'R.U.T.P.A.M. v'+rutpam_version+'<br>\n\
+	Licencia MIT © Néstor M. Lora - 2018<br>\n\
+	<a href="mailto:nestorlora@geeklab.es">nestorlora@geeklab.es</a><br><br>\n\
+	Datos cartográficos: <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i><i class="fab fa-creative-commons-sa"></i> Colaboradores de <a href="https://openstreetmap.org">OpenStreetMap</a><br>\n\
+	Información de líneas: Empresa Malagueña de Transportes S.A.M.<br><br>\n\
+	Construido con <i title="HTML 5" class="fab fa-html5 fa-2x fa-fw" style="color: orangered"></i> \n\
+	<i title="CSS 3" class="fab fa-css3-alt fa-2x fa-fw" style="color: dodgerblue"></i> \n\
+	<span title="JavaScript" class="fa-2x fa-layers fa-fw">\n\
+	<i class="fas fa-square" style="color: black"></i>\n\
+	<i class="fab fa-js" style="color: yellow"></i>\n\
+	</span>\n\
+	jQuery <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> \n\
+	<i title="Font Awesome" class="fab fa-font-awesome fa-2x fa-fw" style="color: dodgerblue"></i><br>\n\
+	Consulta el repositorio en <a href="https://github.com/nestorlora/RUTPAM">Github<i class="fab fa-github fa-fw" style="color: indigo"></i></a>';
+	$("#ventana").hide();
+	$("#infoContent").empty();
+	$("#infoContent").append($("<p>").css("text-align", "center").append($("<b>", {text: "Información"})));
+	$("#infoContent").append($("<p>", {html: rutpam_credits}).css("text-align", "center"));
+	$("#ventana").show();
 }
 
 function closeInfo(){
