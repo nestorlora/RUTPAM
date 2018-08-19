@@ -38,10 +38,7 @@
 <body>
 <div id="map"></div>
 <div id="ventana" class="cuadroFlotante panelInfo">
-	<button class="botonCierre fa-layers fa-fw" onclick="closeInfo();">
-		<i class="fas fa-circle" style="color: black"></i>
-		<span class="fa-layers-text fa-inverse" data-fa-transform="shrink-4">&#x274C;</span>
-	</button> 
+	<button class="botonCierre" onclick="closeInfo();">&#x274C;</button> 
 	<div id="infoContent"></div>
 </div>
 <div id="lineas" class="cuadroFlotante panelLineas"></div>
