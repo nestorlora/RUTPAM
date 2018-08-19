@@ -543,6 +543,20 @@ function findParada(codPar){
 	}
 }
 
+function extrarCorrespondencias(div, codPar, codLinea){
+	$(div).css("max-width", "73px");
+	var parada = paradas[findParada(codPar)];
+	var cont = 0;
+	for(var a = 0; a < parada.servicios.length; a++){
+		var servicio = parada.servicios[a].codLinea;
+		if(servicio !== codLinea){
+			linea = lineas_emt[findLinea(servicio)];
+			$(div).append(lineaIcon(linea.userCodLinea, "2x"));
+		}
+	}
+	return div;
+}
+
 function lineaIcon(userCodLinea, zoom){
 	var id = $('<span>').addClass('fa-layers fa-'+zoom);
 	if(/^C[1-9]/.test(userCodLinea)){ // Circulares
