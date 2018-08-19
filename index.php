@@ -42,10 +42,7 @@
 		<i class="fas fa-circle" style="color: black"></i>
 		<span class="fa-layers-text fa-inverse" data-fa-transform="shrink-4">X</span>
 	</button> 
-	<div id="infoContent">
-		<b>Título</b><br>
-		Contenido
-	</div>
+	<div id="infoContent"></div>
 </div>
 <div id="lineas" class="cuadroFlotante panelLineas"></div>
 <script>
