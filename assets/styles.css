@@ -38,6 +38,10 @@ table{
 p{
 	margin: 3px;
 }
+a{
+	color: blue;
+	text-decoration-style: dotted;
+}
 #map {
 	height: 100%;
 	z-index: 1;

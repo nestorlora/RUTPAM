@@ -345,7 +345,7 @@ function addLinea(lin){
 	$(fila).append($("<td>").append(botonVta));
 	$(fila).append($("<td>").append(botonBus));
 	$(fila).append($("<td>").append(id));
-	$(fila).append($("<td>").append($("<a>", {text: linea.nombreLinea})).click(function(){verInfoLínea(linea.codLinea);}));
+	$(fila).append($("<td>").append($("<a>", {text: linea.nombreLinea, href: "#!"})).click(function(){verInfoLínea(linea.codLinea);}));
 	$(fila).append($("<td>").append($("<p>").attr('id', "cont"+linea.codLinea)));
 
 	$("#tablaLineas").append(fila);
