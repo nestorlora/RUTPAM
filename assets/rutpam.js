@@ -543,6 +543,29 @@ function findParada(codPar){
 	}
 }
 
+function lineaIcon(userCodLinea, zoom){
+	var id = $('<span>').addClass('fa-layers fa-fw fa-'+zoom);
+	if(/^C[1-9]/.test(userCodLinea)){ // Circulares
+		id.append($('<i>').addClass('fas fa-circle').css("color", "F77F00"));
+	}else if(/^N[1-9]/.test(userCodLinea)){ // Nocturno
+		id.append($('<i>').addClass('fas fa-circle').css("color", "04151F"));
+	}else if(/^A$|^E$|^L$/.test(userCodLinea)){ // Lineas Exprés y Lanzaderas
+		id.append($('<i>').addClass('fas fa-circle').css("color", "AA1155"));
+	}else if(/^91$|^92$/.test(userCodLinea)){ // Servicios Turísticos
+		id.append($('<i>').addClass('fas fa-circle').css("color", "62A87C"));
+	}else if(/^12$|^16$|^26$|^64$|^[A-Z]/.test(userCodLinea)){ // Servicios Especiales
+		id.append($('<i>').addClass('fas fa-circle').css("color", "D62828"));
+	}else{ // Líneas Convencionales
+		id.append($('<i>').addClass('fas fa-circle').css("color", "262C72"));
+	}
+	if(userCodLinea.length < 3){
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-6"));
+	}else{
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-8"));
+	}
+	return id;
+}
+
 /**
  * Devuelve el contenido HTML de una ventana de información adicional de autobús
  * @param {Bus} Bus
@@ -565,29 +588,6 @@ function busInfoContent(Bus){
 	"Línea: "+linea.userCodLinea+"<br>"+
 	"Última parada realizada: "+Bus.codParIni+"<br>"+
 	"Sentido: "+sentido;
-}
-
-function lineaIcon(userCodLinea, zoom){
-	var id = $('<span>').addClass('fa-layers fa-fw fa-'+zoom);
-	if(/^C[1-9]/.test(userCodLinea)){ // Circulares
-		id.append($('<i>').addClass('fas fa-circle').css("color", "F77F00"));
-	}else if(/^N[1-9]/.test(userCodLinea)){ // Nocturno
-		id.append($('<i>').addClass('fas fa-circle').css("color", "04151F"));
-	}else if(/^A$|^E$|^L$/.test(userCodLinea)){ // Lineas Exprés y Lanzaderas
-		id.append($('<i>').addClass('fas fa-circle').css("color", "AA1155"));
-	}else if(/^91$|^92$/.test(userCodLinea)){ // Servicios Turísticos
-		id.append($('<i>').addClass('fas fa-circle').css("color", "62A87C"));
-	}else if(/^12$|^16$|^26$|^64$|^[A-Z]/.test(userCodLinea)){ // Servicios Especiales
-		id.append($('<i>').addClass('fas fa-circle').css("color", "D62828"));
-	}else{ // Líneas Convencionales
-		id.append($('<i>').addClass('fas fa-circle').css("color", "262C72"));
-	}
-	if(userCodLinea.length < 3){
-		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-6"));
-	}else{
-		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-8"));
-	}
-	return id;
 }
 
 function busIconContent(Bus, estado){
