@@ -620,10 +620,9 @@ function busIconContent(Bus, estado){
  * @returns {DOM Element}
  */
 function ControlRUTPAM(mapDiv){
-	var layer = $("<div>", {"id":"layer"});
 	var titulo = $("<p>").append($("<b>", {"text":"RUTPAM"}));
 	var descripcion = $("<p>", {"text":"Seguimiento buses EMT en tiempo real"});
-	$(layer).append(titulo).append(descripcion);
+	$(mapDiv).append(titulo).append(descripcion);
 	
 	var obtenerLineas = $("<button>", {
 		"id": "getLineas",
@@ -662,19 +661,16 @@ function ControlRUTPAM(mapDiv){
 		stop();
 	});
 	pause.css("display", "none");
-	$(layer).append(obtenerLineas).append(play).append(refresh).append(pause);
 	
+	$(mapDiv).append(obtenerLineas).append(play).append(refresh).append(pause);
 	var tabla = $("<table>", {
 		"id": "tablaLineas"
 	});
-	
 	var encabezado = $("<tr>");
 	$(encabezado).html('<th>Ida</th><th>Vta</th><th>Bus</th><th colspan="2">Línea</th><th>NºB.</th>');
-	
 	$(tabla).append(encabezado);
-	$(layer).append($("<div>", {"class": "scroll"}).append(tabla));
 	
-	$(mapDiv).append(layer);
+	$(mapDiv).append(tabla);
 	return mapDiv;
 }
 
