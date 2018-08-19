@@ -390,8 +390,8 @@ function verInfoLínea(id){
 	var tabla = $("<table>");
 	var cabecera = $("<tr>");
 	if(linea.cabeceraVta !== null){
-		cabecera.append($("<th>", {text: "Sentido"}).append($("<br>")).append(linea.cabeceraVta));
-		cabecera.append($("<th>", {text: "Sentido"}).append($("<br>")).append(linea.cabeceraIda));
+		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 2).append($("<br>")).append(linea.cabeceraVta));
+		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 2).append($("<br>")).append(linea.cabeceraIda));
 	}else{
 		cabecera.append($("<th>", {text: "Sentido"}).append($("<br>")).append(linea.cabeceraIda));
 	}
@@ -401,23 +401,29 @@ function verInfoLínea(id){
 		if(a < linea.paradasIda.length){
 			var codPar = linea.paradasIda[a].codPar;
 			var nombre = paradas[findParada(codPar)].nombreParada;
-			fila.append($("<td>", {text: codPar+" - "+nombre}));
+			fila.append($("<td>", {text: codPar}));
+			fila.append($("<td>", {text: nombre}));
 		}else if(a === linea.paradasIda.length && linea.cabeceraVta !== null){
 			var codPar = linea.paradasVta[0].codPar;
 			var nombre = paradas[findParada(codPar)].nombreParada;
-			fila.append($("<td>", {text: codPar+" - "+nombre}));
+			fila.append($("<td>", {text: codPar}));
+			fila.append($("<td>", {text: nombre}));
 		}else{
+			fila.append($("<td>"));
 			fila.append($("<td>"));
 		}
 		if(a < linea.paradasVta.length){
 			var codPar = linea.paradasVta[a].codPar;
 			var nombre = paradas[findParada(codPar)].nombreParada;
-			fila.append($("<td>", {text: codPar+" - "+nombre}));
+			fila.append($("<td>", {text: codPar}));
+			fila.append($("<td>", {text: nombre}));
 		}else if(a === linea.paradasVta.length && linea.cabeceraVta !== null){
 			var codPar = linea.paradasIda[0].codPar;
 			var nombre = paradas[findParada(codPar)].nombreParada;
-			fila.append($("<td>", {text: codPar+" - "+nombre}));
+			fila.append($("<td>", {text: codPar}));
+			fila.append($("<td>", {text: nombre}));
 		}else{
+			fila.append($("<td>"));
 			fila.append($("<td>"));
 		}
 		tabla.append(fila);
