@@ -324,29 +324,10 @@ function addLinea(lin){
 	}).prop('checked', false).click(function(){
 		enableBusUpdate(linea.codLinea);
 	});
-	var id = $('<span>').addClass('fa-layers fa-fw fa-3x');
-	if(/^C[1-9]/.test(linea.userCodLinea)){ // Circulares
-		id.append($('<i>').addClass('fas fa-circle').css("color", "F77F00"));
-	}else if(/^N[1-9]/.test(linea.userCodLinea)){ // Nocturno
-		id.append($('<i>').addClass('fas fa-circle').css("color", "04151F"));
-	}else if(/^A$|^E$|^L$/.test(linea.userCodLinea)){ // Lineas Exprés y Lanzaderas
-		id.append($('<i>').addClass('fas fa-circle').css("color", "AA1155"));
-	}else if(/^91$|^92$/.test(linea.userCodLinea)){ // Servicios Turísticos
-		id.append($('<i>').addClass('fas fa-circle').css("color", "62A87C"));
-	}else if(/^12$|^16$|^26$|^64$|^[A-Z]/.test(linea.userCodLinea)){ // Servicios Especiales
-		id.append($('<i>').addClass('fas fa-circle').css("color", "D62828"));
-	}else{ // Líneas Convencionales
-		id.append($('<i>').addClass('fas fa-circle').css("color", "262C72"));
-	}
-	if(linea.userCodLinea.length < 3){
-		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(linea.userCodLinea).attr("data-fa-transform", "shrink-6"));
-	}else{
-		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(linea.userCodLinea).attr("data-fa-transform", "shrink-8"));
-	}
 	$(fila).append($("<td>").append(botonIda));
 	$(fila).append($("<td>").append(botonVta));
 	$(fila).append($("<td>").append(botonBus));
-	$(fila).append($("<td>").append(id));
+	$(fila).append($("<td>").append(lineaIcon(linea.userCodLinea, "3x")));
 	$(fila).append($("<td>").append($("<a>", {text: linea.nombreLinea, href: "#!"})).click(function(){verInfoLínea(linea.codLinea);}));
 	$(fila).append($("<td>").append($("<p>").attr('id', "cont"+linea.codLinea)));
 
@@ -584,6 +565,29 @@ function busInfoContent(Bus){
 	"Línea: "+linea.userCodLinea+"<br>"+
 	"Última parada realizada: "+Bus.codParIni+"<br>"+
 	"Sentido: "+sentido;
+}
+
+function lineaIcon(userCodLinea, zoom){
+	var id = $('<span>').addClass('fa-layers fa-fw fa-'+zoom);
+	if(/^C[1-9]/.test(userCodLinea)){ // Circulares
+		id.append($('<i>').addClass('fas fa-circle').css("color", "F77F00"));
+	}else if(/^N[1-9]/.test(userCodLinea)){ // Nocturno
+		id.append($('<i>').addClass('fas fa-circle').css("color", "04151F"));
+	}else if(/^A$|^E$|^L$/.test(userCodLinea)){ // Lineas Exprés y Lanzaderas
+		id.append($('<i>').addClass('fas fa-circle').css("color", "AA1155"));
+	}else if(/^91$|^92$/.test(userCodLinea)){ // Servicios Turísticos
+		id.append($('<i>').addClass('fas fa-circle').css("color", "62A87C"));
+	}else if(/^12$|^16$|^26$|^64$|^[A-Z]/.test(userCodLinea)){ // Servicios Especiales
+		id.append($('<i>').addClass('fas fa-circle').css("color", "D62828"));
+	}else{ // Líneas Convencionales
+		id.append($('<i>').addClass('fas fa-circle').css("color", "262C72"));
+	}
+	if(userCodLinea.length < 3){
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-6"));
+	}else{
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-8"));
+	}
+	return id;
 }
 
 function busIconContent(Bus, estado){
