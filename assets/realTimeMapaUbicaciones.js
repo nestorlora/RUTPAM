@@ -381,6 +381,47 @@ function addParada(parada, codLinea, sentido){
 	}
 }
 
+function verInfoLínea(id){
+	var linea = lineas_emt[findLinea(id)];
+	$("#ventana").hide();
+	$("#infoContent").empty();
+	$("#infoContent").append($("<p>").css("text-align", "center").append($("<b>", {text: "Información línea "+linea.userCodLinea})));
+	$("#infoContent").append($("<p>", {text: linea.nombreLinea}).css("text-align", "center"));
+	var tabla = $("<table>");
+	var cabecera = $("<tr>");
+	cabecera.append($("<th>", {text: "Sentido"}).append($("<br>")).append(linea.cabeceraVta));
+	cabecera.append($("<th>", {text: "Sentido"}).append($("<br>")).append(linea.cabeceraIda));
+	tabla.append(cabecera);
+	for(var a = 0; a <= Math.max(linea.paradasIda.length, linea.paradasVta.length); a++){
+		var fila = $("<tr>");
+		if(a < linea.paradasIda.length){
+			var codPar = linea.paradasIda[a].codPar;
+			var nombre = paradas[findParada(codPar)].nombreParada;
+			fila.append($("<td>", {text: codPar+" - "+nombre}));
+		}else if(a === linea.paradasIda.length){
+			var codPar = linea.paradasVta[0].codPar;
+			var nombre = paradas[findParada(codPar)].nombreParada;
+			fila.append($("<td>", {text: codPar+" - "+nombre}));
+		}else{
+			fila.append($("<td>"));
+		}
+		if(a < linea.paradasVta.length){
+			var codPar = linea.paradasVta[a].codPar;
+			var nombre = paradas[findParada(codPar)].nombreParada;
+			fila.append($("<td>", {text: codPar+" - "+nombre}));
+		}else if(a === linea.paradasVta.length){
+			var codPar = linea.paradasIda[0].codPar;
+			var nombre = paradas[findParada(codPar)].nombreParada;
+			fila.append($("<td>", {text: codPar+" - "+nombre}));
+		}else{
+			fila.append($("<td>"));
+		}
+		tabla.append(fila);
+	}
+	$("#infoContent").append(tabla);
+	$("#ventana").show();
+}
+
 function enableBusUpdate(codLinea){
 	lineas_emt[findLinea(codLinea)].getBuses = true;
 	$("#botonBus"+codLinea).attr("checked", true);
