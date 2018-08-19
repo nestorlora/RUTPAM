@@ -56,5 +56,5 @@ var ttl_rate_default = 60;
 var ttl_rate_new = ttl_rate_default+30;
 var ttl_rate_old = ttl_rate_default-15;
 </script>
-<script src="./assets/realTimeMapaUbicaciones.js"></script>
+<script src="./assets/rutpam.js"></script>
 </body>
