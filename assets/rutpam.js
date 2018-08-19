@@ -84,8 +84,8 @@ function initMap() {
 		layers: osm,
 		attributionControl: false
 	});
-	
 	$("#lineas").html(ControlRUTPAM($("<div>")));
+	$("#tablaLineas").hide();
 	verCopyright();
 }
 
@@ -139,6 +139,7 @@ function getLineas(){
 	}).done(function (response, status){
 		if(status === "success"){
 			lineas_emt = [];
+			$("#tablaLineas").show();
 			for(var i = 0; i<response.length; i++){
 				addLinea(response[i]);
 			}
@@ -661,7 +662,6 @@ function ControlRUTPAM(mapDiv){
 		stop();
 	});
 	pause.css("display", "none");
-	
 	$(mapDiv).append(obtenerLineas).append(play).append(refresh).append(pause);
 	var tabla = $("<table>", {
 		"id": "tablaLineas"
@@ -671,6 +671,7 @@ function ControlRUTPAM(mapDiv){
 	$(tabla).append(encabezado);
 	
 	$(mapDiv).append(tabla);
+	$(mapDiv).append('<br><small><a href="#!" onclick="verCopyright()">Acerca de RUTPAM</a></small>')
 	return mapDiv;
 }
 
