@@ -34,6 +34,7 @@ html, body {
 }
 table{
 	font-size: 12px;
+	border-collapse: collapse;
 }
 p{
 	margin: 3px;
@@ -64,6 +65,9 @@ a{
 	left: 1%;
 	z-index: 300;
 	display:none;
+}
+.panelInfo table, .panelInfo th, .panelInfo td{
+	border: 1px solid #bbb;
 }
 .boton{
 	background-color: white;

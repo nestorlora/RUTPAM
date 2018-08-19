@@ -371,10 +371,10 @@ function verInfoLínea(id){
 	var tabla = $("<table>");
 	var cabecera = $("<tr>");
 	if(linea.cabeceraVta !== null){
-		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 2).append($("<br>")).append(linea.cabeceraVta));
-		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 2).append($("<br>")).append(linea.cabeceraIda));
+		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraVta));
+		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraIda));
 	}else{
-		cabecera.append($("<th>", {text: "Sentido"}).append($("<br>")).append(linea.cabeceraIda));
+		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraIda));
 	}
 	tabla.append(cabecera);
 	for(var a = 0; a <= Math.max(linea.paradasIda.length, linea.paradasVta.length); a++){
@@ -384,28 +384,32 @@ function verInfoLínea(id){
 			var nombre = paradas[findParada(codPar)].nombreParada;
 			fila.append($("<td>", {text: codPar}));
 			fila.append($("<td>", {text: nombre}));
+			fila.append(extrarCorrespondencias($("<td>"),codPar, linea.codLinea));
 		}else if(a === linea.paradasIda.length && linea.cabeceraVta !== null){
 			var codPar = linea.paradasVta[0].codPar;
 			var nombre = paradas[findParada(codPar)].nombreParada;
 			fila.append($("<td>", {text: codPar}));
 			fila.append($("<td>", {text: nombre}));
-		}else{
-			fila.append($("<td>"));
-			fila.append($("<td>"));
+			fila.append(extrarCorrespondencias($("<td>"),codPar, linea.codLinea));
+		}else if(linea.cabeceraVta !== null){
+			fila.append($("<td>")).append($("<td>")).append($("<td>"));
 		}
-		if(a < linea.paradasVta.length){
-			var codPar = linea.paradasVta[a].codPar;
-			var nombre = paradas[findParada(codPar)].nombreParada;
-			fila.append($("<td>", {text: codPar}));
-			fila.append($("<td>", {text: nombre}));
-		}else if(a === linea.paradasVta.length && linea.cabeceraVta !== null){
-			var codPar = linea.paradasIda[0].codPar;
-			var nombre = paradas[findParada(codPar)].nombreParada;
-			fila.append($("<td>", {text: codPar}));
-			fila.append($("<td>", {text: nombre}));
-		}else{
-			fila.append($("<td>"));
-			fila.append($("<td>"));
+		if(linea.cabeceraVta !== null){
+			if(a < linea.paradasVta.length){
+				var codPar = linea.paradasVta[a].codPar;
+				var nombre = paradas[findParada(codPar)].nombreParada;
+				fila.append($("<td>", {text: codPar}));
+				fila.append($("<td>", {text: nombre}));
+				fila.append(extrarCorrespondencias($("<td>"),codPar, linea.codLinea));
+			}else if(a === linea.paradasVta.length && linea.cabeceraVta !== null){
+				var codPar = linea.paradasIda[0].codPar;
+				var nombre = paradas[findParada(codPar)].nombreParada;
+				fila.append($("<td>", {text: codPar}));
+				fila.append($("<td>", {text: nombre}));
+				fila.append(extrarCorrespondencias($("<td>"),codPar, linea.codLinea));
+			}else{
+				fila.append($("<td>")).append($("<td>")).append($("<td>"));
+			}
 		}
 		tabla.append(fila);
 	}
