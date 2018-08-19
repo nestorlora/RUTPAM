@@ -387,8 +387,12 @@ function verInfoLínea(id){
 	$("#infoContent").append($("<p>", {text: linea.nombreLinea}).css("text-align", "center"));
 	var tabla = $("<table>");
 	var cabecera = $("<tr>");
-	cabecera.append($("<th>", {text: "Sentido"}).append($("<br>")).append(linea.cabeceraVta));
-	cabecera.append($("<th>", {text: "Sentido"}).append($("<br>")).append(linea.cabeceraIda));
+	if(linea.cabeceraVta !== null){
+		cabecera.append($("<th>", {text: "Sentido"}).append($("<br>")).append(linea.cabeceraVta));
+		cabecera.append($("<th>", {text: "Sentido"}).append($("<br>")).append(linea.cabeceraIda));
+	}else{
+		cabecera.append($("<th>", {text: "Sentido"}).append($("<br>")).append(linea.cabeceraIda));
+	}
 	tabla.append(cabecera);
 	for(var a = 0; a <= Math.max(linea.paradasIda.length, linea.paradasVta.length); a++){
 		var fila = $("<tr>");
@@ -396,7 +400,7 @@ function verInfoLínea(id){
 			var codPar = linea.paradasIda[a].codPar;
 			var nombre = paradas[findParada(codPar)].nombreParada;
 			fila.append($("<td>", {text: codPar+" - "+nombre}));
-		}else if(a === linea.paradasIda.length){
+		}else if(a === linea.paradasIda.length && linea.cabeceraVta !== null){
 			var codPar = linea.paradasVta[0].codPar;
 			var nombre = paradas[findParada(codPar)].nombreParada;
 			fila.append($("<td>", {text: codPar+" - "+nombre}));
@@ -407,7 +411,7 @@ function verInfoLínea(id){
 			var codPar = linea.paradasVta[a].codPar;
 			var nombre = paradas[findParada(codPar)].nombreParada;
 			fila.append($("<td>", {text: codPar+" - "+nombre}));
-		}else if(a === linea.paradasVta.length){
+		}else if(a === linea.paradasVta.length && linea.cabeceraVta !== null){
 			var codPar = linea.paradasIda[0].codPar;
 			var nombre = paradas[findParada(codPar)].nombreParada;
 			fila.append($("<td>", {text: codPar+" - "+nombre}));
