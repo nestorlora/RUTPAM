@@ -43,9 +43,9 @@ var ttl_old = ttl_rate_old/refresh_rate; //Número de actualizaciones fallidas s
  * @param {Array} paradasVta Array de paradas a la vuelta {codPar, orden}
  * @param {...} trazadoIda
  * @param {...} trazadoVta
- * @param {bool} getBuses
- * @param {bool} getIda
- * @param {bool} getVta
+ * @param {Bool} getBuses
+ * @param {Bool} getIda
+ * @param {Bool} getVta
  */
 var lineas_emt = [];
 
