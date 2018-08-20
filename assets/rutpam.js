@@ -383,13 +383,13 @@ function verInfoLínea(id){
 			var codPar = linea.paradasIda[a].codPar;
 			var nombre = paradas[findParada(codPar)].nombreParada;
 			fila.append($("<td>", {text: codPar}));
-			fila.append($("<td>", {text: nombre}));
+			fila.append($("<td>", {html: acortarParada(nombre)}));
 			fila.append(extrarCorrespondencias($("<td>"),codPar, linea.codLinea));
 		}else if(a === linea.paradasIda.length && linea.cabeceraVta !== null){
 			var codPar = linea.paradasVta[0].codPar;
 			var nombre = paradas[findParada(codPar)].nombreParada;
 			fila.append($("<td>", {text: codPar}));
-			fila.append($("<td>", {text: nombre}));
+			fila.append($("<td>", {html: acortarParada(nombre)}));
 			fila.append(extrarCorrespondencias($("<td>"),codPar, linea.codLinea));
 		}else if(linea.cabeceraVta !== null){
 			fila.append($("<td>")).append($("<td>")).append($("<td>"));
@@ -399,13 +399,13 @@ function verInfoLínea(id){
 				var codPar = linea.paradasVta[a].codPar;
 				var nombre = paradas[findParada(codPar)].nombreParada;
 				fila.append($("<td>", {text: codPar}));
-				fila.append($("<td>", {text: nombre}));
+				fila.append($("<td>", {html: acortarParada(nombre)}));
 				fila.append(extrarCorrespondencias($("<td>"),codPar, linea.codLinea));
 			}else if(a === linea.paradasVta.length && linea.cabeceraVta !== null){
 				var codPar = linea.paradasIda[0].codPar;
 				var nombre = paradas[findParada(codPar)].nombreParada;
 				fila.append($("<td>", {text: codPar}));
-				fila.append($("<td>", {text: nombre}));
+				fila.append($("<td>", {html: acortarParada(nombre)}));
 				fila.append(extrarCorrespondencias($("<td>"),codPar, linea.codLinea));
 			}else{
 				fila.append($("<td>")).append($("<td>")).append($("<td>"));
@@ -559,6 +559,10 @@ function extrarCorrespondencias(div, codPar, codLinea){
 		}
 	}
 	return div;
+}
+
+function acortarParada(nombre){
+	return nombre.replace(/\s-\s/, "<br>");
 }
 
 function lineaIcon(userCodLinea, zoom){
