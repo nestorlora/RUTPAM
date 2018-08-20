@@ -554,7 +554,7 @@ function extrarCorrespondencias(div, codPar, codLinea){
 	for(var a = 0; a < parada.servicios.length; a++){
 		var servicio = parada.servicios[a].codLinea;
 		if(servicio !== codLinea){
-			linea = lineas_emt[findLinea(servicio)];
+			var linea = lineas_emt[findLinea(servicio)];
 			$(div).append(lineaIcon(linea.userCodLinea, "2x"));
 		}
 	}
