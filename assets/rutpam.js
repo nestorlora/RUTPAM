@@ -24,27 +24,31 @@
 
 /* global emt_proxy_url, url_red_icon, url_orange_icon, url_white_icon, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L */
 
-var rutpam_version = "4.5";
-var timer;
-var map;
+var rutpam_version = "4.5"; // Variable global para la versión del programa.
+var timer; // Variable global para almacenar el timer maestro
+var map; // Variable global para almacenar el mapa
 var ttl_new = ttl_rate_new/refresh_rate; //Tiempo de vida para buses nuevos (naranjas)(al alcanzar default_ttl se vuelven blancos)
 var default_ttl = ttl_rate_default/refresh_rate; //Número de actualizaciones fallidas sin aparecer para darlo por muerto
 var ttl_old = ttl_rate_old/refresh_rate; //Número de actualizaciones fallidas sin aparecer para indicar que el bus probablemente haya desaparecido (color rojo)
-var lineas_emt = [];
-/* 
- * lineas_emt[].codLinea
- * lineas_emt[].userCodLinea
- * lineas_emt[].nombreLinea
- * lineas_emt[].cabeceraIda
- * lineas_emt[].cabeceraVta
- * lineas_emt[].paradasIda[]{codPar, orden}
- * lineas_emt[].paradasVta[]{codPar, orden}
- * lineas_emt[].trazadoIda
- * lineas_emt[].trazadoVta
- * lineas_emt[].getBuses
- * lineas_emt[].getIda
- * lineas_emt[].getVta
+
+/**
+ * @description Tabla de líneas cargadas de la EMT
+ * @type Array-Linea 
+ * @param {Int} codLinea Código interno de la línea
+ * @param {String} userCodLinea Nombre corto de la línea (1, C2, N3)
+ * @param {String} nombreLinea Nombre largo de la línea (Alameda-Churriana)
+ * @param {String} cabeceraIda Nombre de la cabecera donde empieza la ida
+ * @param {String} cabeceraVta Nombre de la cabecera donde empieza la vuelta
+ * @param {Array} paradasIda Array de paradas a la ida {codPar,orden}
+ * @param {Array} paradasVta Array de paradas a la vuelta {codPar, orden}
+ * @param {...} trazadoIda
+ * @param {...} trazadoVta
+ * @param {bool} getBuses
+ * @param {bool} getIda
+ * @param {bool} getVta
  */
+var lineas_emt = [];
+
 var autobuses = [];
 /* 
  * autobuses[].codBus
