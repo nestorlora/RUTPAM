@@ -49,29 +49,33 @@ var ttl_old = ttl_rate_old/refresh_rate; //Número de actualizaciones fallidas s
  */
 var lineas_emt = [];
 
+/**
+ * @description Tabla de autobuses en servicio
+ * @type Array
+ * @param {Int} codBus Nº de coche, identificador
+ * @param {Int} codLinea Código interno de la línea que sirve
+ * @param {Int} sentido Sentido de la línea que está recorriendo actualmente
+ * @param {Int} codParIni Código de la última parada a la que ha llegado
+ * @param {Float} latitud Ubicación
+ * @param {Float} longitud Ubicación
+ * @param {...} marker Objeto del marcador asociado al coche
+ * @param {...} popup Objeto del cuadro de información adicional del coche
+ * @param {...} ttl Time-to-live del coche
+ */
 var autobuses = [];
-/* 
- * autobuses[].codBus
- * autobuses[].codLinea
- * autobuses[].sentido
- * autobuses[].codParIni
- * autobuses[].latitud
- * autobuses[].longitud
- * autobuses[].marker
- * autobuses[].popup
- * autobuses[].ttl
+
+/**
+ * @description Tabla de paradas cargadas
+ * @type Array
+ * @param {Int} codPar Código de la parada
+ * @param {String} nombreParada Nombre de la parada
+ * @param {Array} servicios Array de servicios {codLinea, sentido, espera} que hay en esa parada
+ * @param {Float} latitud Ubicación
+ * @param {Float} longitua Ubicación
+ * @param {...} marker Objeto del marcador asociado a la parada
+ * @param {...} popup Objeto del cuadro de información asociado al coche
  */
 var paradas = [];
-/*
- * paradas[].codPar
- * paradas[].nombreParada
- * paradas[].servicios[]{codLinea, sentido, espera}
- * paradas[].latitud
- * paradas[].longitud
- * paradas[].marker
- * paradas[].popup
- */
-
 
 $(document).ready(function(){
 	initMap();
