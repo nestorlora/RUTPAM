@@ -221,6 +221,7 @@ function getLineas(){
 			$("#pause").css("display", "inline-block");
 		}
 	});
+	return null;
 };
 
 function getTrazados(codLinea){
