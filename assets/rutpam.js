@@ -225,31 +225,33 @@ function getLineas(){
 };
 
 function getTrazados(codLinea){
+	// Cambiamos el estado a deshabilitado a la espera de recibir los datos
 	$("#botonIda"+codLinea).prop("indeterminate", false).prop("disabled", true).prop("checked", false).off('click');
 	$("#botonVta"+codLinea).prop("indeterminate", false).prop("disabled", true).prop("checked", false).off('click');
+	// Llamada AJAX
 	$.getJSON({
 		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea+'&sentido=1'
 	}).done(function (response, status){
 		if(status === "success" && response.length > 0){
-			var posLinea = findLinea(codLinea);
-			var trazado = [];
+			var posLinea = findLinea(codLinea); // Almacenamos la posición en lineas_emt[] para uso más cómodo
+			var trazado = []; // Creamos un array con los puntos de latitud y longitud del polígono
 			for(var a = 0; a < response.length; a++){
-				trazado.push({lat: response[a].latitud, lng: response[a].longitud});
+				trazado.push({lat: response[a].latitud, lng: response[a].longitud});  // Rellenamos con los datos de la respuesta
 			}
 			lineas_emt[posLinea].trazadoIda = L.polyline(trazado, {
-				color: '#1E3180',
-				opacity: 1.0,
-				weight: 3
+				color: '#1E3180', // Fijamos el color de la ida
+				opacity: 1.0, // Opacidad
+				weight: 3 // Grosor
 			});
-			$("#botonIda"+codLinea).prop("disabled", false);
 			/* TO-DO: Revisar esto */
+			$("#botonIda"+codLinea).prop("disabled", false); 
 			$("#botonIda"+codLinea).prop("checked", false);
 			$("#botonIda"+codLinea).change(function(){
 				var isChecked = $(this).is(':checked');
 				if(isChecked){
-					showTrazado(codLinea, 1);
+					showTrazado(codLinea, 1); // Mostramos el trazado
 				}else{
-					hideTrazado(codLinea, 1);
+					hideTrazado(codLinea, 1); // Ocultamos el trazado
 				}
 			});
 			/* Fin TO-DO */ 
@@ -259,15 +261,15 @@ function getTrazados(codLinea){
 		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea+'&sentido=2'
 	}).done(function (response, status){
 		if(status === "success" && response.length > 0){
-			var posLinea = findLinea(codLinea);
-			var trazado = [];
+			var posLinea = findLinea(codLinea); // Almacenamos la posición en lineas_emt[] para uso más cómodo
+			var trazado = []; // Creamos un array con los puntos de latitud y longitud del polígono
 			for(var a = 0; a < response.length; a++){
-				trazado.push({lat: response[a].latitud, lng: response[a].longitud});
+				trazado.push({lat: response[a].latitud, lng: response[a].longitud}); // Rellenamos con los datos de la respuesta
 			}
 			lineas_emt[posLinea].trazadoVta = L.polyline(trazado, {
-				color: '#4876FE',
-				opacity: 1.0,
-				weight: 3
+				color: '#4876FE', // Fijamos el color de la vuelta
+				opacity: 1.0, // Opacidad
+				weight: 3 // Grosor
 			});
 			/* TO-DO: Revisar esto */
 			$("#botonVta"+codLinea).prop("disabled", false);
@@ -275,9 +277,9 @@ function getTrazados(codLinea){
 			$("#botonVta"+codLinea).change(function(){
 				var isChecked = $(this).is(':checked');
 				if(isChecked){
-					showTrazado(codLinea, 2);
+					showTrazado(codLinea, 2); // Mostramos el trazado
 				}else{
-					hideTrazado(codLinea, 2);
+					hideTrazado(codLinea, 2); // Ocultamos el trazado
 				}
 			});
 			/* Fin TO-DO */
