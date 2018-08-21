@@ -124,6 +124,7 @@ function stop(){
 	$("#pause").attr("disabled", true);
 	$("#play").attr("disabled", false);
 	$("#refresh").attr("disabled", false);
+	return null;
 }
 
 function start(){
@@ -131,6 +132,7 @@ function start(){
 	$("#pause").attr("disabled", false);
 	$("#play").attr("disabled", true);
 	$("#refresh").attr("disabled", true);
+	return null;
 }
 
 function reducirTTL(){
