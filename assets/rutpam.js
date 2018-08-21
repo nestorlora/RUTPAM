@@ -119,6 +119,10 @@ function motor(){
 	return null;
 }
 
+/**
+ * @description Función para detener el motor
+ * @returns {null}
+ */
 function stop(){
 	clearInterval(timer);
 	$("#pause").attr("disabled", true);
@@ -127,6 +131,10 @@ function stop(){
 	return null;
 }
 
+/**
+ * @description Función para arrancar el motor
+ * @returns {null}
+ */
 function start(){
 	timer = setInterval(motor, refresh_rate*1000);
 	$("#pause").attr("disabled", false);
