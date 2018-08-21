@@ -161,6 +161,7 @@ function reducirTTL(){
 			pos++;
 		}
 	}
+	return null;
 }
 
 function getLineas(){
