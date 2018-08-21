@@ -242,6 +242,7 @@ function getTrazados(codLinea){
 				weight: 3
 			});
 			$("#botonIda"+codLinea).prop("disabled", false);
+			/* TO-DO: Revisar esto */
 			$("#botonIda"+codLinea).prop("checked", false);
 			$("#botonIda"+codLinea).change(function(){
 				var isChecked = $(this).is(':checked');
@@ -251,13 +252,13 @@ function getTrazados(codLinea){
 					hideTrazado(codLinea, 1);
 				}
 			});
+			/* Fin TO-DO */ 
 		}
 	});
 	$.getJSON({
 		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea+'&sentido=2'
 	}).done(function (response, status){
 		if(status === "success" && response.length > 0){
-			//console.log("Línea "+codLinea+" Vta: "+response.length);
 			var posLinea = findLinea(codLinea);
 			var trazado = [];
 			for(var a = 0; a < response.length; a++){
@@ -268,6 +269,7 @@ function getTrazados(codLinea){
 				opacity: 1.0,
 				weight: 3
 			});
+			/* TO-DO: Revisar esto */
 			$("#botonVta"+codLinea).prop("disabled", false);
 			$("#botonVta"+codLinea).prop("checked", false);
 			$("#botonVta"+codLinea).change(function(){
@@ -278,6 +280,7 @@ function getTrazados(codLinea){
 					hideTrazado(codLinea, 2);
 				}
 			});
+			/* Fin TO-DO */
 		}		
 	});
 }
