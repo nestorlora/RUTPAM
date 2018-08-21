@@ -106,7 +106,7 @@ function initMap() {
 }
 
 /**
- * Función asíncrona para refrescar los datos periódicamente
+ * @description Función asíncrona para refrescar los datos periódicamente
  * @returns {null}
  */
 function motor(){
