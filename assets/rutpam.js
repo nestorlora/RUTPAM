@@ -81,8 +81,8 @@ var paradas = [];
  * Función de puesta en marcha cuando finaliza la carga del DOM
  */
 $(document).ready(function(){
-	initMap();
-	document.title = "RUTPAM "+rutpam_version;
+	initMap(); // Inicializamos el mapa y todo el layout
+	document.title = "RUTPAM "+rutpam_version; // Seteamos el título del documento
 });
 
 /**
