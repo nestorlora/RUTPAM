@@ -24,12 +24,41 @@
 
 /* global emt_proxy_url, url_red_icon, url_orange_icon, url_white_icon, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L */
 
-var rutpam_version = "4.6"; // Variable global para la versión del programa.
-var timer; // Variable global para almacenar el timer maestro
-var map; // Variable global para almacenar el mapa
-var ttl_new = ttl_rate_new/refresh_rate; //Tiempo de vida para buses nuevos (naranjas)(al alcanzar default_ttl se vuelven blancos)
-var default_ttl = ttl_rate_default/refresh_rate; //Número de actualizaciones fallidas sin aparecer para darlo por muerto
-var ttl_old = ttl_rate_old/refresh_rate; //Número de actualizaciones fallidas sin aparecer para indicar que el bus probablemente haya desaparecido (color rojo)
+/**
+ * @description Variable global para la versión del programa
+ * @type String
+ */
+var rutpam_version = "4.6";
+
+/**
+ * @description Variable global para almacenar el timer maestro
+ * @type JS_Timer
+ */
+var timer;
+
+/**
+ * @description Variable global para almacenar el mapa
+ * @type L.map
+ */
+var map;
+
+/**
+ * @description Tiempo de vida para buses nuevos (verde)(al alcanzar default_ttl se vuelven blancos)
+ * @type int
+ */
+var ttl_new = ttl_rate_new/refresh_rate;
+
+/**
+ * @description Número de actualizaciones fallidas sin aparecer para darlo por muerto
+ * @type Int
+ */
+var default_ttl = ttl_rate_default/refresh_rate;
+
+/**
+ * @description Número de actualizaciones fallidas sin aparecer para indicar que el bus probablemente haya desaparecido (color rojo)
+ * @type Int
+ */
+var ttl_old = ttl_rate_old/refresh_rate;
 
 /**
  * @description Tabla de líneas cargadas de la EMT
