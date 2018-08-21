@@ -197,8 +197,13 @@ function reducirTTL(){
 	return null;
 }
 
+/**
+ * @description Función que llama a la API para cargar las líneas. Cambia algunos elementos para preparar la interfaz.
+ * @returns {null}
+ */
 function getLineas(){
-	$("#getLineas").remove();
+	$("#getLineas").remove(); // Eliminamos el botón para pedir las líneas
+	// Petición AJAX
 	$.getJSON({
 		url: emt_proxy_url+'/services/lineas/'
 	}).done(function (response, status){
@@ -206,10 +211,11 @@ function getLineas(){
 			lineas_emt = [];
 			$("#tablaLineas").show();
 			for(var i = 0; i<response.length; i++){
-				addLinea(response[i]);
+				addLinea(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
 			}
-			motor();
-			start();
+			motor(); // Llamamos la primera vez al motor
+			start(); // Programamos que se ejecute periódicamente
+			// Mostramos la botoner de control del motor
 			$("#play").css("display", "inline-block");
 			$("#refresh").css("display", "inline-block");
 			$("#pause").css("display", "inline-block");
