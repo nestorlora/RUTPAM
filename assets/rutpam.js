@@ -225,14 +225,8 @@ function getLineas(){
 };
 
 function getTrazados(codLinea){
-	$("#botonIda"+codLinea).prop("indeterminate", false);
-	$("#botonIda"+codLinea).prop("disabled", true);
-	$("#botonIda"+codLinea).prop("checked", false);
-	$("#botonIda"+codLinea).off('click');
-	$("#botonVta"+codLinea).prop("indeterminate", false);
-	$("#botonVta"+codLinea).prop("disabled", true);
-	$("#botonVta"+codLinea).prop("checked", false);
-	$("#botonVta"+codLinea).off('click');
+	$("#botonIda"+codLinea).prop("indeterminate", false).prop("disabled", true).prop("checked", false).off('click');
+	$("#botonVta"+codLinea).prop("indeterminate", false).prop("disabled", true).prop("checked", false).off('click');
 	$.getJSON({
 		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea+'&sentido=1'
 	}).done(function (response, status){
