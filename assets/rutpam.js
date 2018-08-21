@@ -33,7 +33,7 @@ var ttl_old = ttl_rate_old/refresh_rate; //Número de actualizaciones fallidas s
 
 /**
  * @description Tabla de líneas cargadas de la EMT
- * @type Array-Linea 
+ * @type Array
  * @param {Int} codLinea Código interno de la línea
  * @param {String} userCodLinea Nombre corto de la línea (1, C2, N3)
  * @param {String} nombreLinea Nombre largo de la línea (Alameda-Churriana)
