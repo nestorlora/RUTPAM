@@ -143,22 +143,26 @@ function start(){
 	return null;
 }
 
+/**
+ * @description Función para limpiar los buses que no estamos siguiendo, llevan mucho sin refrescarse, o han desaparecido
+ * @returns {null}
+ */
 function reducirTTL(){
-	var pos = 0;
-	while(pos < autobuses.length){
-		autobuses[pos].ttl--;
-		if(autobuses[pos].ttl <= 0){
-			console.log("DROP "+autobuses[pos].codBus);
-			autobuses[pos].marker.remove();
-			autobuses.splice(pos, 1);
-		}else if(lineas_emt[findLinea(autobuses[pos].codLinea)].getBuses === false){
-			autobuses[pos].marker.remove();
-			pos++;
-		}else if(autobuses[pos].ttl <= ttl_old){
-			autobuses[pos].marker.setIcon(busIconContent(autobuses[pos], 2));
-			pos++;
-		}else{
-			pos++;
+	var pos = 0; // Empezamos por el principio
+	while(pos < autobuses.length){ // Para todos los autobuses
+		autobuses[pos].ttl--; // Decrementar TTL
+		if(autobuses[pos].ttl <= 0){ // SI su vida útil ha expirado
+			console.log("DROP "+autobuses[pos].codBus); // Registramos que se pierde
+			autobuses[pos].marker.remove(); // Quitamos el marcador del mapa
+			autobuses.splice(pos, 1); // Borramos el objeto del array
+		}else if(lineas_emt[findLinea(autobuses[pos].codLinea)].getBuses === false){ // O SI no estamos haciendo un seguimiento de esa línea
+			autobuses[pos].marker.remove(); // Quitamos el marcador del mapa
+			pos++; // Avanzamos de posición
+		}else if(autobuses[pos].ttl <= ttl_old){ // O SI el TTL es bajo y el bus lleva rato sin refrescarse
+			autobuses[pos].marker.setIcon(busIconContent(autobuses[pos], 2)); // Cambiamos el icono para que aparezca como no-actualizado
+			pos++; // Avanzamos de posición
+		}else{ // O Todo está bien
+			pos++; // Avanzamos de posición
 		}
 	}
 	return null;
