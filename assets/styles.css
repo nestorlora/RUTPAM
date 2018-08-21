@@ -34,6 +34,7 @@ html, body {
 }
 table{
 	font-size: 12px;
+	border-collapse: collapse;
 }
 p{
 	margin: 3px;
@@ -50,25 +51,35 @@ a{
 	background-color: white;
 	padding: 5px;
 	overflow-y: auto;
-	max-height: 92%;
+	top: 1%;
+	max-height: 97%;
 }
 .panelLineas {
 	position: absolute;
-	top: 10px;
-	right: 10px;
+	right: 1%;
 	z-index: 200;
 	width: 300px
 }
 .panelInfo {
 	position: absolute;
-	top: 10px;
-	left: 10px;
+	left: 1%;
 	z-index: 300;
+	display:none;
+}
+.panelInfo table, .panelInfo th, .panelInfo td{
+	border: 1px solid #bbb;
 }
 .boton{
 	background-color: white;
 	border: 1px solid lightgray;
 	padding: 3px;
+}
+.botonCierre{
+	position: inherit;
+	right: 0px;
+	margin-left: 10px;
+	border: none;
+	background-color: transparent;
 }
 input[type=checkbox]{
 	transform: scale(1.5);

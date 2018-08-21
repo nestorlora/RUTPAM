@@ -30,7 +30,7 @@
 	<link rel="stylesheet" href="assets/leaflet.css"/>
 	<script src="assets/leaflet.js"></script>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.11/js/all.js"></script>
 	<link rel="stylesheet" href="./assets/styles.css">
 	<meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
@@ -38,10 +38,7 @@
 <body>
 <div id="map"></div>
 <div id="ventana" class="cuadroFlotante panelInfo">
-	<button style="position: inherit; right: 0px; margin-left: 10px;" class="fa-layers fa-fw" onclick="closeInfo();">
-		<i class="fas fa-circle" style="color: black"></i>
-		<span class="fa-layers-text fa-inverse" data-fa-transform="shrink-4">X</span>
-	</button> 
+	<button class="botonCierre" onclick="closeInfo();">&#x274C;</button> 
 	<div id="infoContent"></div>
 </div>
 <div id="lineas" class="cuadroFlotante panelLineas"></div>
