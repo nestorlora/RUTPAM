@@ -85,19 +85,23 @@ $(document).ready(function(){
 	document.title = "RUTPAM "+rutpam_version;
 });
 
+/**
+ * @description Puesta en marcha del mapa y los elementos que se le superponen
+ * @returns {null}
+ */
 function initMap() {
-	var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-	var osm = new L.TileLayer(osmUrl);
+	var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'; // URL del servidor cartográfico
+	var osm = new L.TileLayer(osmUrl); // Creamos la capa de cartografía
 	map = L.map('map', {
-		center: [36.7121977, -4.4370495],
-		zoom: 13,
-		closePopupOnClick: false,
-		layers: osm,
-		attributionControl: false
+		center: [36.7121977, -4.4370495], // Centro del mapa sobre málaga
+		zoom: 13, // Nivel de zoom para ver todo el área metropolitana
+		closePopupOnClick: false, // Deshabilitamos que los popups se cierren al hacer click en cualquier otro sitio fuera
+		layers: osm, // Añadimos la capa de cartografía
+		attributionControl: false // Deshabilitamos el footer de copyright porque ya tenemos una ventana para ello
 	});
-	$("#lineas").html(ControlRUTPAM($("<div>")));
-	$("#tablaLineas").hide();
-	verCopyright();
+	$("#lineas").html(ControlRUTPAM($("<div>"))); // Rellenamos el div del panel de control con lo que devuelve ControlRUTPAM()
+	$("#tablaLineas").hide(); // Ocultamos la tabla de líneas porque todavía está vacía
+	verCopyright(); // Mostramos el "Acerca de RUTPAM"
 }
 
 function motor(){
