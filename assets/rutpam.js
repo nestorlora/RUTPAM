@@ -104,13 +104,17 @@ function initMap() {
 	verCopyright(); // Mostramos el "Acerca de RUTPAM"
 }
 
+/**
+ * Función asíncrona para refrescar los datos periódicamente
+ * @returns {undefined}
+ */
 function motor(){
-	for(var y = 0; y < lineas_emt.length; y++){
-		if(lineas_emt[y].getBuses){
-			setTimeout(getUbicaciones, y*30, lineas_emt[y].codLinea);
+	for(var y = 0; y < lineas_emt.length; y++){ // Para todo el array de líneas
+		if(lineas_emt[y].getBuses){ // Si hemos activado el refresco de los buses
+			setTimeout(getUbicaciones, y*30, lineas_emt[y].codLinea); // Refrescar los buses (con un tiempo de diferencia para hacerlo escalonadamente)
 		}
 	}
-	reducirTTL();
+	reducirTTL(); // Reducir TTLs, cambiar iconos y limpiar buses viejos
 }
 
 function stop(){
