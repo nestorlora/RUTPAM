@@ -102,11 +102,12 @@ function initMap() {
 	$("#lineas").html(ControlRUTPAM($("<div>"))); // Rellenamos el div del panel de control con lo que devuelve ControlRUTPAM()
 	$("#tablaLineas").hide(); // Ocultamos la tabla de líneas porque todavía está vacía
 	verCopyright(); // Mostramos el "Acerca de RUTPAM"
+	return null;
 }
 
 /**
  * Función asíncrona para refrescar los datos periódicamente
- * @returns {undefined}
+ * @returns {null}
  */
 function motor(){
 	for(var y = 0; y < lineas_emt.length; y++){ // Para todo el array de líneas
@@ -115,6 +116,7 @@ function motor(){
 		}
 	}
 	reducirTTL(); // Reducir TTLs, cambiar iconos y limpiar buses viejos
+	return null;
 }
 
 function stop(){
