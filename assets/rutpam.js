@@ -24,7 +24,7 @@
 
 /* global emt_proxy_url, url_red_icon, url_orange_icon, url_white_icon, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L */
 
-var rutpam_version = "4.5"; // Variable global para la versión del programa.
+var rutpam_version = "4.6"; // Variable global para la versión del programa.
 var timer; // Variable global para almacenar el timer maestro
 var map; // Variable global para almacenar el mapa
 var ttl_new = ttl_rate_new/refresh_rate; //Tiempo de vida para buses nuevos (naranjas)(al alcanzar default_ttl se vuelven blancos)
