@@ -243,9 +243,9 @@ function getTrazados(codLinea){
 				opacity: 1.0, // Opacidad
 				weight: 3 // Grosor
 			});
+			lineas_emt[posLinea].getIda = true;
 			/* TO-DO: Revisar esto */
 			$("#botonIda"+codLinea).prop("disabled", false); 
-			//$("#botonIda"+codLinea).prop("checked", false);
 			$("#botonIda"+codLinea).change(function(){
 				var isChecked = $(this).is(':checked');
 				if(isChecked){
@@ -272,9 +272,9 @@ function getTrazados(codLinea){
 				opacity: 1.0, // Opacidad
 				weight: 3 // Grosor
 			});
+			lineas_emt[posLinea].getVta = true;
 			/* TO-DO: Revisar esto */
 			$("#botonVta"+codLinea).prop("disabled", false);
-			//$("#botonVta"+codLinea).prop("checked", false);
 			$("#botonVta"+codLinea).change(function(){
 				var isChecked = $(this).is(':checked');
 				if(isChecked){
