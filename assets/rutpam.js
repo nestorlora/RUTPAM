@@ -618,6 +618,19 @@ function findParada(codPar){
 	}
 }
 
+/**
+ * @description Calcula la distancia total de un trazado indicado
+ * @param {linea.trazado} trazado
+ * @returns {Float}
+ */
+function distanciaTrazado(trazado){
+	var total = 0;
+	for(var pos = 1; pos < trazado.getLatLngs().length; pos++){
+		total = total + map.distance(trazado.getLatLngs()[pos-1], trazado.getLatLngs()[pos]);
+	}
+	return total;
+}
+
 function extrarCorrespondencias(div, codPar, codLinea){
 	$(div).css("max-width", "73px");
 	var parada = paradas[findParada(codPar)];
