@@ -226,8 +226,8 @@ function getLineas(){
 
 function getTrazados(codLinea){
 	// Cambiamos el estado a deshabilitado a la espera de recibir los datos
-	$("#botonIda"+codLinea).prop("indeterminate", false).prop("disabled", true).prop("checked", false).off('click');
-	$("#botonVta"+codLinea).prop("indeterminate", false).prop("disabled", true).prop("checked", false).off('click');
+	$("#botonIda"+codLinea).prop("indeterminate", false).prop("disabled", true).off('click');
+	$("#botonVta"+codLinea).prop("indeterminate", false).prop("disabled", true).off('click');
 	// Llamada AJAX
 	$.getJSON({
 		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea+'&sentido=1'
@@ -245,7 +245,7 @@ function getTrazados(codLinea){
 			});
 			/* TO-DO: Revisar esto */
 			$("#botonIda"+codLinea).prop("disabled", false); 
-			$("#botonIda"+codLinea).prop("checked", false);
+			//$("#botonIda"+codLinea).prop("checked", false);
 			$("#botonIda"+codLinea).change(function(){
 				var isChecked = $(this).is(':checked');
 				if(isChecked){
@@ -254,6 +254,7 @@ function getTrazados(codLinea){
 					hideTrazado(codLinea, 1); // Ocultamos el trazado
 				}
 			});
+			$("#botonIda"+codLinea).trigger("change");
 			/* Fin TO-DO */ 
 		}
 	});
@@ -273,7 +274,7 @@ function getTrazados(codLinea){
 			});
 			/* TO-DO: Revisar esto */
 			$("#botonVta"+codLinea).prop("disabled", false);
-			$("#botonVta"+codLinea).prop("checked", false);
+			//$("#botonVta"+codLinea).prop("checked", false);
 			$("#botonVta"+codLinea).change(function(){
 				var isChecked = $(this).is(':checked');
 				if(isChecked){
@@ -282,6 +283,7 @@ function getTrazados(codLinea){
 					hideTrazado(codLinea, 2); // Ocultamos el trazado
 				}
 			});
+			$("#botonVta"+codLinea).trigger("change");
 			/* Fin TO-DO */
 		}		
 	});
@@ -379,14 +381,14 @@ function addLinea(lin){
 	var botonIda = $("<input>", {
 		"type": "checkbox",
 		"id": "botonIda"+linea.codLinea
-	}).prop('checked', true).prop("indeterminate", true).click(function(){
+	}).prop('checked', false).prop("indeterminate", true).click(function(){
 		getTrazados(linea.codLinea);
 	});
 	var botonVta = $("<input>", {
 		"type": "checkbox",
 		"id": "botonVta"+linea.codLinea,
 		"checked": true
-	}).prop('checked', true).prop("indeterminate", true).click(function(){
+	}).prop('checked', false).prop("indeterminate", true).click(function(){
 		getTrazados(linea.codLinea);
 	});
 	var botonBus = $("<input>", {
