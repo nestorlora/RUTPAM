@@ -439,8 +439,8 @@ function verInfoLínea(id){
 	var linea = lineas_emt[findLinea(id)];
 	$("#ventana").hide();
 	$("#infoContent").empty();
-	$("#infoContent").append($("<p>").css("text-align", "center").append($("<b>", {text: "Información línea "+linea.userCodLinea})));
-	$("#infoContent").append($("<p>", {text: linea.nombreLinea}).css("text-align", "center"));
+	$("#infoContent").append($("<h3>", {text: "Información línea "+linea.userCodLinea}).css("text-align", "center"));
+	$("#infoContent").append($("<h4>", {text: linea.nombreLinea}).css("text-align", "center"));
 	var tabla = $("<table>");
 	var cabecera = $("<tr>");
 	if(linea.cabeceraVta !== null){
@@ -739,7 +739,7 @@ function busIconContent(Bus, estado){
  * @returns {DOM Element}
  */
 function ControlRUTPAM(mapDiv){
-	var titulo = $("<p>").append($("<b>", {"text":"RUTPAM"}));
+	var titulo = $("<h2>", {"text":"RUTPAM"});
 	var descripcion = $("<p>", {"text":"Seguimiento buses EMT en tiempo real"});
 	$(mapDiv).append(titulo).append(descripcion);
 	
@@ -810,7 +810,7 @@ function verCopyright(){
 	Consulta el repositorio en <a href="https://github.com/nestorlora/RUTPAM">Github<i class="fab fa-github fa-fw" style="color: indigo"></i></a>';
 	$("#ventana").hide();
 	$("#infoContent").empty();
-	$("#infoContent").append($("<p>").css("text-align", "center").append($("<b>", {text: "Información"})));
+	$("#infoContent").append($("<h3>", {text: "Información"}).css("text-align", "center"));
 	$("#infoContent").append($("<p>", {html: rutpam_credits}).css("text-align", "center"));
 	$("#ventana").show();
 }
