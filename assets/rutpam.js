@@ -441,6 +441,7 @@ function verInfoLínea(id){
 	$("#infoContent").empty();
 	$("#infoContent").append($("<h3>", {text: "Información línea "+linea.userCodLinea}).css("text-align", "center"));
 	$("#infoContent").append($("<h4>", {text: linea.nombreLinea}).css("text-align", "center"));
+	$("#infoContent").append($("<p>", {text: "Id. interno EMT: "+linea.codLinea}));
 	var tabla = $("<table>");
 	var cabecera = $("<tr>");
 	if(linea.cabeceraVta !== null){
