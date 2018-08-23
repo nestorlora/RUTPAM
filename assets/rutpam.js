@@ -638,7 +638,7 @@ function acortarParada(nombre){
 
 function lineaIcon(userCodLinea, zoom){
 	var id = $('<span>').addClass('fa-layers fa-'+zoom);
-	if(/^C[1-9]/.test(userCodLinea)){ // Circulares
+	if(/^C[1-9]$|^29$/.test(userCodLinea)){ // Circulares
 		id.append($('<i>').addClass('fas fa-circle').css("color", "F77F00"));
 	}else if(/^N[1-9]/.test(userCodLinea)){ // Nocturno
 		id.append($('<i>').addClass('fas fa-circle').css("color", "04151F"));
