@@ -37,6 +37,9 @@ table{
 	border-collapse: collapse;
 }
 p{
+	font-size: 14px;
+}
+p, h1, h2, h3, h4, h5, h6{
 	margin: 3px;
 }
 a{
