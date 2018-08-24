@@ -479,7 +479,8 @@ function verInfoLinea(id){
 			//fila.append($("<td>", {html: acortarParada(nombre)}));
 			//fila.append(extrarCorrespondencias($("<td>"),codPar, linea.codLinea));
 		}else if(linea.cabeceraVta !== null){
-			fila.append($("<td>")).append($("<td>")).append($("<td>"));
+			//fila.append($("<td>")).append($("<td>")).append($("<td>"));
+			fila = generarFilaParada(fila);
 		}
 		if(linea.cabeceraVta !== null){
 			if(a < linea.paradasVta.length){
@@ -497,7 +498,8 @@ function verInfoLinea(id){
 				//fila.append($("<td>", {html: acortarParada(nombre)}));
 				//fila.append(extrarCorrespondencias($("<td>"),codPar, linea.codLinea));
 			}else{
-				fila.append($("<td>")).append($("<td>")).append($("<td>"));
+				//fila.append($("<td>")).append($("<td>")).append($("<td>"));
+				fila = generarFilaParada(fila);
 			}
 		}
 		tabla.append(fila);
@@ -508,12 +510,15 @@ function verInfoLinea(id){
 }
 
 function generarFilaParada(div, codPar, codLinea){
-	var nombre = paradas[findParada(codPar)].nombreParada;
-	div.append($("<td>", {text: codPar}));
-	/*div.append($("<td>").append($("<a>", {text: codPar, href: "#!"}).click(function(){verInfoParada(codPar)})));*/
-	div.append($("<td>", {html: acortarParada(nombre)}));
-	div.append(extrarCorrespondencias($("<td>"),codPar, codLinea));
-
+	if(codPar !== undefined && codPar !== null){
+		var nombre = paradas[findParada(codPar)].nombreParada;
+		div.append($("<td>", {text: codPar}));
+		/*div.append($("<td>").append($("<a>", {text: codPar, href: "#!"}).click(function(){verInfoParada(codPar)})));*/
+		div.append($("<td>", {html: acortarParada(nombre)}));
+		div.append(extrarCorrespondencias($("<td>"),codPar, codLinea));
+	}else{
+		div.append($("<td>")).append($("<td>")).append($("<td>"));
+	}
 	return div;
 }
 
