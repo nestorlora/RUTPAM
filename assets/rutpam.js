@@ -499,6 +499,7 @@ function verInfoLinea(id){
 	}
 	$("#infoContent").append(tabla);
 	$("#ventana").show();
+	return null;
 }
 
 function enableBusUpdate(codLinea){
