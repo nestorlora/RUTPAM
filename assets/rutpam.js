@@ -224,6 +224,11 @@ function getLineas(){
 	return null;
 };
 
+/**
+ * @description Función que llama a la API para cargar los trazados de una linea dada. A continuación los muestra sobre el mapa según el usuario lo haya indicado
+ * @param {Int} codLinea
+ * @returns {null}
+ */
 function getTrazados(codLinea){
 	// Cambiamos el estado a deshabilitado a la espera de recibir los datos
 	$("#botonIda"+codLinea).prop("indeterminate", false).prop("disabled", true).off('click');
@@ -244,7 +249,6 @@ function getTrazados(codLinea){
 				weight: 3 // Grosor
 			});
 			lineas_emt[posLinea].getIda = true;
-			/* TO-DO: Revisar esto */
 			$("#botonIda"+codLinea).prop("disabled", false); 
 			$("#botonIda"+codLinea).change(function(){
 				var isChecked = $(this).is(':checked');
@@ -255,7 +259,6 @@ function getTrazados(codLinea){
 				}
 			});
 			$("#botonIda"+codLinea).trigger("change");
-			/* Fin TO-DO */ 
 		}
 	});
 	$.getJSON({
@@ -273,7 +276,6 @@ function getTrazados(codLinea){
 				weight: 3 // Grosor
 			});
 			lineas_emt[posLinea].getVta = true;
-			/* TO-DO: Revisar esto */
 			$("#botonVta"+codLinea).prop("disabled", false);
 			$("#botonVta"+codLinea).change(function(){
 				var isChecked = $(this).is(':checked');
@@ -284,9 +286,9 @@ function getTrazados(codLinea){
 				}
 			});
 			$("#botonVta"+codLinea).trigger("change");
-			/* Fin TO-DO */
 		}		
 	});
+	return null;
 }
 
 function getUbicaciones(codLinea){
