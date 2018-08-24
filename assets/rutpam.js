@@ -650,7 +650,9 @@ function extrarCorrespondencias(div, codPar, codLinea){
 		var servicio = parada.servicios[a].codLinea;
 		if(servicio !== codLinea){
 			var linea = lineas_emt[findLinea(servicio)];
-			$(div).append(lineaIcon(linea.userCodLinea, "2x"));
+			var spanIcon = lineaIcon(linea.userCodLinea, "2x");
+			$(spanIcon).click(function(){verInfoLínea(linea.codLinea);});
+			$(div).append(spanIcon);
 		}
 	}
 	return div;
