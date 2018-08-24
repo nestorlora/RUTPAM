@@ -502,6 +502,48 @@ function verInfoLinea(id){
 	return null;
 }
 
+function verInfoParada(id){
+	var parada = paradas[findParada(id)];
+	/**/console.log(parada);
+	$("#ventana").hide();
+	$("#infoContent").empty();
+	$("#infoContent").append($("<h3>", {text: "Parada "+parada.codPar}).css("text-align", "center"));
+	$("#infoContent").append($("<h4>", {text: parada.nombreParada}).css("text-align", "center"));
+	$("#infoContent").append($("<p>", {text: "Dirección: "+parada.direccion}));
+	var tabla = $("<table>");
+	var cabecera = $("<tr>");
+	cabecera.append($("<th>", {text: "Servicios"}).attr("colspan", /*3*/2));
+	tabla.append(cabecera);
+	for(var a = 0; a < parada.servicios.length; a++){
+		var linea = lineas_emt[findLinea(parada.servicios[a].codLinea)]
+		var sentido;
+		switch (parada.servicios[a].sentido){
+			case 1:
+				if(linea.cabeceraVta !== null){
+					sentido = linea.cabeceraVta;
+				}else{
+					sentido = linea.cabeceraIda;
+				}
+				break;
+			case 2:
+				sentido = linea.cabeceraIda;
+				break;
+			default:
+				sentido = "-";
+				break;
+		}
+		var fila = $("<tr>");
+		fila.append($("<td>", {html: lineaIcon(linea.userCodLinea, "3x", linea.codLinea)}));
+		fila.append($("<td>", {text: sentido}));
+		//fila.append($("<td>", {text: "??? min."}).css("text-align", "right"));
+		tabla.append(fila);
+	}
+	$("#infoContent").append(tabla);
+	$("#ventana").show();
+
+	return null;
+}
+
 function enableBusUpdate(codLinea){
 	lineas_emt[findLinea(codLinea)].getBuses = true;
 	$("#botonBus"+codLinea).attr("checked", true);
