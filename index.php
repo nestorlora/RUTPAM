@@ -1,5 +1,4 @@
-<?php
-
+<!--
 /*
  * The MIT License
  *
@@ -23,7 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-?>
+-->
 <head>
 	<link rel="shorcut icon" type="image/png" href="./assets/favicon.png">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik">
