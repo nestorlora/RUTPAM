@@ -653,7 +653,7 @@ function acortarParada(nombre){
 	return nombre.replace(/\s-\s/, "<br>");
 }
 
-function lineaIcon(userCodLinea, zoom){
+function lineaIcon(userCodLinea, zoom, codLinea){
 	var id = $('<span>').addClass('fa-layers fa-'+zoom);
 	if(/^C[1-9]$|^29$/.test(userCodLinea)){ // Circulares
 		id.append($('<i>').addClass('fas fa-circle').css("color", "F77F00"));
@@ -672,6 +672,9 @@ function lineaIcon(userCodLinea, zoom){
 		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-6"));
 	}else{
 		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-8"));
+	}
+	if(codLinea !== undefined && codLinea !== null){
+		id.click(function(){verInfoLinea(codLinea);});
 	}
 	return id;
 }
