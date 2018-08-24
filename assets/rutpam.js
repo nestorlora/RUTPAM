@@ -404,7 +404,7 @@ function addLinea(lin){
 	$(fila).append($("<td>").append(botonVta));
 	$(fila).append($("<td>").append(botonBus));
 	$(fila).append($("<td>").append(lineaIcon(linea.userCodLinea, "3x")));
-	$(fila).append($("<td>").append($("<a>", {text: linea.nombreLinea, href: "#!"})).click(function(){verInfoLínea(linea.codLinea);}));
+	$(fila).append($("<td>").append($("<a>", {text: linea.nombreLinea, href: "#!"}).click(function(){verInfoLinea(linea.codLinea);})));
 	$(fila).append($("<td>").append($("<p>").attr('id', "cont"+linea.codLinea)));
 
 	$("#tablaLineas").append(fila);
@@ -439,7 +439,7 @@ function addParada(parada, codLinea, sentido){
 	}
 }
 
-function verInfoLínea(id){
+function verInfoLinea(id){
 	var linea = lineas_emt[findLinea(id)];
 	$("#ventana").hide();
 	$("#infoContent").empty();
@@ -642,8 +642,7 @@ function extrarCorrespondencias(div, codPar, codLinea){
 		var servicio = parada.servicios[a].codLinea;
 		if(servicio !== codLinea){
 			var linea = lineas_emt[findLinea(servicio)];
-			var spanIcon = lineaIcon(linea.userCodLinea, "2x");
-			$(spanIcon).click(function(){verInfoLínea(linea.codLinea);});
+			var spanIcon = lineaIcon(linea.userCodLinea, "2x", linea.codLinea);
 			$(div).append(spanIcon);
 		}
 	}
