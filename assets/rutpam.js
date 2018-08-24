@@ -444,6 +444,12 @@ function verInfoLínea(id){
 	$("#infoContent").append($("<h3>", {text: "Información línea "+linea.userCodLinea}).css("text-align", "center"));
 	$("#infoContent").append($("<h4>", {text: linea.nombreLinea}).css("text-align", "center"));
 	$("#infoContent").append($("<p>", {text: "Id. interno EMT: "+linea.codLinea}));
+	if(linea.getIda){
+		$("#infoContent").append($("<p>", {text: "Longitud Ida: "+Math.floor(distanciaTrazado(linea.trazadoIda))+" m"}));
+	}
+	if(linea.getVta){
+		$("#infoContent").append($("<p>", {text: "Longitud Vuelta: "+Math.floor(distanciaTrazado(linea.trazadoVta))+" m"}));
+	}
 	var tabla = $("<table>");
 	var cabecera = $("<tr>");
 	if(linea.cabeceraVta !== null){
