@@ -98,6 +98,7 @@ var autobuses = [];
  * @type Array
  * @param {Int} codPar Código de la parada
  * @param {String} nombreParada Nombre de la parada
+ * @param {String} direccion Dirección postal de la parada
  * @param {Array} servicios Array de servicios {codLinea, sentido, espera} que hay en esa parada
  * @param {Float} latitud Ubicación
  * @param {Float} longitua Ubicación
@@ -421,6 +422,7 @@ function addParada(parada, codLinea, sentido){
 		pos = paradas.push({
 			codPar: parada.codParada,
 			nombreParada: parada.nombreParada,
+			direccion: parada.direccion,
 			servicios: [],
 			latitud: parada.latitud,
 			longitud: parada.longitud,
