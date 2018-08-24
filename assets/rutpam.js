@@ -28,7 +28,7 @@
  * @description Variable global para la versión del programa
  * @type String
  */
-var rutpam_version = "4.6";
+var rutpam_version = "4.7";
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -737,9 +737,9 @@ function busIconContent(Bus, estado){
 	}
 	return L.divIcon({
 		className: clase,
-		iconSize: [37, 34],
-		iconAnchor: [5, 2],
-		popupAnchor: [13, -2],
+		iconSize: [32, 30],
+		iconAnchor: [0, 0],
+		popupAnchor: [16, 0],
 		html: html
 	});
 }
