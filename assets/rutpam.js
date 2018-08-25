@@ -752,13 +752,13 @@ function busIconContent(Bus, estado){
 	var clase;
 	switch (Bus.sentido){
 		case 1:
-			clase = 'bus-marker bus-ida';
+			clase = 'marker ida';
 			break;
 		case 2:
-			clase = 'bus-marker bus-vta';
+			clase = 'marker vta';
 			break;
 		default:
-			clase = 'bus-marker bus-other';
+			clase = 'marker other';
 			break;
 	}
 	switch (estado){
