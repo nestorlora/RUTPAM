@@ -758,7 +758,7 @@ function busIconContent(Bus, estado){
 			clase = 'marker vta';
 			break;
 		default:
-			clase = 'marker other';
+			clase = 'marker desconocido';
 			break;
 	}
 	switch (estado){
