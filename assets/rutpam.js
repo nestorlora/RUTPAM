@@ -317,7 +317,7 @@ function addBus(Bus){
 		marker: L.marker(coordenadas, {
 			icon: busIconContent(Bus, 1)
 		}),
-		popup: L.popup({autoPan: false, autoClose: false}).setContent(busInfoContent(Bus)),
+		popup: L.popup({autoPan: false, autoClose: false}).setContent(busPopupContent(Bus)),
 		codBus: Bus.codBus,
 		codLinea: Bus.codLinea,
 		sentido: Bus.sentido,
@@ -341,7 +341,7 @@ function updateBus(Bus, pos){
 	autobuses[pos].codParIni = Bus.codParIni;
 	autobuses[pos].latitud = Bus.latitud;
 	autobuses[pos].longitud = Bus.longitud;
-	autobuses[pos].popup.setContent(busInfoContent(Bus));
+	autobuses[pos].popup.setContent(busPopupContent(Bus));
 	autobuses[pos].marker.addTo(map);
 	if(autobuses[pos].ttl < default_ttl){
 		autobuses[pos].ttl = default_ttl;
@@ -726,7 +726,7 @@ function lineaIcon(userCodLinea, zoom, codLinea){
  * @param {Bus} Bus
  * @returns {String}
  */
-function busInfoContent(Bus){
+function busPopupContent(Bus){
 	var linea = lineas_emt[findLinea(Bus.codLinea)];
 	var sentido;
 	switch(Bus.sentido){
