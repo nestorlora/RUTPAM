@@ -95,6 +95,9 @@ input[type=checkbox]{
 	border-color: black;
 	border-radius: 15%;
 }
+.parada{
+	background-color: orange;
+}
 .bus-new{
 	color: lime;
 }

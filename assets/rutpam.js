@@ -780,6 +780,16 @@ function busIconContent(Bus, estado){
 	});
 }
 
+function paradaIconContent(codPar){
+	return L.divIcon({
+		className: 'marker parada',
+		iconSize: [36, 15],
+		iconAnchor: [18, 7],
+		popupAnchor: [0, -7],
+		html: codPar
+	});
+}
+
 /**
  * Recoge un elemento del DOM y lo devuelve rellenado con el HTML adecuado de la barra de control
  * @param {DOM Element} mapDiv
