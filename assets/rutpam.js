@@ -504,7 +504,6 @@ function generarFilaParada(div, codPar, codLinea){
 
 function verInfoParada(id){
 	var parada = paradas[findParada(id)];
-	/**/console.log(parada);
 	$("#ventana").hide();
 	$("#infoContent").empty();
 	$("#infoContent").append($("<h3>", {text: "Parada "+parada.codPar}).css("text-align", "center"));
