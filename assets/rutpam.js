@@ -745,6 +745,43 @@ function busPopupContent(Bus){
 	"Sentido: "+sentido;
 }
 
+function paradaPopupContent(id){
+	var div = $("<div>");
+	var parada = paradas[findParada(id)];
+	$(div).append($("<h3>", {text: "Parada "+parada.codPar}).css("text-align", "center"));
+	$(div).append($("<h4>", {text: parada.nombreParada}).css("text-align", "center"));
+	var tabla = $("<table>");
+	/*var cabecera = $("<tr>");
+	$(cabecera).append($("<th>", {text: "Servicios"}).attr("colspan", /*3 2));
+	$(tabla).append(cabecera);*/
+	for(var a = 0; a < parada.servicios.length; a++){
+		var linea = lineas_emt[findLinea(parada.servicios[a].codLinea)]
+		var sentido;
+		switch (parada.servicios[a].sentido){
+			case 1:
+				if(linea.cabeceraVta !== null){
+					sentido = linea.cabeceraVta;
+				}else{
+					sentido = linea.cabeceraIda;
+				}
+				break;
+			case 2:
+				sentido = linea.cabeceraIda;
+				break;
+			default:
+				sentido = "-";
+				break;
+		}
+		var fila = $("<tr>");
+		$(fila).append($("<td>", {html: lineaIcon(linea.userCodLinea, "2x", linea.codLinea)}));
+		$(fila).append($("<td>", {text: sentido}));
+		//fila.append($("<td>", {text: "??? min."}).css("text-align", "right"));
+		$(tabla).append(fila);
+	}
+	$(div).append(tabla);
+	return $(div).html();
+}
+
 function busIconContent(Bus, estado){
 	var linea = lineas_emt[findLinea(Bus.codLinea)].userCodLinea;
 	var html = linea+"<br>"+Bus.codBus;

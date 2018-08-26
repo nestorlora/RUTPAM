@@ -46,6 +46,9 @@ a{
 	color: blue;
 	text-decoration-style: dotted;
 }
+span .fa-layers-text{
+	z-index: 1900;
+}
 #map {
 	height: 100%;
 	z-index: 1;
