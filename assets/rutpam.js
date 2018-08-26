@@ -426,9 +426,8 @@ function addParada(parada, codLinea, sentido){
 			servicios: [],
 			latitud: parada.latitud,
 			longitud: parada.longitud,
-			marker: L.marker({lat: parada.latitud, lng: parada.longitud}/*, {
-				icon: bus_stop_icon
-			}*/)
+			marker: null,
+			popup: null
 		})-1;
 		paradas[pos].servicios.push({
 			codLinea: codLinea,
