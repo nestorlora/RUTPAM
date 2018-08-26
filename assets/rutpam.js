@@ -103,7 +103,7 @@ var autobuses = [];
  * @param {Float} latitud Ubicación
  * @param {Float} longitua Ubicación
  * @param {...} marker Objeto del marcador asociado a la parada
- * @param {...} popup Objeto del cuadro de información asociado al coche
+ * @param {...} popup Objeto del cuadro de información asociado a la parada
  */
 var paradas = [];
 
