@@ -214,6 +214,7 @@ function getLineas(){
 			for(var i = 0; i<response.length; i++){
 				addLinea(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
 			}
+			inicialiarParadas();
 			motor(); // Llamamos la primera vez al motor
 			start(); // Programamos que se ejecute periódicamente
 			// Mostramos la botoner de control del motor
