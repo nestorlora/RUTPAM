@@ -435,7 +435,17 @@ function addParada(parada, codLinea, sentido){
 			sentido: sentido,
 			espera: null
 		});
-		//paradas[pos].marker.addTo(map);
+	}
+}
+
+function inicialiarParadas(){
+	for(var a = 0; a < paradas.length; a++){
+		paradas[a].marker = L.marker({lat: paradas[a].latitud, lng: paradas[a].longitud}, {
+			icon: paradaIconContent(paradas[a].codPar)
+		});
+		paradas[a].popup = L.popup({autoPan: false, autoClose: false}).setContent(paradaPopupContent(paradas[a].codPar));
+		paradas[a].marker.bindPopup(paradas[a].popup);
+		paradas[a].marker.addTo(map);
 	}
 }
 
