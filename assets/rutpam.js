@@ -695,8 +695,10 @@ function findParada(codPar){
  */
 function distanciaTrazado(trazado){
 	var total = 0;
+	if(trazado !== undefined){
 	for(var pos = 1; pos < trazado.getLatLngs().length; pos++){
 		total = total + map.distance(trazado.getLatLngs()[pos-1], trazado.getLatLngs()[pos]);
+	}
 	}
 	return total;
 }
