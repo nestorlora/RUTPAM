@@ -75,6 +75,7 @@ var ttl_old = ttl_rate_old/refresh_rate;
  * @param {Bool} getBuses
  * @param {Bool} getIda
  * @param {Bool} getVta
+ * @param {Bool} verParadas Indica si esta activa sobre el mapa la visualización de las paradas de la línea
  */
 var lineas_emt = [];
 
@@ -362,7 +363,8 @@ function addLinea(lin){
 		paradasVta: [],
 		getIda: false,
 		getVta: false,
-		getBuses: false
+		getBuses: false,
+		verParadas: false
 	};
 	for(var a = 0; a < lin.paradas.length; a++){
 		addParada(lin.paradas[a].parada, linea.codLinea, lin.paradas[a].sentido);
@@ -463,6 +465,45 @@ function verInfoLinea(id){
 	if(linea.getVta){
 		$("#infoContent").append($("<p>", {text: "Longitud Vuelta: "+Math.floor(distanciaTrazado(linea.trazadoVta))+" m"}));
 	}
+	var botonParadas = $("<button>", {
+		"type": "button",
+		"class": "boton"
+	});
+	if(linea.verParadas){
+		// Ocultar paradas
+		$(botonParadas).text("Ocultar paradas");
+		$(botonParadas).on("click", function(){
+			linea = lineas_emt[findLinea(id)];
+			if(linea.verParadas === true){
+				for(var a = 0; a < linea.paradasIda.length; a++){
+					hideParada(linea.paradasIda[a].codPar);
+				}
+				for(var a = 0; a < linea.paradasVta.length; a++){
+					hideParada(linea.paradasVta[a].codPar);
+				}
+				linea.verParadas = false;
+				verInfoLinea(id);
+			}
+			
+		});
+	}else{
+		// Mostrar paradas
+		$(botonParadas).text("Ubicar paradas");
+		$(botonParadas).on("click", function(){
+			linea = lineas_emt[findLinea(id)];
+			if(linea.verParadas === false){
+				for(var a = 0; a < linea.paradasIda.length; a++){
+					showParada(linea.paradasIda[a].codPar);
+				}
+				for(var a = 0; a < linea.paradasVta.length; a++){
+					showParada(linea.paradasVta[a].codPar);
+				}
+				linea.verParadas = true;
+				verInfoLinea(id);
+			}
+		});
+	}
+	$("#infoContent").append(botonParadas);
 	var tabla = $("<table>");
 	var cabecera = $("<tr>");
 	if(linea.cabeceraVta !== null){
@@ -696,9 +737,9 @@ function findParada(codPar){
 function distanciaTrazado(trazado){
 	var total = 0;
 	if(trazado !== undefined){
-	for(var pos = 1; pos < trazado.getLatLngs().length; pos++){
-		total = total + map.distance(trazado.getLatLngs()[pos-1], trazado.getLatLngs()[pos]);
-	}
+		for(var pos = 1; pos < trazado.getLatLngs().length; pos++){
+			total = total + map.distance(trazado.getLatLngs()[pos-1], trazado.getLatLngs()[pos]);
+		}
 	}
 	return total;
 }
