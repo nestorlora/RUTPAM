@@ -87,9 +87,9 @@ var lineas_emt = [];
  * @param {Int} codParIni Código de la última parada a la que ha llegado
  * @param {Float} latitud Ubicación
  * @param {Float} longitud Ubicación
- * @param {...} marker Objeto del marcador asociado al coche
- * @param {...} popup Objeto del cuadro de información adicional del coche
- * @param {...} ttl Time-to-live del coche
+ * @param {L.marker} marker Objeto del marcador asociado al coche
+ * @param {L.popup} popup Objeto del cuadro de información adicional del coche
+ * @param {Int} ttl Time-to-live del coche
  */
 var autobuses = [];
 
@@ -102,8 +102,8 @@ var autobuses = [];
  * @param {Array} servicios Array de servicios {codLinea, sentido, espera} que hay en esa parada
  * @param {Float} latitud Ubicación
  * @param {Float} longitua Ubicación
- * @param {...} marker Objeto del marcador asociado a la parada
- * @param {...} popup Objeto del cuadro de información asociado a la parada
+ * @param {L.marker} marker Objeto del marcador asociado a la parada
+ * @param {L.popup} popup Objeto del cuadro de información asociado a la parada
  */
 var paradas = [];
 
