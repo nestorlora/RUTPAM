@@ -104,6 +104,7 @@ var autobuses = [];
  * @param {Float} longitua Ubicación
  * @param {L.marker} marker Objeto del marcador asociado a la parada
  * @param {L.popup} popup Objeto del cuadro de información asociado a la parada
+ * @param {Int} viewCont Contador del número de líneas o acciones del usuario están solicitando ver esta parada
  */
 var paradas = [];
 
@@ -428,7 +429,8 @@ function addParada(parada, codLinea, sentido){
 			latitud: parada.latitud,
 			longitud: parada.longitud,
 			marker: null,
-			popup: null
+			popup: null,
+			viewCont: 0
 		})-1;
 		paradas[pos].servicios.push({
 			codLinea: codLinea,
@@ -445,7 +447,6 @@ function inicialiarParadas(){
 		});
 		paradas[a].popup = L.popup({autoPan: false, autoClose: false}).setContent(paradaPopupContent(paradas[a].codPar));
 		paradas[a].marker.bindPopup(paradas[a].popup);
-		paradas[a].marker.addTo(map);
 	}
 }
 
@@ -604,6 +605,20 @@ function hideTrazado(codLinea, sentido){
 		$("#botonVta"+codLinea).click(function(){
 			showTrazado(codLinea, sentido);
 		});
+	}
+}
+
+function showParada(codParada){
+	parada = paradas[findParada(codParada)];
+	if(parada.viewCont++ === 0){ // SI nadie ha puesto antes el marcador (y lo incrementamos)
+		parada.marker.addTo(map); // Añadimos el marcador al mapa
+	}
+}
+
+function hideParada(codParada){
+	parada = paradas[findParada(codParada)];
+	if(--parada.viewCont === 0){ // (Reducimos contador) | SI nadie ha puesto antes el marcador... lo quitamos
+		parada.marker.remove(); // Quitamos el marcador del mapa
 	}
 }
 
