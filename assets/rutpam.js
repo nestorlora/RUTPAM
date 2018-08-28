@@ -76,6 +76,7 @@ var ttl_old = ttl_rate_old/refresh_rate;
  * @param {Bool} getIda
  * @param {Bool} getVta
  * @param {Bool} verParadas Indica si esta activa sobre el mapa la visualización de las paradas de la línea
+ * @param {Int} numBuses Indica la cantidad de buses que ahora mismo están operando en la línea
  */
 var lineas_emt = [];
 
@@ -308,6 +309,7 @@ function getUbicaciones(codLinea){
 					addBus(response[x]);
 				}
 			}
+			lineas_emt[findLinea(codLinea)].numBuses = response.length;
 			$("#cont"+codLinea).text(response.length);
 		}		
 	});
@@ -364,7 +366,8 @@ function addLinea(lin){
 		getIda: false,
 		getVta: false,
 		getBuses: false,
-		verParadas: false
+		verParadas: false,
+		numBuses: 0
 	};
 	for(var a = 0; a < lin.paradas.length; a++){
 		addParada(lin.paradas[a].parada, linea.codLinea, lin.paradas[a].sentido);
