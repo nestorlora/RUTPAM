@@ -46,6 +46,9 @@ a{
 	color: blue;
 	text-decoration-style: dotted;
 }
+span .fa-layers-text{
+	z-index: 1900;
+}
 #map {
 	height: 100%;
 	z-index: 1;
@@ -60,13 +63,15 @@ a{
 .panelLineas {
 	position: absolute;
 	right: 1%;
-	z-index: 200;
-	width: 300px
+	z-index: 2000;
+	width: 30%;
+	max-width: 350px;
+	min-width: 230px;
 }
 .panelInfo {
 	position: absolute;
 	left: 1%;
-	z-index: 300;
+	z-index: 2200;
 	display:none;
 }
 .panelInfo table, .panelInfo th, .panelInfo td{
@@ -87,11 +92,14 @@ a{
 input[type=checkbox]{
 	transform: scale(1.5);
 }
-.bus-marker{
+.marker{
 	text-align: center;
 	border-width: 5px;
 	border-color: black;
 	border-radius: 15%;
+}
+.parada{
+	background-color: orange;
 }
 .bus-new{
 	color: lime;
@@ -102,12 +110,12 @@ input[type=checkbox]{
 .bus-lost{
 	color: #ff4747;
 }
-.bus-ida{
+.ida{
 	background-color: #262C72;
 }
-.bus-vta{
+.vta{
 	background-color: #4876FE;
 }
-.bus-other{
+.desconocido{
 	background-color: black;
 }

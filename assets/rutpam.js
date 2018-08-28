@@ -28,7 +28,7 @@
  * @description Variable global para la versión del programa
  * @type String
  */
-var rutpam_version = "4.7";
+var rutpam_version = "4.7.2";
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -75,6 +75,8 @@ var ttl_old = ttl_rate_old/refresh_rate;
  * @param {Bool} getBuses
  * @param {Bool} getIda
  * @param {Bool} getVta
+ * @param {Bool} verParadas Indica si esta activa sobre el mapa la visualización de las paradas de la línea
+ * @param {Int} numBuses Indica la cantidad de buses que ahora mismo están operando en la línea
  */
 var lineas_emt = [];
 
@@ -87,9 +89,9 @@ var lineas_emt = [];
  * @param {Int} codParIni Código de la última parada a la que ha llegado
  * @param {Float} latitud Ubicación
  * @param {Float} longitud Ubicación
- * @param {...} marker Objeto del marcador asociado al coche
- * @param {...} popup Objeto del cuadro de información adicional del coche
- * @param {...} ttl Time-to-live del coche
+ * @param {L.marker} marker Objeto del marcador asociado al coche
+ * @param {L.popup} popup Objeto del cuadro de información adicional del coche
+ * @param {Int} ttl Time-to-live del coche
  */
 var autobuses = [];
 
@@ -102,8 +104,9 @@ var autobuses = [];
  * @param {Array} servicios Array de servicios {codLinea, sentido, espera} que hay en esa parada
  * @param {Float} latitud Ubicación
  * @param {Float} longitua Ubicación
- * @param {...} marker Objeto del marcador asociado a la parada
- * @param {...} popup Objeto del cuadro de información asociado al coche
+ * @param {L.marker} marker Objeto del marcador asociado a la parada
+ * @param {L.popup} popup Objeto del cuadro de información asociado a la parada
+ * @param {Int} viewCont Contador del número de líneas o acciones del usuario están solicitando ver esta parada
  */
 var paradas = [];
 
@@ -214,6 +217,7 @@ function getLineas(){
 			for(var i = 0; i<response.length; i++){
 				addLinea(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
 			}
+			inicialiarParadas();
 			motor(); // Llamamos la primera vez al motor
 			start(); // Programamos que se ejecute periódicamente
 			// Mostramos la botoner de control del motor
@@ -305,6 +309,7 @@ function getUbicaciones(codLinea){
 					addBus(response[x]);
 				}
 			}
+			lineas_emt[findLinea(codLinea)].numBuses = response.length;
 			$("#cont"+codLinea).text(response.length);
 		}		
 	});
@@ -317,7 +322,7 @@ function addBus(Bus){
 		marker: L.marker(coordenadas, {
 			icon: busIconContent(Bus, 1)
 		}),
-		popup: L.popup({autoPan: false, autoClose: false}).setContent(busInfoContent(Bus)),
+		popup: L.popup({autoPan: false, autoClose: false}).setContent(busPopupContent(Bus)),
 		codBus: Bus.codBus,
 		codLinea: Bus.codLinea,
 		sentido: Bus.sentido,
@@ -341,7 +346,7 @@ function updateBus(Bus, pos){
 	autobuses[pos].codParIni = Bus.codParIni;
 	autobuses[pos].latitud = Bus.latitud;
 	autobuses[pos].longitud = Bus.longitud;
-	autobuses[pos].popup.setContent(busInfoContent(Bus));
+	autobuses[pos].popup.setContent(busPopupContent(Bus));
 	autobuses[pos].marker.addTo(map);
 	if(autobuses[pos].ttl < default_ttl){
 		autobuses[pos].ttl = default_ttl;
@@ -360,7 +365,9 @@ function addLinea(lin){
 		paradasVta: [],
 		getIda: false,
 		getVta: false,
-		getBuses: false
+		getBuses: false,
+		verParadas: false,
+		numBuses: 0
 	};
 	for(var a = 0; a < lin.paradas.length; a++){
 		addParada(lin.paradas[a].parada, linea.codLinea, lin.paradas[a].sentido);
@@ -426,16 +433,25 @@ function addParada(parada, codLinea, sentido){
 			servicios: [],
 			latitud: parada.latitud,
 			longitud: parada.longitud,
-			marker: L.marker({lat: parada.latitud, lng: parada.longitud}/*, {
-				icon: bus_stop_icon
-			}*/)
+			marker: null,
+			popup: null,
+			viewCont: 0
 		})-1;
 		paradas[pos].servicios.push({
 			codLinea: codLinea,
 			sentido: sentido,
 			espera: null
 		});
-		//paradas[pos].marker.addTo(map);
+	}
+}
+
+function inicialiarParadas(){
+	for(var a = 0; a < paradas.length; a++){
+		paradas[a].marker = L.marker({lat: paradas[a].latitud, lng: paradas[a].longitud}, {
+			icon: paradaIconContent(paradas[a].codPar)
+		});
+		paradas[a].popup = L.popup({autoPan: false, autoClose: false}).setContent(paradaPopupContent(paradas[a].codPar));
+		paradas[a].marker.bindPopup(paradas[a].popup);
 	}
 }
 
@@ -446,12 +462,60 @@ function verInfoLinea(id){
 	$("#infoContent").append($("<h3>", {text: "Línea "+linea.userCodLinea}).css("text-align", "center"));
 	$("#infoContent").append($("<h4>", {text: linea.nombreLinea}).css("text-align", "center"));
 	$("#infoContent").append($("<p>", {text: "Id. interno EMT: "+linea.codLinea}));
+	var distanciaIda = Math.floor(distanciaTrazado(linea.trazadoIda));
+	var distanciaVuelta = Math.floor(distanciaTrazado(linea.trazadoVta));
 	if(linea.getIda){
-		$("#infoContent").append($("<p>", {text: "Longitud Ida: "+Math.floor(distanciaTrazado(linea.trazadoIda))+" m"}));
+		$("#infoContent").append($("<p>", {text: "Longitud Ida: "+distanciaIda+" m"}));
 	}
 	if(linea.getVta){
-		$("#infoContent").append($("<p>", {text: "Longitud Vuelta: "+Math.floor(distanciaTrazado(linea.trazadoVta))+" m"}));
+		$("#infoContent").append($("<p>", {text: "Longitud Vuelta: "+distanciaVuelta+" m"}));
 	}
+	if(linea.numBuses > 0 && linea.getIda){
+		var distanciaTotal = distanciaIda + distanciaVuelta;
+		var distanciaEntreBuses = distanciaTotal/linea.numBuses;
+		$("#infoContent").append($("<p>", {text: "Distancia media entre coches: "+distanciaEntreBuses+" m"}));
+		var frecuenciaTeorica = distanciaEntreBuses/1000/13.5*60;
+		$("#infoContent").append($("<p>", {text: "Frecuencia media teórica: "+Math.floor(frecuenciaTeorica*100)/100+" min"}));
+	}
+	var botonParadas = $("<button>", {
+		"type": "button",
+		"class": "boton"
+	});
+	if(linea.verParadas){
+		// Ocultar paradas
+		$(botonParadas).text("Ocultar paradas");
+		$(botonParadas).on("click", function(){
+			linea = lineas_emt[findLinea(id)];
+			if(linea.verParadas === true){
+				for(var a = 0; a < linea.paradasIda.length; a++){
+					hideParada(linea.paradasIda[a].codPar);
+				}
+				for(var a = 0; a < linea.paradasVta.length; a++){
+					hideParada(linea.paradasVta[a].codPar);
+				}
+				linea.verParadas = false;
+				verInfoLinea(id);
+			}
+			
+		});
+	}else{
+		// Mostrar paradas
+		$(botonParadas).text("Ubicar paradas");
+		$(botonParadas).on("click", function(){
+			linea = lineas_emt[findLinea(id)];
+			if(linea.verParadas === false){
+				for(var a = 0; a < linea.paradasIda.length; a++){
+					showParada(linea.paradasIda[a].codPar);
+				}
+				for(var a = 0; a < linea.paradasVta.length; a++){
+					showParada(linea.paradasVta[a].codPar);
+				}
+				linea.verParadas = true;
+				verInfoLinea(id);
+			}
+		});
+	}
+	$("#infoContent").append(botonParadas);
 	var tabla = $("<table>");
 	var cabecera = $("<tr>");
 	if(linea.cabeceraVta !== null){
@@ -504,7 +568,6 @@ function generarFilaParada(div, codPar, codLinea){
 
 function verInfoParada(id){
 	var parada = paradas[findParada(id)];
-	/**/console.log(parada);
 	$("#ventana").hide();
 	$("#infoContent").empty();
 	$("#infoContent").append($("<h3>", {text: "Parada "+parada.codPar}).css("text-align", "center"));
@@ -598,6 +661,20 @@ function hideTrazado(codLinea, sentido){
 	}
 }
 
+function showParada(codParada){
+	parada = paradas[findParada(codParada)];
+	if(parada.viewCont++ === 0){ // SI nadie ha puesto antes el marcador (y lo incrementamos)
+		parada.marker.addTo(map); // Añadimos el marcador al mapa
+	}
+}
+
+function hideParada(codParada){
+	parada = paradas[findParada(codParada)];
+	if(--parada.viewCont === 0){ // (Reducimos contador) | SI nadie ha puesto antes el marcador... lo quitamos
+		parada.marker.remove(); // Quitamos el marcador del mapa
+	}
+}
+
 /**
  * Busca la posición de una línea dentro de lineas_emt[]
  * @param {Number} codLinea
@@ -671,8 +748,10 @@ function findParada(codPar){
  */
 function distanciaTrazado(trazado){
 	var total = 0;
-	for(var pos = 1; pos < trazado.getLatLngs().length; pos++){
-		total = total + map.distance(trazado.getLatLngs()[pos-1], trazado.getLatLngs()[pos]);
+	if(trazado !== undefined){
+		for(var pos = 1; pos < trazado.getLatLngs().length; pos++){
+			total = total + map.distance(trazado.getLatLngs()[pos-1], trazado.getLatLngs()[pos]);
+		}
 	}
 	return total;
 }
@@ -727,7 +806,7 @@ function lineaIcon(userCodLinea, zoom, codLinea){
  * @param {Bus} Bus
  * @returns {String}
  */
-function busInfoContent(Bus){
+function busPopupContent(Bus){
 	var linea = lineas_emt[findLinea(Bus.codLinea)];
 	var sentido;
 	switch(Bus.sentido){
@@ -746,19 +825,56 @@ function busInfoContent(Bus){
 	"Sentido: "+sentido;
 }
 
+function paradaPopupContent(id){
+	var div = $("<div>");
+	var parada = paradas[findParada(id)];
+	$(div).append($("<h3>", {text: "Parada "+parada.codPar}).css("text-align", "center"));
+	$(div).append($("<h4>", {text: parada.nombreParada}).css("text-align", "center"));
+	var tabla = $("<table>");
+	/*var cabecera = $("<tr>");
+	$(cabecera).append($("<th>", {text: "Servicios"}).attr("colspan", /*3 2));
+	$(tabla).append(cabecera);*/
+	for(var a = 0; a < parada.servicios.length; a++){
+		var linea = lineas_emt[findLinea(parada.servicios[a].codLinea)]
+		var sentido;
+		switch (parada.servicios[a].sentido){
+			case 1:
+				if(linea.cabeceraVta !== null){
+					sentido = linea.cabeceraVta;
+				}else{
+					sentido = linea.cabeceraIda;
+				}
+				break;
+			case 2:
+				sentido = linea.cabeceraIda;
+				break;
+			default:
+				sentido = "-";
+				break;
+		}
+		var fila = $("<tr>");
+		$(fila).append($("<td>", {html: lineaIcon(linea.userCodLinea, "2x", linea.codLinea)}));
+		$(fila).append($("<td>", {text: sentido}));
+		//fila.append($("<td>", {text: "??? min."}).css("text-align", "right"));
+		$(tabla).append(fila);
+	}
+	$(div).append(tabla);
+	return $(div).html();
+}
+
 function busIconContent(Bus, estado){
 	var linea = lineas_emt[findLinea(Bus.codLinea)].userCodLinea;
 	var html = linea+"<br>"+Bus.codBus;
 	var clase;
 	switch (Bus.sentido){
 		case 1:
-			clase = 'bus-marker bus-ida';
+			clase = 'marker ida';
 			break;
 		case 2:
-			clase = 'bus-marker bus-vta';
+			clase = 'marker vta';
 			break;
 		default:
-			clase = 'bus-marker bus-other';
+			clase = 'marker desconocido';
 			break;
 	}
 	switch (estado){
@@ -778,6 +894,16 @@ function busIconContent(Bus, estado){
 		iconAnchor: [0, 0],
 		popupAnchor: [16, 0],
 		html: html
+	});
+}
+
+function paradaIconContent(codPar){
+	return L.divIcon({
+		className: 'marker parada',
+		iconSize: [36, 15],
+		iconAnchor: [18, 7],
+		popupAnchor: [0, -7],
+		html: codPar
 	});
 }
 
