@@ -817,7 +817,7 @@ function busPopupContent(Bus){
 			sentido = linea.cabeceraIda;
 			break;
 		default:
-			sentido = "¿? Desconocido ¿?";
+			sentido = "¿? Desconocido ("+Bus.sentido+") ¿?";
 	}
 	return "Bus: "+Bus.codBus+"<br>"+
 	"Línea: "+linea.userCodLinea+"<br>"+
