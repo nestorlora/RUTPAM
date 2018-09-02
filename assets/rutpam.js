@@ -465,18 +465,22 @@ function verInfoLinea(id){
 	$("#infoContent").append($("<p>", {text: "Id. interno EMT: "+linea.codLinea}));
 	var distanciaIda = Math.floor(distanciaTrazado(linea.trazadoIda));
 	var distanciaVuelta = Math.floor(distanciaTrazado(linea.trazadoVta));
+	var tiempoIda = Math.floor(distanciaIda/1000/13.5*60);
+	var tiempoVuelta = Math.floor(distanciaVuelta/1000/13.5*60);
 	if(linea.getIda){
 		$("#infoContent").append($("<p>", {text: "Longitud Ida: "+distanciaIda+" m"}));
+		$("#infoContent").append($("<p>", {text: "Tiempo viaje ida (est.): "+ tiempoIda + " min"}));
 	}
 	if(linea.getVta){
 		$("#infoContent").append($("<p>", {text: "Longitud Vuelta: "+distanciaVuelta+" m"}));
+		$("#infoContent").append($("<p>", {text: "Tiempo viaje vuelta (est.): "+ tiempoVuelta + " min"}));
 	}
 	if(linea.numBuses > 0 && linea.getIda){
 		var distanciaTotal = distanciaIda + distanciaVuelta;
 		var distanciaEntreBuses = distanciaTotal/linea.numBuses;
-		$("#infoContent").append($("<p>", {text: "Distancia media entre coches: "+Math.floor(distanciaEntreBuses*100)/100+" m"}));
 		var frecuenciaTeorica = distanciaEntreBuses/1000/13.5*60;
 		$("#infoContent").append($("<p>", {text: "Frecuencia media teórica: "+Math.floor(frecuenciaTeorica*100)/100+" min"}));
+		$("#infoContent").append($("<p>", {text: "Distancia media entre coches: "+Math.floor(distanciaEntreBuses*100)/100+" m"}));
 	}
 	var botonParadas = $("<button>", {
 		"type": "button",
@@ -516,7 +520,7 @@ function verInfoLinea(id){
 			}
 		});
 	}
-	$("#infoContent").append(botonParadas);
+	$("#infoContent").append($("<p>").append(botonParadas));
 	var tabla = $("<table>");
 	var cabecera = $("<tr>");
 	if(linea.cabeceraVta !== null){
