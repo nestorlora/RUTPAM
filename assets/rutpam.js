@@ -85,6 +85,7 @@ var modos = [];
  * @param {Bool} getVta
  * @param {Bool} verParadas Indica si esta activa sobre el mapa la visualización de las paradas de la línea
  * @param {Int} numBuses Indica la cantidad de buses que ahora mismo están operando en la línea
+ * @param {Int} idModo ID del modo de transporte de la línea
  */
 var lineas = [];
 

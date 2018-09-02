@@ -193,7 +193,8 @@ function addLinea(lin){
 		getIda: false,
 		getVta: false,
 		verParadas: false,
-		numBuses: 0
+        numBuses: 0,
+        idModo: 1
 	};
 	for(var a = 0; a < lin.paradas.length; a++){
 		addParada(lin.paradas[a].parada, linea.codLinea, lin.paradas[a].sentido);
