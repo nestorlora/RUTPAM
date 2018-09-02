@@ -71,6 +71,7 @@ var modos = [];
 /**
  * @description Tabla de líneas cargadas
  * @type Array
+ * @param {String} idLinea Identificador único de la línea (EMT+CTAN)
  * @param {Int} codLinea Código interno de la línea
  * @param {String} userCodLinea Nombre corto de la línea (1, C2, N3)
  * @param {String} nombreLinea Nombre largo de la línea (Alameda-Churriana)
@@ -86,6 +87,8 @@ var modos = [];
  * @param {Bool} verParadas Indica si esta activa sobre el mapa la visualización de las paradas de la línea
  * @param {Int} numBuses Indica la cantidad de buses que ahora mismo están operando en la línea
  * @param {Int} idModo ID del modo de transporte de la línea
+ * @param {Bool} hayNoticia Indica si hay o no noticias relacionadas con la línea
+ * @param {String} operadores Lista de operadores de la línea
  */
 var lineas = [];
 

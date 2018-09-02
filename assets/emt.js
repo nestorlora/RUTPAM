@@ -180,7 +180,8 @@ function updateBus(Bus, pos){
 
 function addLinea(lin){
 	var linea = {
-		codLinea: lin.codLinea,
+        idLinea: "EMT-"+lin.codLinea,
+        codLinea: lin.codLinea,
 		userCodLinea: lin.userCodLinea.replace(/^F-/, "F"),
 		nombreLinea: lin.nombreLinea.replace(/(\(F\))|(\(?F-[0-9A-Z]{1,2}\)$)/, ""),
 		cabeceraIda: lin.cabeceraIda, 
@@ -194,7 +195,9 @@ function addLinea(lin){
 		getVta: false,
 		verParadas: false,
         numBuses: 0,
-        idModo: 1
+        idModo: 1,
+        hayNoticia: null,
+        operadores: "Empresa Malagueña de Transportes"
 	};
 	for(var a = 0; a < lin.paradas.length; a++){
 		addParada(lin.paradas[a].parada, linea.codLinea, lin.paradas[a].sentido);
