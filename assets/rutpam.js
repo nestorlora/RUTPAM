@@ -126,7 +126,7 @@ var paradas = [];
  */
 $(document).ready(function(){
 	$("#lineas").html(ControlRUTPAM($("<div>"))); // Rellenamos el div del panel de control con lo que devuelve ControlRUTPAM()
-	$("#tablaLineas").hide(); // Ocultamos la tabla de líneas porque todavía está vacía
+	$("#tablaLineasEMT").hide(); // Ocultamos la tabla de líneas porque todavía está vacía
 	verCopyright(); // Mostramos el "Acerca de RUTPAM"
 	initMap(); // Inicializamos el mapa y todo el layout
 	document.title = "RUTPAM "+rutpam_version; // Seteamos el título del documento
@@ -742,7 +742,7 @@ function ControlRUTPAM(mapDiv){
 	pause.css("display", "none");
 	$(mapDiv).append(controles);
 	var tabla = $("<table>", {
-		"id": "tablaLineas"
+		"id": "tablaLineasEMT"
 	});
 	var encabezado = $("<tr>");
 	$(encabezado).html('<th>Ida</th><th>Vta</th><th>Bus</th><th colspan="2">Línea</th><th>NºB.</th>');

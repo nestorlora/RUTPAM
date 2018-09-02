@@ -29,14 +29,14 @@
  * @returns {null}
  */
 function getLineasEmt(){
-	$("#getLineas").remove(); // Eliminamos el botón para pedir las líneas
+	//$("#getLineas").remove(); // Eliminamos el botón para pedir las líneas
 	// Petición AJAX
 	$.getJSON({
 		url: emt_proxy_url+'/services/lineas/'
 	}).done(function (response, status){
 		if(status === "success"){
 			lineas = [];
-			$("#tablaLineas").show();
+			$("#tablaLineasEMT").show();
 			for(var i = 0; i<response.length; i++){
 				addLineaEmt(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
 			}
@@ -244,7 +244,7 @@ function addLineaEmt(lin){
 	$(fila).append($("<td>").append($("<a>", {text: linea.nombreLinea, href: "#!"}).click(function(){verInfoLinea(linea.idLinea);})));
 	$(fila).append($("<td>").append($("<p>").attr('id', "cont"+linea.idLinea)));
 
-	$("#tablaLineas").append(fila);
+	$("#tablaLineasEMT").append(fila);
 }
 
 function addParadaEmt(parada, idLinea, sentido){
