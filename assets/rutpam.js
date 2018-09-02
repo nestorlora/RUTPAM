@@ -123,6 +123,9 @@ var paradas = [];
  * Función de puesta en marcha cuando finaliza la carga del DOM
  */
 $(document).ready(function(){
+	$("#lineas").html(ControlRUTPAM($("<div>"))); // Rellenamos el div del panel de control con lo que devuelve ControlRUTPAM()
+	$("#tablaLineas").hide(); // Ocultamos la tabla de líneas porque todavía está vacía
+	verCopyright(); // Mostramos el "Acerca de RUTPAM"
 	initMap(); // Inicializamos el mapa y todo el layout
 	document.title = "RUTPAM "+rutpam_version; // Seteamos el título del documento
 });
@@ -141,9 +144,6 @@ function initMap() {
 		layers: osm, // Añadimos la capa de cartografía
 		attributionControl: false // Deshabilitamos el footer de copyright porque ya tenemos una ventana para ello
 	});
-	$("#lineas").html(ControlRUTPAM($("<div>"))); // Rellenamos el div del panel de control con lo que devuelve ControlRUTPAM()
-	$("#tablaLineas").hide(); // Ocultamos la tabla de líneas porque todavía está vacía
-	verCopyright(); // Mostramos el "Acerca de RUTPAM"
 	return null;
 }
 
