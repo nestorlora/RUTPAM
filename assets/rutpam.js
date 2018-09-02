@@ -24,7 +24,7 @@
 
 /* Este script necesia los archivos ctan.js y emt.js para poder funcionar correctamente */
 
-/* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url */
+/* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url, showEMT, showCTAN */
 
 /**
  * @description Variable global para la versión del programa
@@ -150,7 +150,6 @@ var paradas = [];
  */
 $(document).ready(function(){
 	$("#control").html(ControlRUTPAM($("<div>"))); // Rellenamos el div del panel de control con lo que devuelve ControlRUTPAM()
-	$("#tablaLineasEMT").hide(); // Ocultamos la tabla de líneas porque todavía está vacía
 	verCopyright(); // Mostramos el "Acerca de RUTPAM"
 	initMap(); // Inicializamos el mapa y todo el layout
 	document.title = "RUTPAM "+rutpam_version; // Seteamos el título del documento
@@ -724,6 +723,32 @@ function paradaIconContent(codPar){
 	});
 }
 
+function togglePanelEmt(){
+	if(showEMT){
+		$("#tablaLineasEMT").css("display", "none");
+		$("#verEMT").css("color", "black").css("background-color", "white");
+		showEMT = false;
+	}else{
+		$("#tablaLineasEMT").css("display", "block");
+		$("#verEMT").css("color", "white").css("background-color", colores.emtA);
+		showEMT = true;
+	}
+	//$("#verEMT").on("click", ocultarPanelEmt);
+	//$("#verEMT").on("click", mostrarPanelEmt);
+}
+
+function togglePanelCtan(){
+	if(showCTAN){
+		$("#verCTAN").css("color", "black").css("background-color", "white");
+		showCTAN = false;
+	}else{
+		$("#verCTAN").css("color", "white").css("background-color", colores.ctmamA);
+		showCTAN = true;
+	}
+	//$("#verCTAN").on("click", ocultarPanelCtan);
+	//$("#verCTAN").on("click", mostrarPanelCtan);
+}
+
 /**
  * Recoge un elemento del DOM y lo devuelve rellenado con el HTML adecuado de la barra de control
  * @param {DOM Element} mapDiv
@@ -733,41 +758,41 @@ function ControlRUTPAM(mapDiv){
 	var titulo = $("<h2>", {"text":"RUTPAM"});
 	var descripcion = $("<p>", {"text":"Información de transportes metropolitanos del área de Málaga"});
 	$(mapDiv).append(titulo).append(descripcion);
+	var botonEMT = $("<button>", {
+		"id": "verEMT",
+		"type": "button",
+		"class": "boton",
+		"text": "Red EMT"
+	}).on("click", togglePanelEmt);
+	var botonCTAN = $("<button>", {
+		"id": "verCTAN",
+		"type": "button",
+		"class": "boton",
+		"text": "Red CTMAM"
+	}).on("click", togglePanelCtan).attr("disabled", true);
 	var play = $("<button>", {
 		"id": "play",
 		"type": "button",
 		"class": "boton",
 		"text": "Play"
-	});
-	play.on("click", function(){
-		start();
-	});
-	play.css("display", "none");
+	}).on("click", start).css("display", "none");
 	var refresh = $("<button>", {
 		"id": "refresh",
 		"type": "button",
 		"class": "boton",
 		"text": "Refrescar"
-	});
-	refresh.on("click", function(){
-		motor();
-	});
-	refresh.css("display", "none");
+	}).on("click", motor).css("display", "none");
 	var pause = $("<button>", {
 		"id": "pause",
 		"type": "button",
 		"class": "boton",
 		"text": "Pausa"
-	});
-	pause.on("click", function(){
-		stop();
-	});
-	var controles = $("<p>", {id: "controles"}).append(play).append(refresh).append(pause);
-	pause.css("display", "none");
+	}).on("click", stop).css("display", "none");
+	var controles = $("<p>", {id: "controles"}).append(botonEMT).append(botonCTAN).append($("<br>")).append(play).append(refresh).append(pause);
 	$(mapDiv).append(controles);
 	var tabla = $("<table>", {
 		"id": "tablaLineasEMT"
-	});
+	}).css("display", "none");
 	var encabezado = $("<tr>");
 	$(encabezado).html('<th>Ida</th><th>Vta</th><th>Bus</th><th colspan="2">Línea</th><th>NºB.</th>');
 	$(tabla).append(encabezado);

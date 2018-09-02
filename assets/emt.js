@@ -38,7 +38,6 @@ function getLineasEmt(){
 	}).done(function (response, status){
 		if(status === "success"){
 			lineas = [];
-			$("#tablaLineasEMT").show();
 			for(var i = 0; i<response.length; i++){
 				addLineaEmt(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
 			}
