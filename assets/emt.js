@@ -186,10 +186,12 @@ function addLinea(lin){
 		cabeceraIda: lin.cabeceraIda, 
 		cabeceraVta: lin.cabeceraVuelta,
 		paradasIda: [],
-		paradasVta: [],
+        paradasVta: [],
+        trazadoIda: null,
+        trazadoVta: null,
+        getBuses: false,
 		getIda: false,
 		getVta: false,
-		getBuses: false,
 		verParadas: false,
 		numBuses: 0
 	};
