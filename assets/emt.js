@@ -54,19 +54,19 @@ function getLineas(){
 
 /**
  * @description Función que llama a la API para cargar los trazados de una linea dada. A continuación los muestra sobre el mapa según el usuario lo haya indicado
- * @param {Int} codLinea
+ * @param {Int} idLinea
  * @returns {null}
  */
-function getTrazados(codLinea){
+function getTrazados(idLinea){
 	// Cambiamos el estado a deshabilitado a la espera de recibir los datos
-	$("#botonIda"+codLinea).prop("indeterminate", false).prop("disabled", true).off('click');
-	$("#botonVta"+codLinea).prop("indeterminate", false).prop("disabled", true).off('click');
+	$("#botonIda"+idLinea).prop("indeterminate", false).prop("disabled", true).off('click');
+	$("#botonVta"+idLinea).prop("indeterminate", false).prop("disabled", true).off('click');
 	// Llamada AJAX
 	$.getJSON({
-		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea+'&sentido=1'
+		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea(idLinea)+'&sentido=1'
 	}).done(function (response, status){
 		if(status === "success" && response.length > 0){
-			var posLinea = findLinea(codLinea); // Almacenamos la posición en lineas[] para uso más cómodo
+			var posLinea = findLinea(idLinea); // Almacenamos la posición en lineas[] para uso más cómodo
 			var trazado = []; // Creamos un array con los puntos de latitud y longitud del polígono
 			for(var a = 0; a < response.length; a++){
 				trazado.push({lat: response[a].latitud, lng: response[a].longitud});  // Rellenamos con los datos de la respuesta
@@ -77,23 +77,23 @@ function getTrazados(codLinea){
 				weight: 3 // Grosor
 			});
 			lineas[posLinea].getIda = true;
-			$("#botonIda"+codLinea).prop("disabled", false); 
-			$("#botonIda"+codLinea).change(function(){
+			$("#botonIda"+idLinea).prop("disabled", false); 
+			$("#botonIda"+idLinea).change(function(){
 				var isChecked = $(this).is(':checked');
 				if(isChecked){
-					showTrazado(codLinea, 1); // Mostramos el trazado
+					showTrazado(idLinea, 1); // Mostramos el trazado
 				}else{
-					hideTrazado(codLinea, 1); // Ocultamos el trazado
+					hideTrazado(idLinea, 1); // Ocultamos el trazado
 				}
 			});
-			$("#botonIda"+codLinea).trigger("change");
+			$("#botonIda"+idLinea).trigger("change");
 		}
 	});
 	$.getJSON({
-		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea+'&sentido=2'
+		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea(idLinea)+'&sentido=2'
 	}).done(function (response, status){
 		if(status === "success" && response.length > 0){
-			var posLinea = findLinea(codLinea); // Almacenamos la posición en lineas[] para uso más cómodo
+			var posLinea = findLinea(idLinea); // Almacenamos la posición en lineas[] para uso más cómodo
 			var trazado = []; // Creamos un array con los puntos de latitud y longitud del polígono
 			for(var a = 0; a < response.length; a++){
 				trazado.push({lat: response[a].latitud, lng: response[a].longitud}); // Rellenamos con los datos de la respuesta
@@ -104,51 +104,52 @@ function getTrazados(codLinea){
 				weight: 3 // Grosor
 			});
 			lineas[posLinea].getVta = true;
-			$("#botonVta"+codLinea).prop("disabled", false);
-			$("#botonVta"+codLinea).change(function(){
+			$("#botonVta"+idLinea).prop("disabled", false);
+			$("#botonVta"+idLinea).change(function(){
 				var isChecked = $(this).is(':checked');
 				if(isChecked){
-					showTrazado(codLinea, 2); // Mostramos el trazado
+					showTrazado(idLinea, 2); // Mostramos el trazado
 				}else{
-					hideTrazado(codLinea, 2); // Ocultamos el trazado
+					hideTrazado(idLinea, 2); // Ocultamos el trazado
 				}
 			});
-			$("#botonVta"+codLinea).trigger("change");
+			$("#botonVta"+idLinea).trigger("change");
 		}		
 	});
 	return null;
 }
 
-function getUbicaciones(codLinea){
+function getUbicaciones(idLinea){
 	$.getJSON({
 		//url: emt_proxy_url+'/services/buses/?codLinea='+codLinea
-		url: betteremt_api_url+'/buses/linea/'+codLinea
+		url: betteremt_api_url+'/buses/linea/'+codLinea(idLinea)
 	}).done(function (response, status){
 		if(status === "success"){
 			for(var x = 0; x < response.length; x++){
-				pos = findBus(response[x].codBus);
+                pos = findBus(response[x].codBus);
+                response[x].idLinea = "EMT-"+response[x].codLinea;
 				if(pos !== null){
 					updateBus(response[x], pos);
 				}else{
 					addBus(response[x]);
 				}
 			}
-			lineas[findLinea(codLinea)].numBuses = response.length;
-			$("#cont"+codLinea).text(response.length);
+			lineas[findLinea(idLinea)].numBuses = response.length;
+			$("#cont"+idLinea).text(response.length);
 		}		
 	});
 };
 
 function addBus(Bus){
 	console.log("ADDED "+Bus.codBus);
-	var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
+    var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
 	var data = {
 		marker: L.marker(coordenadas, {
 			icon: busIconContent(Bus, 1)
 		}),
 		popup: L.popup({autoPan: false, autoClose: false}).setContent(busPopupContent(Bus)),
 		codBus: Bus.codBus,
-		codLinea: Bus.codLinea,
+		idLinea: Bus.idLinea,
 		sentido: Bus.sentido,
 		codParIni: Bus.codParIni,
 		latitud: Bus.latitud,
@@ -165,7 +166,7 @@ function updateBus(Bus, pos){
 	if(!autobuses[pos].marker.getLatLng().equals(coordenadas)){
 		autobuses[pos].marker.setLatLng(coordenadas);
 	}
-	autobuses[pos].codLinea = Bus.codLinea;
+	autobuses[pos].idLinea = Bus.idLinea;
 	autobuses[pos].sentido = Bus.sentido;
 	autobuses[pos].codParIni = Bus.codParIni;
 	autobuses[pos].latitud = Bus.latitud;
@@ -181,7 +182,6 @@ function updateBus(Bus, pos){
 function addLinea(lin){
 	var linea = {
         idLinea: "EMT-"+lin.codLinea,
-        codLinea: lin.codLinea,
 		userCodLinea: lin.userCodLinea.replace(/^F-/, "F"),
 		nombreLinea: lin.nombreLinea.replace(/(\(F\))|(\(?F-[0-9A-Z]{1,2}\)$)/, ""),
 		cabeceraIda: lin.cabeceraIda, 
@@ -200,7 +200,7 @@ function addLinea(lin){
         operadores: "Empresa Malagueña de Transportes"
 	};
 	for(var a = 0; a < lin.paradas.length; a++){
-		addParada(lin.paradas[a].parada, linea.codLinea, lin.paradas[a].sentido);
+		addParada(lin.paradas[a].parada, linea.idLinea, lin.paradas[a].sentido);
 		if(lin.paradas[a].sentido === 1){
 			linea.paradasIda.push({
 				codPar: lin.paradas[a].parada.codParada,
@@ -215,43 +215,43 @@ function addLinea(lin){
 		}
 	}
 	lineas.push(linea);
-	//getTrazados(linea.codLinea);
+	//getTrazados(linea.idLinea);
 	
 	var fila = $("<tr>");
 	var botonIda = $("<input>", {
 		"type": "checkbox",
-		"id": "botonIda"+linea.codLinea
+		"id": "botonIda"+linea.idLinea
 	}).prop('checked', false).prop("indeterminate", true).click(function(){
-		getTrazados(linea.codLinea);
+		getTrazados(linea.idLinea);
 	});
 	var botonVta = $("<input>", {
 		"type": "checkbox",
-		"id": "botonVta"+linea.codLinea,
+		"id": "botonVta"+linea.idLinea,
 		"checked": true
 	}).prop('checked', false).prop("indeterminate", true).click(function(){
-		getTrazados(linea.codLinea);
+		getTrazados(linea.idLinea);
 	});
 	var botonBus = $("<input>", {
 		"type": "checkbox",
-		"id": "botonBus"+linea.codLinea
+		"id": "botonBus"+linea.idLinea
 	}).prop('checked', false).click(function(){
-		enableBusUpdate(linea.codLinea);
+		enableBusUpdate(linea.idLinea);
 	});
 	$(fila).append($("<td>").append(botonIda));
 	$(fila).append($("<td>").append(botonVta));
 	$(fila).append($("<td>").append(botonBus));
 	$(fila).append($("<td>").append(lineaIcon(linea.userCodLinea, "3x")));
-	$(fila).append($("<td>").append($("<a>", {text: linea.nombreLinea, href: "#!"}).click(function(){verInfoLinea(linea.codLinea);})));
-	$(fila).append($("<td>").append($("<p>").attr('id', "cont"+linea.codLinea)));
+	$(fila).append($("<td>").append($("<a>", {text: linea.nombreLinea, href: "#!"}).click(function(){verInfoLinea(linea.idLinea);})));
+	$(fila).append($("<td>").append($("<p>").attr('id', "cont"+linea.idLinea)));
 
 	$("#tablaLineas").append(fila);
 }
 
-function addParada(parada, codLinea, sentido){
+function addParada(parada, idLinea, sentido){
 	var pos = findParada(parada.codParada);
 	if(pos !== null){
 		paradas[pos].servicios.push({
-			codLinea: codLinea,
+			idLinea: idLinea,
 			sentido: sentido,
 			espera: null
 		});
@@ -268,9 +268,13 @@ function addParada(parada, codLinea, sentido){
 			viewCont: 0
 		})-1;
 		paradas[pos].servicios.push({
-			codLinea: codLinea,
+			idLinea: idLinea,
 			sentido: sentido,
 			espera: null
 		});
 	}
+}
+
+function codLinea(idLinea){
+    return idLinea.replace(/^EMT-/, "");
 }
