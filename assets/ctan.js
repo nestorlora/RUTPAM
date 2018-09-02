@@ -22,6 +22,8 @@
  * THE SOFTWARE.
  */
 
+/* Este archivo forma parte de R.U.T.P.A.M. no funcionará por separado */
+
 /* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url */
 
 function getModos(){
