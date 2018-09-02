@@ -61,7 +61,7 @@ var default_ttl = ttl_rate_default/refresh_rate;
 var ttl_old = ttl_rate_old/refresh_rate;
 
 /**
- * @description Tabla de líneas cargadas de la EMT
+ * @description Tabla de líneas cargadas
  * @type Array
  * @param {Int} codLinea Código interno de la línea
  * @param {String} userCodLinea Nombre corto de la línea (1, C2, N3)
@@ -78,7 +78,7 @@ var ttl_old = ttl_rate_old/refresh_rate;
  * @param {Bool} verParadas Indica si esta activa sobre el mapa la visualización de las paradas de la línea
  * @param {Int} numBuses Indica la cantidad de buses que ahora mismo están operando en la línea
  */
-var lineas_emt = [];
+var lineas = [];
 
 /**
  * @description Tabla de autobuses en servicio
@@ -143,9 +143,9 @@ function initMap() {
  * @returns {null}
  */
 function motor(){
-	for(var y = 0; y < lineas_emt.length; y++){ // Para todo el array de líneas
-		if(lineas_emt[y].getBuses){ // Si hemos activado el refresco de los buses
-			setTimeout(getUbicaciones, y*30, lineas_emt[y].codLinea); // Refrescar los buses (con un tiempo de diferencia para hacerlo escalonadamente)
+	for(var y = 0; y < lineas.length; y++){ // Para todo el array de líneas
+		if(lineas[y].getBuses){ // Si hemos activado el refresco de los buses
+			setTimeout(getUbicaciones, y*30, lineas[y].codLinea); // Refrescar los buses (con un tiempo de diferencia para hacerlo escalonadamente)
 		}
 	}
 	reducirTTL(); // Reducir TTLs, cambiar iconos y limpiar buses viejos
@@ -188,7 +188,7 @@ function reducirTTL(){
 			console.log("DROP "+autobuses[pos].codBus); // Registramos que se pierde
 			autobuses[pos].marker.remove(); // Quitamos el marcador del mapa
 			autobuses.splice(pos, 1); // Borramos el objeto del array
-		}else if(lineas_emt[findLinea(autobuses[pos].codLinea)].getBuses === false){ // O SI no estamos haciendo un seguimiento de esa línea
+		}else if(lineas[findLinea(autobuses[pos].codLinea)].getBuses === false){ // O SI no estamos haciendo un seguimiento de esa línea
 			autobuses[pos].marker.remove(); // Quitamos el marcador del mapa
 			pos++; // Avanzamos de posición
 		}else if(autobuses[pos].ttl <= ttl_old){ // O SI el TTL es bajo y el bus lleva rato sin refrescarse
@@ -201,7 +201,7 @@ function reducirTTL(){
 	return null;
 }
 
-function inicialiarParadas(){
+function inicializarParadas(){
 	for(var a = 0; a < paradas.length; a++){
 		paradas[a].marker = L.marker({lat: paradas[a].latitud, lng: paradas[a].longitud}, {
 			icon: paradaIconContent(paradas[a].codPar)
@@ -212,7 +212,7 @@ function inicialiarParadas(){
 }
 
 function verInfoLinea(id){
-	var linea = lineas_emt[findLinea(id)];
+	var linea = lineas[findLinea(id)];
 	$("#ventana").hide();
 	$("#infoContent").empty();
 	$("#infoContent").append($("<h3>", {text: "Línea "+linea.userCodLinea}).css("text-align", "center"));
@@ -245,7 +245,7 @@ function verInfoLinea(id){
 		// Ocultar paradas
 		$(botonParadas).text("Ocultar paradas");
 		$(botonParadas).on("click", function(){
-			linea = lineas_emt[findLinea(id)];
+			linea = lineas[findLinea(id)];
 			if(linea.verParadas === true){
 				for(var a = 0; a < linea.paradasIda.length; a++){
 					hideParada(linea.paradasIda[a].codPar);
@@ -262,7 +262,7 @@ function verInfoLinea(id){
 		// Mostrar paradas
 		$(botonParadas).text("Ubicar paradas");
 		$(botonParadas).on("click", function(){
-			linea = lineas_emt[findLinea(id)];
+			linea = lineas[findLinea(id)];
 			if(linea.verParadas === false){
 				for(var a = 0; a < linea.paradasIda.length; a++){
 					showParada(linea.paradasIda[a].codPar);
@@ -338,7 +338,7 @@ function verInfoParada(id){
 	cabecera.append($("<th>", {text: "Servicios"}).attr("colspan", /*3*/2));
 	tabla.append(cabecera);
 	for(var a = 0; a < parada.servicios.length; a++){
-		var linea = lineas_emt[findLinea(parada.servicios[a].codLinea)]
+		var linea = lineas[findLinea(parada.servicios[a].codLinea)]
 		var sentido;
 		switch (parada.servicios[a].sentido){
 			case 1:
@@ -368,7 +368,7 @@ function verInfoParada(id){
 }
 
 function enableBusUpdate(codLinea){
-	lineas_emt[findLinea(codLinea)].getBuses = true;
+	lineas[findLinea(codLinea)].getBuses = true;
 	$("#botonBus"+codLinea).attr("checked", true);
 	$("#botonBus"+codLinea).unbind("click");
 	$("#botonBus"+codLinea).click(function(){
@@ -377,7 +377,7 @@ function enableBusUpdate(codLinea){
 }
 
 function disableBusUpdate(codLinea){
-	lineas_emt[findLinea(codLinea)].getBuses = false;
+	lineas[findLinea(codLinea)].getBuses = false;
 	$("#botonBus"+codLinea).attr("checked", false);
 	$("#botonBus"+codLinea).unbind("click");
 	$("#botonBus"+codLinea).click(function(){
@@ -392,9 +392,9 @@ function disableBusUpdate(codLinea){
  */
 function showTrazado(codLinea, sentido){
 	if(sentido === 1){
-		lineas_emt[findLinea(codLinea)].trazadoIda.addTo(map);
+		lineas[findLinea(codLinea)].trazadoIda.addTo(map);
 	}else if(sentido === 2){
-		lineas_emt[findLinea(codLinea)].trazadoVta.addTo(map);
+		lineas[findLinea(codLinea)].trazadoVta.addTo(map);
 	}
 }
 
@@ -405,14 +405,14 @@ function showTrazado(codLinea, sentido){
  */
 function hideTrazado(codLinea, sentido){
 	if(sentido === 1){
-		lineas_emt[findLinea(codLinea)].trazadoIda.remove();
+		lineas[findLinea(codLinea)].trazadoIda.remove();
 		$("#botonIda"+codLinea).attr("checked", false);
 		$("#botonIda"+codLinea).unbind("click");
 		$("#botonIda"+codLinea).click(function(){
 			showTrazado(codLinea, sentido);
 		});
 	}else if(sentido === 2){
-		lineas_emt[findLinea(codLinea)].trazadoVta.remove();
+		lineas[findLinea(codLinea)].trazadoVta.remove();
 		$("#botonVta"+codLinea).attr("checked", false);
 		$("#botonVta"+codLinea).unbind("click");
 		$("#botonVta"+codLinea).click(function(){
@@ -436,21 +436,21 @@ function hideParada(codParada){
 }
 
 /**
- * Busca la posición de una línea dentro de lineas_emt[]
+ * Busca la posición de una línea dentro de lineas[]
  * @param {Number} codLinea
- * @returns {Number} Posición en lineas_emt[]
+ * @returns {Number} Posición en lineas[]
  */
 function findLinea(codLinea){
 	var pos = 0;
 	var found = false;
-	while(pos < lineas_emt.length && !found){
-		if(lineas_emt[pos].codLinea === codLinea){
+	while(pos < lineas.length && !found){
+		if(lineas[pos].codLinea === codLinea){
 			found = true;
 		}else{
 			pos++;
 		}
 	}
-	if(pos >= lineas_emt.length){
+	if(pos >= lineas.length){
 		return null;
 	}else{
 		return pos;
@@ -523,7 +523,7 @@ function extrarCorrespondencias(div, codPar, codLinea){
 	for(var a = 0; a < parada.servicios.length; a++){
 		var servicio = parada.servicios[a].codLinea;
 		if(servicio !== codLinea){
-			var linea = lineas_emt[findLinea(servicio)];
+			var linea = lineas[findLinea(servicio)];
 			var spanIcon = lineaIcon(linea.userCodLinea, "2x", linea.codLinea);
 			$(div).append(spanIcon);
 		}
@@ -552,8 +552,12 @@ function lineaIcon(userCodLinea, zoom, codLinea){
 	}
 	if(userCodLinea.length < 3){
 		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-6"));
-	}else{
+	}else if(userCodLinea.length < 5){
 		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-8"));
+	}else if(userCodLinea.length < 7){
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-10"));
+	}else{
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-12"));
 	}
 	if(codLinea !== undefined && codLinea !== null){
 		id.click(function(){verInfoLinea(codLinea);});
@@ -567,7 +571,7 @@ function lineaIcon(userCodLinea, zoom, codLinea){
  * @returns {String}
  */
 function busPopupContent(Bus){
-	var linea = lineas_emt[findLinea(Bus.codLinea)];
+	var linea = lineas[findLinea(Bus.codLinea)];
 	var sentido;
 	switch(Bus.sentido){
 		case 1: // Ida
@@ -595,7 +599,7 @@ function paradaPopupContent(id){
 	$(cabecera).append($("<th>", {text: "Servicios"}).attr("colspan", /*3 2));
 	$(tabla).append(cabecera);*/
 	for(var a = 0; a < parada.servicios.length; a++){
-		var linea = lineas_emt[findLinea(parada.servicios[a].codLinea)]
+		var linea = lineas[findLinea(parada.servicios[a].codLinea)]
 		var sentido;
 		switch (parada.servicios[a].sentido){
 			case 1:
@@ -623,7 +627,7 @@ function paradaPopupContent(id){
 }
 
 function busIconContent(Bus, estado){
-	var linea = lineas_emt[findLinea(Bus.codLinea)].userCodLinea;
+	var linea = lineas[findLinea(Bus.codLinea)].userCodLinea;
 	var html = linea+"<br>"+Bus.codBus;
 	var clase;
 	switch (Bus.sentido){

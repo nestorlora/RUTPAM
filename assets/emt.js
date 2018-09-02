@@ -35,12 +35,12 @@ function getLineas(){
 		url: emt_proxy_url+'/services/lineas/'
 	}).done(function (response, status){
 		if(status === "success"){
-			lineas_emt = [];
+			lineas = [];
 			$("#tablaLineas").show();
 			for(var i = 0; i<response.length; i++){
 				addLinea(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
 			}
-			inicialiarParadas();
+			inicializarParadas();
 			motor(); // Llamamos la primera vez al motor
 			start(); // Programamos que se ejecute periódicamente
 			// Mostramos la botoner de control del motor
@@ -66,17 +66,17 @@ function getTrazados(codLinea){
 		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea+'&sentido=1'
 	}).done(function (response, status){
 		if(status === "success" && response.length > 0){
-			var posLinea = findLinea(codLinea); // Almacenamos la posición en lineas_emt[] para uso más cómodo
+			var posLinea = findLinea(codLinea); // Almacenamos la posición en lineas[] para uso más cómodo
 			var trazado = []; // Creamos un array con los puntos de latitud y longitud del polígono
 			for(var a = 0; a < response.length; a++){
 				trazado.push({lat: response[a].latitud, lng: response[a].longitud});  // Rellenamos con los datos de la respuesta
 			}
-			lineas_emt[posLinea].trazadoIda = L.polyline(trazado, {
+			lineas[posLinea].trazadoIda = L.polyline(trazado, {
 				color: '#1E3180', // Fijamos el color de la ida
 				opacity: 1.0, // Opacidad
 				weight: 3 // Grosor
 			});
-			lineas_emt[posLinea].getIda = true;
+			lineas[posLinea].getIda = true;
 			$("#botonIda"+codLinea).prop("disabled", false); 
 			$("#botonIda"+codLinea).change(function(){
 				var isChecked = $(this).is(':checked');
@@ -93,17 +93,17 @@ function getTrazados(codLinea){
 		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea+'&sentido=2'
 	}).done(function (response, status){
 		if(status === "success" && response.length > 0){
-			var posLinea = findLinea(codLinea); // Almacenamos la posición en lineas_emt[] para uso más cómodo
+			var posLinea = findLinea(codLinea); // Almacenamos la posición en lineas[] para uso más cómodo
 			var trazado = []; // Creamos un array con los puntos de latitud y longitud del polígono
 			for(var a = 0; a < response.length; a++){
 				trazado.push({lat: response[a].latitud, lng: response[a].longitud}); // Rellenamos con los datos de la respuesta
 			}
-			lineas_emt[posLinea].trazadoVta = L.polyline(trazado, {
+			lineas[posLinea].trazadoVta = L.polyline(trazado, {
 				color: '#4876FE', // Fijamos el color de la vuelta
 				opacity: 1.0, // Opacidad
 				weight: 3 // Grosor
 			});
-			lineas_emt[posLinea].getVta = true;
+			lineas[posLinea].getVta = true;
 			$("#botonVta"+codLinea).prop("disabled", false);
 			$("#botonVta"+codLinea).change(function(){
 				var isChecked = $(this).is(':checked');
@@ -133,7 +133,7 @@ function getUbicaciones(codLinea){
 					addBus(response[x]);
 				}
 			}
-			lineas_emt[findLinea(codLinea)].numBuses = response.length;
+			lineas[findLinea(codLinea)].numBuses = response.length;
 			$("#cont"+codLinea).text(response.length);
 		}		
 	});
@@ -208,7 +208,7 @@ function addLinea(lin){
 			});
 		}
 	}
-	lineas_emt.push(linea);
+	lineas.push(linea);
 	//getTrazados(linea.codLinea);
 	
 	var fila = $("<tr>");
