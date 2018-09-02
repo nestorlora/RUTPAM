@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-/* global emt_proxy_url, url_red_icon, url_orange_icon, url_white_icon, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L */
+/* global emt_proxy_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url */
 
 /**
  * @description Variable global para la versión del programa
@@ -473,7 +473,7 @@ function verInfoLinea(id){
 	if(linea.numBuses > 0 && linea.getIda){
 		var distanciaTotal = distanciaIda + distanciaVuelta;
 		var distanciaEntreBuses = distanciaTotal/linea.numBuses;
-		$("#infoContent").append($("<p>", {text: "Distancia media entre coches: "+distanciaEntreBuses+" m"}));
+		$("#infoContent").append($("<p>", {text: "Distancia media entre coches: "+Math.floor(distanciaEntreBuses*100)/100+" m"}));
 		var frecuenciaTeorica = distanciaEntreBuses/1000/13.5*60;
 		$("#infoContent").append($("<p>", {text: "Frecuencia media teórica: "+Math.floor(frecuenciaTeorica*100)/100+" min"}));
 	}
