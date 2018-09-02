@@ -130,6 +130,7 @@ $(document).ready(function(){
 	verCopyright(); // Mostramos el "Acerca de RUTPAM"
 	initMap(); // Inicializamos el mapa y todo el layout
 	document.title = "RUTPAM "+rutpam_version; // Seteamos el título del documento
+	getLineasEmt(); // Cargamos las líneas
 });
 
 /**
@@ -146,12 +147,6 @@ function initMap() {
 		layers: osm, // Añadimos la capa de cartografía
 		attributionControl: false // Deshabilitamos el footer de copyright porque ya tenemos una ventana para ello
 	});
-	return null;
-}
-
-function getLineas(){
-	getLineasEmt();
-	//getLineasCtan();
 	return null;
 }
 
@@ -714,14 +709,6 @@ function ControlRUTPAM(mapDiv){
 	var titulo = $("<h2>", {"text":"RUTPAM"});
 	var descripcion = $("<p>", {"text":"Seguimiento buses EMT en tiempo real"});
 	$(mapDiv).append(titulo).append(descripcion);
-	
-	var obtenerLineas = $("<button>", {
-		"id": "getLineas",
-		"type": "button",
-		"class": "boton",
-		"text": "Obtener líneas"
-	});
-	obtenerLineas.on("click", getLineas);
 	var play = $("<button>", {
 		"id": "play",
 		"type": "button",
@@ -751,8 +738,9 @@ function ControlRUTPAM(mapDiv){
 	pause.on("click", function(){
 		stop();
 	});
+	var controles = $("<p>", {id: "controles"}).append(play).append(refresh).append(pause);
 	pause.css("display", "none");
-	$(mapDiv).append(obtenerLineas).append(play).append(refresh).append(pause);
+	$(mapDiv).append(controles);
 	var tabla = $("<table>", {
 		"id": "tablaLineas"
 	});
