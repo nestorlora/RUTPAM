@@ -45,6 +45,28 @@ var timer;
 var map;
 
 /**
+ * @description Variable global para almacenar los colores utilizados por la app
+ * @type Objeto
+ */
+var colores = {
+	// EMT SAM
+	emtA: "#1E3180", // Primario, lineas regulares, sentido ida
+	emtB: "#4876FE", // Secundario, sentido vuelta
+	// Consorcio de Transportes
+	ctmamA: "#009639", // Oficial Primario, líneas regulares, sentido ida
+	ctmamB: "#CBE896", // sentido vuelta
+	ctmamC: "#E4D77E", // Oficial Secundario
+	ctmamD: "#0C0A3E", // lineas buho
+	ctmamE: "#4C4878", // líneas urbanas
+	ctmamF: "#71A9F7", // líneas de verano
+	// Renfe Operadora
+	renfeA: "#8A0072", // Oficial general
+	renfeB: "#EF3340", // Oficial cercanías
+	// Metro Málaga
+	metroA: "#DC241F" // "Oficial"
+};
+
+/**
  * @description Tiempo de vida para buses nuevos (verde)(al alcanzar default_ttl se vuelven blancos)
  * @type int
  */
@@ -579,7 +601,7 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 	}else if(/^12$|^16$|^26$|^64$|^[A-Z]/.test(userCodLinea)){ // Servicios Especiales
 		id.append($('<i>').addClass('fas fa-circle').css("color", "D62828"));
 	}else{ // Líneas Convencionales
-		id.append($('<i>').addClass('fas fa-circle').css("color", "262C72"));
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtA));
 	}
 	if(userCodLinea.length < 3){
 		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-6"));
