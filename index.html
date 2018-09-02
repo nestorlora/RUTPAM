@@ -40,17 +40,20 @@
 	<button class="botonCierre" onclick="closeInfo();">&#x274C;</button> 
 	<div id="infoContent"></div>
 </div>
-<div id="lineas" class="cuadroFlotante panelLineas"></div>
+<div id="control" class="cuadroFlotante panelLineas"></div>
 <script>
 var site_url = '/RUTPAM';
-var url_white_icon = site_url+'/assets/img/white_bus.png';
-var url_red_icon = site_url+'/assets/img/red_bus.png';
-var url_orange_icon = site_url+'/assets/img/orange_bus.png';
 var emt_proxy_url = '/proxy/emt-core';
-var refresh_rate = 1;
+var betteremt_api_url = 'https://betteremt.edufdezsoy.es/api';
+var ctan_api_url = 'http://api.ctan.es/v1/Consorcios/4';
+var refresh_rate = 3;
 var ttl_rate_default = 60;
-var ttl_rate_new = ttl_rate_default+30;
+var ttl_rate_new = ttl_rate_default+10;
 var ttl_rate_old = ttl_rate_default-15;
+var showEMT = true;
+var showCTAN = false;
 </script>
-<script src="./assets/rutpam.js"></script>
+<script src="./assets/rutpam.js?v=4.8"></script>
+<script src="./assets/emt.js?v=4.8"></script>
+<script src="./assets/ctan.js?v=4.8"></script>
 </body>

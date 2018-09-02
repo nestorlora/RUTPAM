@@ -22,13 +22,15 @@
  * THE SOFTWARE.
  */
 
-/* global emt_proxy_url, url_red_icon, url_orange_icon, url_white_icon, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L */
+/* Este script necesia los archivos ctan.js y emt.js para poder funcionar correctamente */
+
+/* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url, showEMT, showCTAN */
 
 /**
  * @description Variable global para la versión del programa
  * @type String
  */
-var rutpam_version = "4.7.2";
+var rutpam_version = "4.8";
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -41,6 +43,28 @@ var timer;
  * @type L.map
  */
 var map;
+
+/**
+ * @description Variable global para almacenar los colores utilizados por la app
+ * @type Objeto
+ */
+var colores = {
+	// EMT SAM
+	emtA: "#1E3180", // Primario, lineas regulares, sentido ida
+	emtB: "#4876FE", // Secundario, sentido vuelta
+	// Consorcio de Transportes
+	ctmamA: "#009639", // Oficial Primario, líneas regulares, sentido ida
+	ctmamB: "#CBE896", // sentido vuelta
+	ctmamC: "#E4D77E", // Oficial Secundario
+	ctmamD: "#0C0A3E", // lineas buho
+	ctmamE: "#4C4878", // líneas urbanas
+	ctmamF: "#71A9F7", // líneas de verano
+	// Renfe Operadora
+	renfeA: "#8A0072", // Oficial general
+	renfeB: "#EF3340", // Oficial cercanías
+	// Metro Málaga
+	metroA: "#DC241F" // "Oficial"
+};
 
 /**
  * @description Tiempo de vida para buses nuevos (verde)(al alcanzar default_ttl se vuelven blancos)
@@ -61,9 +85,17 @@ var default_ttl = ttl_rate_default/refresh_rate;
 var ttl_old = ttl_rate_old/refresh_rate;
 
 /**
- * @description Tabla de líneas cargadas de la EMT
+ * @description Tabla de modos de transporte (medios de transporte)
  * @type Array
- * @param {Int} codLinea Código interno de la línea
+ * @param {Int} idModo Identificador del modo
+ * @param {String} descripcion Descripción del modo
+ */
+var modos = [];
+
+/**
+ * @description Tabla de líneas cargadas
+ * @type Array
+ * @param {String} idLinea Identificador único de la línea (EMT+CTAN)
  * @param {String} userCodLinea Nombre corto de la línea (1, C2, N3)
  * @param {String} nombreLinea Nombre largo de la línea (Alameda-Churriana)
  * @param {String} cabeceraIda Nombre de la cabecera donde empieza la ida
@@ -77,14 +109,17 @@ var ttl_old = ttl_rate_old/refresh_rate;
  * @param {Bool} getVta
  * @param {Bool} verParadas Indica si esta activa sobre el mapa la visualización de las paradas de la línea
  * @param {Int} numBuses Indica la cantidad de buses que ahora mismo están operando en la línea
+ * @param {Int} idModo ID del modo de transporte de la línea
+ * @param {Bool} hayNoticia Indica si hay o no noticias relacionadas con la línea
+ * @param {String} operadores Lista de operadores de la línea
  */
-var lineas_emt = [];
+var lineas = [];
 
 /**
  * @description Tabla de autobuses en servicio
  * @type Array
  * @param {Int} codBus Nº de coche, identificador
- * @param {Int} codLinea Código interno de la línea que sirve
+ * @param {Int} idLinea Código interno de la línea que sirve
  * @param {Int} sentido Sentido de la línea que está recorriendo actualmente
  * @param {Int} codParIni Código de la última parada a la que ha llegado
  * @param {Float} latitud Ubicación
@@ -98,10 +133,10 @@ var autobuses = [];
 /**
  * @description Tabla de paradas cargadas
  * @type Array
- * @param {Int} codPar Código de la parada
+ * @param {Int} idLinea Código de la parada
  * @param {String} nombreParada Nombre de la parada
  * @param {String} direccion Dirección postal de la parada
- * @param {Array} servicios Array de servicios {codLinea, sentido, espera} que hay en esa parada
+ * @param {Array} servicios Array de servicios {idLinea, sentido, espera} que hay en esa parada
  * @param {Float} latitud Ubicación
  * @param {Float} longitua Ubicación
  * @param {L.marker} marker Objeto del marcador asociado a la parada
@@ -114,8 +149,11 @@ var paradas = [];
  * Función de puesta en marcha cuando finaliza la carga del DOM
  */
 $(document).ready(function(){
+	$("#control").html(ControlRUTPAM($("<div>"))); // Rellenamos el div del panel de control con lo que devuelve ControlRUTPAM()
+	verCopyright(); // Mostramos el "Acerca de RUTPAM"
 	initMap(); // Inicializamos el mapa y todo el layout
 	document.title = "RUTPAM "+rutpam_version; // Seteamos el título del documento
+	getLineasEmt(); // Cargamos las líneas
 });
 
 /**
@@ -132,9 +170,6 @@ function initMap() {
 		layers: osm, // Añadimos la capa de cartografía
 		attributionControl: false // Deshabilitamos el footer de copyright porque ya tenemos una ventana para ello
 	});
-	$("#lineas").html(ControlRUTPAM($("<div>"))); // Rellenamos el div del panel de control con lo que devuelve ControlRUTPAM()
-	$("#tablaLineas").hide(); // Ocultamos la tabla de líneas porque todavía está vacía
-	verCopyright(); // Mostramos el "Acerca de RUTPAM"
 	return null;
 }
 
@@ -143,9 +178,9 @@ function initMap() {
  * @returns {null}
  */
 function motor(){
-	for(var y = 0; y < lineas_emt.length; y++){ // Para todo el array de líneas
-		if(lineas_emt[y].getBuses){ // Si hemos activado el refresco de los buses
-			setTimeout(getUbicaciones, y*30, lineas_emt[y].codLinea); // Refrescar los buses (con un tiempo de diferencia para hacerlo escalonadamente)
+	for(var y = 0; y < lineas.length; y++){ // Para todo el array de líneas
+		if(lineas[y].getBuses){ // Si hemos activado el refresco de los buses
+			setTimeout(getUbicacionesEmt, y*30, lineas[y].idLinea); // Refrescar los buses (con un tiempo de diferencia para hacerlo escalonadamente)
 		}
 	}
 	reducirTTL(); // Reducir TTLs, cambiar iconos y limpiar buses viejos
@@ -188,7 +223,7 @@ function reducirTTL(){
 			console.log("DROP "+autobuses[pos].codBus); // Registramos que se pierde
 			autobuses[pos].marker.remove(); // Quitamos el marcador del mapa
 			autobuses.splice(pos, 1); // Borramos el objeto del array
-		}else if(lineas_emt[findLinea(autobuses[pos].codLinea)].getBuses === false){ // O SI no estamos haciendo un seguimiento de esa línea
+		}else if(lineas[findLinea(autobuses[pos].idLinea)].getBuses === false){ // O SI no estamos haciendo un seguimiento de esa línea
 			autobuses[pos].marker.remove(); // Quitamos el marcador del mapa
 			pos++; // Avanzamos de posición
 		}else if(autobuses[pos].ttl <= ttl_old){ // O SI el TTL es bajo y el bus lleva rato sin refrescarse
@@ -201,251 +236,7 @@ function reducirTTL(){
 	return null;
 }
 
-/**
- * @description Función que llama a la API para cargar las líneas. Cambia algunos elementos para preparar la interfaz.
- * @returns {null}
- */
-function getLineas(){
-	$("#getLineas").remove(); // Eliminamos el botón para pedir las líneas
-	// Petición AJAX
-	$.getJSON({
-		url: emt_proxy_url+'/services/lineas/'
-	}).done(function (response, status){
-		if(status === "success"){
-			lineas_emt = [];
-			$("#tablaLineas").show();
-			for(var i = 0; i<response.length; i++){
-				addLinea(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
-			}
-			inicialiarParadas();
-			motor(); // Llamamos la primera vez al motor
-			start(); // Programamos que se ejecute periódicamente
-			// Mostramos la botoner de control del motor
-			$("#play").css("display", "inline-block");
-			$("#refresh").css("display", "inline-block");
-			$("#pause").css("display", "inline-block");
-		}
-	});
-	return null;
-};
-
-/**
- * @description Función que llama a la API para cargar los trazados de una linea dada. A continuación los muestra sobre el mapa según el usuario lo haya indicado
- * @param {Int} codLinea
- * @returns {null}
- */
-function getTrazados(codLinea){
-	// Cambiamos el estado a deshabilitado a la espera de recibir los datos
-	$("#botonIda"+codLinea).prop("indeterminate", false).prop("disabled", true).off('click');
-	$("#botonVta"+codLinea).prop("indeterminate", false).prop("disabled", true).off('click');
-	// Llamada AJAX
-	$.getJSON({
-		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea+'&sentido=1'
-	}).done(function (response, status){
-		if(status === "success" && response.length > 0){
-			var posLinea = findLinea(codLinea); // Almacenamos la posición en lineas_emt[] para uso más cómodo
-			var trazado = []; // Creamos un array con los puntos de latitud y longitud del polígono
-			for(var a = 0; a < response.length; a++){
-				trazado.push({lat: response[a].latitud, lng: response[a].longitud});  // Rellenamos con los datos de la respuesta
-			}
-			lineas_emt[posLinea].trazadoIda = L.polyline(trazado, {
-				color: '#1E3180', // Fijamos el color de la ida
-				opacity: 1.0, // Opacidad
-				weight: 3 // Grosor
-			});
-			lineas_emt[posLinea].getIda = true;
-			$("#botonIda"+codLinea).prop("disabled", false); 
-			$("#botonIda"+codLinea).change(function(){
-				var isChecked = $(this).is(':checked');
-				if(isChecked){
-					showTrazado(codLinea, 1); // Mostramos el trazado
-				}else{
-					hideTrazado(codLinea, 1); // Ocultamos el trazado
-				}
-			});
-			$("#botonIda"+codLinea).trigger("change");
-		}
-	});
-	$.getJSON({
-		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea+'&sentido=2'
-	}).done(function (response, status){
-		if(status === "success" && response.length > 0){
-			var posLinea = findLinea(codLinea); // Almacenamos la posición en lineas_emt[] para uso más cómodo
-			var trazado = []; // Creamos un array con los puntos de latitud y longitud del polígono
-			for(var a = 0; a < response.length; a++){
-				trazado.push({lat: response[a].latitud, lng: response[a].longitud}); // Rellenamos con los datos de la respuesta
-			}
-			lineas_emt[posLinea].trazadoVta = L.polyline(trazado, {
-				color: '#4876FE', // Fijamos el color de la vuelta
-				opacity: 1.0, // Opacidad
-				weight: 3 // Grosor
-			});
-			lineas_emt[posLinea].getVta = true;
-			$("#botonVta"+codLinea).prop("disabled", false);
-			$("#botonVta"+codLinea).change(function(){
-				var isChecked = $(this).is(':checked');
-				if(isChecked){
-					showTrazado(codLinea, 2); // Mostramos el trazado
-				}else{
-					hideTrazado(codLinea, 2); // Ocultamos el trazado
-				}
-			});
-			$("#botonVta"+codLinea).trigger("change");
-		}		
-	});
-	return null;
-}
-
-function getUbicaciones(codLinea){
-	$.getJSON({
-		url: emt_proxy_url+'/services/buses/?codLinea='+codLinea
-	}).done(function (response, status){
-		if(status === "success"){
-			for(var x = 0; x < response.length; x++){
-				pos = findBus(response[x].codBus);
-				if(pos !== null){
-					updateBus(response[x], pos);
-				}else{
-					addBus(response[x]);
-				}
-			}
-			lineas_emt[findLinea(codLinea)].numBuses = response.length;
-			$("#cont"+codLinea).text(response.length);
-		}		
-	});
-};
-
-function addBus(Bus){
-	console.log("ADDED "+Bus.codBus);
-	var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
-	var data = {
-		marker: L.marker(coordenadas, {
-			icon: busIconContent(Bus, 1)
-		}),
-		popup: L.popup({autoPan: false, autoClose: false}).setContent(busPopupContent(Bus)),
-		codBus: Bus.codBus,
-		codLinea: Bus.codLinea,
-		sentido: Bus.sentido,
-		codParIni: Bus.codParIni,
-		latitud: Bus.latitud,
-		longitud: Bus.longitud,
-		ttl: ttl_new
-	};
-	var pos = autobuses.push(data)-1;
-	autobuses[pos].marker.bindPopup(autobuses[pos].popup);
-	autobuses[pos].marker.addTo(map);
-}
-
-function updateBus(Bus, pos){
-	var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
-	if(!autobuses[pos].marker.getLatLng().equals(coordenadas)){
-		autobuses[pos].marker.setLatLng(coordenadas);
-	}
-	autobuses[pos].codLinea = Bus.codLinea;
-	autobuses[pos].sentido = Bus.sentido;
-	autobuses[pos].codParIni = Bus.codParIni;
-	autobuses[pos].latitud = Bus.latitud;
-	autobuses[pos].longitud = Bus.longitud;
-	autobuses[pos].popup.setContent(busPopupContent(Bus));
-	autobuses[pos].marker.addTo(map);
-	if(autobuses[pos].ttl < default_ttl){
-		autobuses[pos].ttl = default_ttl;
-		autobuses[pos].marker.setIcon(busIconContent(autobuses[pos], 0));
-	}
-}
-
-function addLinea(lin){
-	var linea = {
-		codLinea: lin.codLinea,
-		userCodLinea: lin.userCodLinea.replace(/^F-/, "F"),
-		nombreLinea: lin.nombreLinea.replace(/(\(F\))|(\(?F-[0-9A-Z]{1,2}\)$)/, ""),
-		cabeceraIda: lin.cabeceraIda, 
-		cabeceraVta: lin.cabeceraVuelta,
-		paradasIda: [],
-		paradasVta: [],
-		getIda: false,
-		getVta: false,
-		getBuses: false,
-		verParadas: false,
-		numBuses: 0
-	};
-	for(var a = 0; a < lin.paradas.length; a++){
-		addParada(lin.paradas[a].parada, linea.codLinea, lin.paradas[a].sentido);
-		if(lin.paradas[a].sentido === 1){
-			linea.paradasIda.push({
-				codPar: lin.paradas[a].parada.codParada,
-				orden: lin.paradas[a].orden
-			});
-		}
-		if(lin.paradas[a].sentido === 2){
-			linea.paradasVta.push({
-				codPar: lin.paradas[a].parada.codParada,
-				orden: lin.paradas[a].orden
-			});
-		}
-	}
-	lineas_emt.push(linea);
-	//getTrazados(linea.codLinea);
-	
-	var fila = $("<tr>");
-	var botonIda = $("<input>", {
-		"type": "checkbox",
-		"id": "botonIda"+linea.codLinea
-	}).prop('checked', false).prop("indeterminate", true).click(function(){
-		getTrazados(linea.codLinea);
-	});
-	var botonVta = $("<input>", {
-		"type": "checkbox",
-		"id": "botonVta"+linea.codLinea,
-		"checked": true
-	}).prop('checked', false).prop("indeterminate", true).click(function(){
-		getTrazados(linea.codLinea);
-	});
-	var botonBus = $("<input>", {
-		"type": "checkbox",
-		"id": "botonBus"+linea.codLinea
-	}).prop('checked', false).click(function(){
-		enableBusUpdate(linea.codLinea);
-	});
-	$(fila).append($("<td>").append(botonIda));
-	$(fila).append($("<td>").append(botonVta));
-	$(fila).append($("<td>").append(botonBus));
-	$(fila).append($("<td>").append(lineaIcon(linea.userCodLinea, "3x")));
-	$(fila).append($("<td>").append($("<a>", {text: linea.nombreLinea, href: "#!"}).click(function(){verInfoLinea(linea.codLinea);})));
-	$(fila).append($("<td>").append($("<p>").attr('id', "cont"+linea.codLinea)));
-
-	$("#tablaLineas").append(fila);
-}
-
-function addParada(parada, codLinea, sentido){
-	var pos = findParada(parada.codParada);
-	if(pos !== null){
-		paradas[pos].servicios.push({
-			codLinea: codLinea,
-			sentido: sentido,
-			espera: null
-		});
-	}else{
-		pos = paradas.push({
-			codPar: parada.codParada,
-			nombreParada: parada.nombreParada,
-			direccion: parada.direccion,
-			servicios: [],
-			latitud: parada.latitud,
-			longitud: parada.longitud,
-			marker: null,
-			popup: null,
-			viewCont: 0
-		})-1;
-		paradas[pos].servicios.push({
-			codLinea: codLinea,
-			sentido: sentido,
-			espera: null
-		});
-	}
-}
-
-function inicialiarParadas(){
+function inicializarParadas(){
 	for(var a = 0; a < paradas.length; a++){
 		paradas[a].marker = L.marker({lat: paradas[a].latitud, lng: paradas[a].longitud}, {
 			icon: paradaIconContent(paradas[a].codPar)
@@ -456,26 +247,30 @@ function inicialiarParadas(){
 }
 
 function verInfoLinea(id){
-	var linea = lineas_emt[findLinea(id)];
+	var linea = lineas[findLinea(id)];
 	$("#ventana").hide();
 	$("#infoContent").empty();
 	$("#infoContent").append($("<h3>", {text: "Línea "+linea.userCodLinea}).css("text-align", "center"));
 	$("#infoContent").append($("<h4>", {text: linea.nombreLinea}).css("text-align", "center"));
-	$("#infoContent").append($("<p>", {text: "Id. interno EMT: "+linea.codLinea}));
+	$("#infoContent").append($("<p>", {text: "Id. interno: "+linea.idLinea}));
 	var distanciaIda = Math.floor(distanciaTrazado(linea.trazadoIda));
 	var distanciaVuelta = Math.floor(distanciaTrazado(linea.trazadoVta));
+	var tiempoIda = Math.floor(distanciaIda/1000/13.5*60);
+	var tiempoVuelta = Math.floor(distanciaVuelta/1000/13.5*60);
 	if(linea.getIda){
 		$("#infoContent").append($("<p>", {text: "Longitud Ida: "+distanciaIda+" m"}));
+		$("#infoContent").append($("<p>", {text: "Tiempo viaje ida (est.): "+ tiempoIda + " min"}));
 	}
 	if(linea.getVta){
 		$("#infoContent").append($("<p>", {text: "Longitud Vuelta: "+distanciaVuelta+" m"}));
+		$("#infoContent").append($("<p>", {text: "Tiempo viaje vuelta (est.): "+ tiempoVuelta + " min"}));
 	}
 	if(linea.numBuses > 0 && linea.getIda){
 		var distanciaTotal = distanciaIda + distanciaVuelta;
 		var distanciaEntreBuses = distanciaTotal/linea.numBuses;
-		$("#infoContent").append($("<p>", {text: "Distancia media entre coches: "+distanciaEntreBuses+" m"}));
 		var frecuenciaTeorica = distanciaEntreBuses/1000/13.5*60;
 		$("#infoContent").append($("<p>", {text: "Frecuencia media teórica: "+Math.floor(frecuenciaTeorica*100)/100+" min"}));
+		$("#infoContent").append($("<p>", {text: "Distancia media entre coches: "+Math.floor(distanciaEntreBuses*100)/100+" m"}));
 	}
 	var botonParadas = $("<button>", {
 		"type": "button",
@@ -485,7 +280,7 @@ function verInfoLinea(id){
 		// Ocultar paradas
 		$(botonParadas).text("Ocultar paradas");
 		$(botonParadas).on("click", function(){
-			linea = lineas_emt[findLinea(id)];
+			linea = lineas[findLinea(id)];
 			if(linea.verParadas === true){
 				for(var a = 0; a < linea.paradasIda.length; a++){
 					hideParada(linea.paradasIda[a].codPar);
@@ -502,7 +297,7 @@ function verInfoLinea(id){
 		// Mostrar paradas
 		$(botonParadas).text("Ubicar paradas");
 		$(botonParadas).on("click", function(){
-			linea = lineas_emt[findLinea(id)];
+			linea = lineas[findLinea(id)];
 			if(linea.verParadas === false){
 				for(var a = 0; a < linea.paradasIda.length; a++){
 					showParada(linea.paradasIda[a].codPar);
@@ -515,7 +310,7 @@ function verInfoLinea(id){
 			}
 		});
 	}
-	$("#infoContent").append(botonParadas);
+	$("#infoContent").append($("<p>").append(botonParadas));
 	var tabla = $("<table>");
 	var cabecera = $("<tr>");
 	if(linea.cabeceraVta !== null){
@@ -529,20 +324,20 @@ function verInfoLinea(id){
 		var fila = $("<tr>");
 		if(a < linea.paradasIda.length){
 			var codPar = linea.paradasIda[a].codPar;
-			fila = generarFilaParada(fila, codPar, linea.codLinea);
+			fila = generarFilaParada(fila, codPar, linea.idLinea);
 		}else if(a === linea.paradasIda.length && linea.cabeceraVta !== null){
 			var codPar = linea.paradasVta[0].codPar;
-			fila = generarFilaParada(fila, codPar, linea.codLinea);
+			fila = generarFilaParada(fila, codPar, linea.idLinea);
 		}else if(linea.cabeceraVta !== null){
 			fila = generarFilaParada(fila);
 		}
 		if(linea.cabeceraVta !== null){
 			if(a < linea.paradasVta.length){
 				var codPar = linea.paradasVta[a].codPar;
-				fila = generarFilaParada(fila, codPar, linea.codLinea);
+				fila = generarFilaParada(fila, codPar, linea.idLinea);
 			}else if(a === linea.paradasVta.length && linea.cabeceraVta !== null){
 				var codPar = linea.paradasIda[0].codPar;
-				fila = generarFilaParada(fila, codPar, linea.codLinea);
+				fila = generarFilaParada(fila, codPar, linea.idLinea);
 			}else{
 				fila = generarFilaParada(fila);
 			}
@@ -554,12 +349,12 @@ function verInfoLinea(id){
 	return null;
 }
 
-function generarFilaParada(div, codPar, codLinea){
+function generarFilaParada(div, codPar, idLinea){
 	if(codPar !== undefined && codPar !== null){
 		var nombre = paradas[findParada(codPar)].nombreParada;
 		div.append($("<td>").append($("<a>", {text: codPar, href: "#!"}).click(function(){verInfoParada(codPar)})));
 		div.append($("<td>", {html: acortarParada(nombre)}));
-		div.append(extrarCorrespondencias($("<td>"),codPar, codLinea));
+		div.append(extrarCorrespondencias($("<td>"),codPar, idLinea));
 	}else{
 		div.append($("<td>")).append($("<td>")).append($("<td>"));
 	}
@@ -578,7 +373,7 @@ function verInfoParada(id){
 	cabecera.append($("<th>", {text: "Servicios"}).attr("colspan", /*3*/2));
 	tabla.append(cabecera);
 	for(var a = 0; a < parada.servicios.length; a++){
-		var linea = lineas_emt[findLinea(parada.servicios[a].codLinea)]
+		var linea = lineas[findLinea(parada.servicios[a].idLinea)]
 		var sentido;
 		switch (parada.servicios[a].sentido){
 			case 1:
@@ -596,7 +391,7 @@ function verInfoParada(id){
 				break;
 		}
 		var fila = $("<tr>");
-		fila.append($("<td>", {html: lineaIcon(linea.userCodLinea, "3x", linea.codLinea)}));
+		fila.append($("<td>", {html: lineaIcon(linea.userCodLinea, "3x", linea.idLinea)}));
 		fila.append($("<td>", {text: sentido}));
 		//fila.append($("<td>", {text: "??? min."}).css("text-align", "right"));
 		tabla.append(fila);
@@ -607,56 +402,56 @@ function verInfoParada(id){
 	return null;
 }
 
-function enableBusUpdate(codLinea){
-	lineas_emt[findLinea(codLinea)].getBuses = true;
-	$("#botonBus"+codLinea).attr("checked", true);
-	$("#botonBus"+codLinea).unbind("click");
-	$("#botonBus"+codLinea).click(function(){
-		disableBusUpdate(codLinea);
+function enableBusUpdate(idLinea){
+	lineas[findLinea(idLinea)].getBuses = true;
+	$("#botonBus"+idLinea).attr("checked", true);
+	$("#botonBus"+idLinea).unbind("click");
+	$("#botonBus"+idLinea).click(function(){
+		disableBusUpdate(idLinea);
 	});
 }
 
-function disableBusUpdate(codLinea){
-	lineas_emt[findLinea(codLinea)].getBuses = false;
-	$("#botonBus"+codLinea).attr("checked", false);
-	$("#botonBus"+codLinea).unbind("click");
-	$("#botonBus"+codLinea).click(function(){
-		enableBusUpdate(codLinea);
+function disableBusUpdate(idLinea){
+	lineas[findLinea(idLinea)].getBuses = false;
+	$("#botonBus"+idLinea).attr("checked", false);
+	$("#botonBus"+idLinea).unbind("click");
+	$("#botonBus"+idLinea).click(function(){
+		enableBusUpdate(idLinea);
 	});
 }
 
 /**
  * Al ser llamada, añade al mapa el trazado de la línea indicada y prepara el botón para realizar la acción contraria cuando vuelva a ser llamado
- * @param {Number} codLinea
+ * @param {Number} idLinea
  * @param {Number} sentido
  */
-function showTrazado(codLinea, sentido){
+function showTrazado(idLinea, sentido){
 	if(sentido === 1){
-		lineas_emt[findLinea(codLinea)].trazadoIda.addTo(map);
+		lineas[findLinea(idLinea)].trazadoIda.addTo(map);
 	}else if(sentido === 2){
-		lineas_emt[findLinea(codLinea)].trazadoVta.addTo(map);
+		lineas[findLinea(idLinea)].trazadoVta.addTo(map);
 	}
 }
 
 /**
  * Al ser llamada, borra del mapa el trazado de la línea indicada y prepara el botón para realizar la acción contraria cuando vuelva a ser llamado
- * @param {Number} codLinea
+ * @param {Number} idLinea
  * @param {Number} sentido
  */
-function hideTrazado(codLinea, sentido){
+function hideTrazado(idLinea, sentido){
 	if(sentido === 1){
-		lineas_emt[findLinea(codLinea)].trazadoIda.remove();
-		$("#botonIda"+codLinea).attr("checked", false);
-		$("#botonIda"+codLinea).unbind("click");
-		$("#botonIda"+codLinea).click(function(){
-			showTrazado(codLinea, sentido);
+		lineas[findLinea(idLinea)].trazadoIda.remove();
+		$("#botonIda"+idLinea).attr("checked", false);
+		$("#botonIda"+idLinea).unbind("click");
+		$("#botonIda"+idLinea).click(function(){
+			showTrazado(idLinea, sentido);
 		});
 	}else if(sentido === 2){
-		lineas_emt[findLinea(codLinea)].trazadoVta.remove();
-		$("#botonVta"+codLinea).attr("checked", false);
-		$("#botonVta"+codLinea).unbind("click");
-		$("#botonVta"+codLinea).click(function(){
-			showTrazado(codLinea, sentido);
+		lineas[findLinea(idLinea)].trazadoVta.remove();
+		$("#botonVta"+idLinea).attr("checked", false);
+		$("#botonVta"+idLinea).unbind("click");
+		$("#botonVta"+idLinea).click(function(){
+			showTrazado(idLinea, sentido);
 		});
 	}
 }
@@ -676,21 +471,21 @@ function hideParada(codParada){
 }
 
 /**
- * Busca la posición de una línea dentro de lineas_emt[]
- * @param {Number} codLinea
- * @returns {Number} Posición en lineas_emt[]
+ * Busca la posición de una línea dentro de lineas[]
+ * @param {Number} idLinea
+ * @returns {Number} Posición en lineas[]
  */
-function findLinea(codLinea){
+function findLinea(idLinea){
 	var pos = 0;
 	var found = false;
-	while(pos < lineas_emt.length && !found){
-		if(lineas_emt[pos].codLinea === codLinea){
+	while(pos < lineas.length && !found){
+		if(lineas[pos].idLinea === idLinea){
 			found = true;
 		}else{
 			pos++;
 		}
 	}
-	if(pos >= lineas_emt.length){
+	if(pos >= lineas.length){
 		return null;
 	}else{
 		return pos;
@@ -741,6 +536,23 @@ function findParada(codPar){
 	}
 }
 
+function findModo(idModo){
+	var pos = 0;
+	var found = false;
+	while(pos < modos.length && !found){
+		if(modos[pos].idModo === idModo){
+			found = true;
+		}else{
+			pos++;
+		}
+	}
+	if(pos >= modos.length){
+		return null;
+	}else{
+		return pos;
+	}
+}
+
 /**
  * @description Calcula la distancia total de un trazado indicado
  * @param {linea.trazado} trazado
@@ -748,7 +560,7 @@ function findParada(codPar){
  */
 function distanciaTrazado(trazado){
 	var total = 0;
-	if(trazado !== undefined){
+	if(trazado !== null){
 		for(var pos = 1; pos < trazado.getLatLngs().length; pos++){
 			total = total + map.distance(trazado.getLatLngs()[pos-1], trazado.getLatLngs()[pos]);
 		}
@@ -756,15 +568,15 @@ function distanciaTrazado(trazado){
 	return total;
 }
 
-function extrarCorrespondencias(div, codPar, codLinea){
+function extrarCorrespondencias(div, codPar, idLinea){
 	$(div).css("max-width", "73px");
 	var parada = paradas[findParada(codPar)];
 	var cont = 0;
 	for(var a = 0; a < parada.servicios.length; a++){
-		var servicio = parada.servicios[a].codLinea;
-		if(servicio !== codLinea){
-			var linea = lineas_emt[findLinea(servicio)];
-			var spanIcon = lineaIcon(linea.userCodLinea, "2x", linea.codLinea);
+		var servicio = parada.servicios[a].idLinea;
+		if(servicio !== idLinea){
+			var linea = lineas[findLinea(servicio)];
+			var spanIcon = lineaIcon(linea.userCodLinea, "2x", linea.idLinea);
 			$(div).append(spanIcon);
 		}
 	}
@@ -775,7 +587,7 @@ function acortarParada(nombre){
 	return nombre.replace(/\s-\s/, "<br>");
 }
 
-function lineaIcon(userCodLinea, zoom, codLinea){
+function lineaIcon(userCodLinea, zoom, idLinea){
 	var id = $('<span>').addClass('fa-layers fa-'+zoom);
 	if(/^C[1-9]$|^29$/.test(userCodLinea)){ // Circulares
 		id.append($('<i>').addClass('fas fa-circle').css("color", "F77F00"));
@@ -788,15 +600,19 @@ function lineaIcon(userCodLinea, zoom, codLinea){
 	}else if(/^12$|^16$|^26$|^64$|^[A-Z]/.test(userCodLinea)){ // Servicios Especiales
 		id.append($('<i>').addClass('fas fa-circle').css("color", "D62828"));
 	}else{ // Líneas Convencionales
-		id.append($('<i>').addClass('fas fa-circle').css("color", "262C72"));
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtA));
 	}
 	if(userCodLinea.length < 3){
 		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-6"));
-	}else{
+	}else if(userCodLinea.length < 5){
 		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-8"));
+	}else if(userCodLinea.length < 7){
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-10"));
+	}else{
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-12"));
 	}
-	if(codLinea !== undefined && codLinea !== null){
-		id.click(function(){verInfoLinea(codLinea);});
+	if(idLinea !== undefined && idLinea !== null){
+		id.click(function(){verInfoLinea(idLinea);});
 	}
 	return id;
 }
@@ -807,7 +623,7 @@ function lineaIcon(userCodLinea, zoom, codLinea){
  * @returns {String}
  */
 function busPopupContent(Bus){
-	var linea = lineas_emt[findLinea(Bus.codLinea)];
+	var linea = lineas[findLinea(Bus.idLinea)];
 	var sentido;
 	switch(Bus.sentido){
 		case 1: // Ida
@@ -817,7 +633,7 @@ function busPopupContent(Bus){
 			sentido = linea.cabeceraIda;
 			break;
 		default:
-			sentido = "¿? Desconocido ¿?";
+			sentido = "¿? Desconocido ("+Bus.sentido+") ¿?";
 	}
 	return "Bus: "+Bus.codBus+"<br>"+
 	"Línea: "+linea.userCodLinea+"<br>"+
@@ -835,7 +651,7 @@ function paradaPopupContent(id){
 	$(cabecera).append($("<th>", {text: "Servicios"}).attr("colspan", /*3 2));
 	$(tabla).append(cabecera);*/
 	for(var a = 0; a < parada.servicios.length; a++){
-		var linea = lineas_emt[findLinea(parada.servicios[a].codLinea)]
+		var linea = lineas[findLinea(parada.servicios[a].idLinea)]
 		var sentido;
 		switch (parada.servicios[a].sentido){
 			case 1:
@@ -853,7 +669,7 @@ function paradaPopupContent(id){
 				break;
 		}
 		var fila = $("<tr>");
-		$(fila).append($("<td>", {html: lineaIcon(linea.userCodLinea, "2x", linea.codLinea)}));
+		$(fila).append($("<td>", {html: lineaIcon(linea.userCodLinea, "2x", linea.idLinea)}));
 		$(fila).append($("<td>", {text: sentido}));
 		//fila.append($("<td>", {text: "??? min."}).css("text-align", "right"));
 		$(tabla).append(fila);
@@ -863,7 +679,7 @@ function paradaPopupContent(id){
 }
 
 function busIconContent(Bus, estado){
-	var linea = lineas_emt[findLinea(Bus.codLinea)].userCodLinea;
+	var linea = lineas[findLinea(Bus.idLinea)].userCodLinea;
 	var html = linea+"<br>"+Bus.codBus;
 	var clase;
 	switch (Bus.sentido){
@@ -907,6 +723,32 @@ function paradaIconContent(codPar){
 	});
 }
 
+function togglePanelEmt(){
+	if(showEMT){
+		$("#tablaLineasEMT").css("display", "none");
+		$("#verEMT").css("color", "black").css("background-color", "white");
+		showEMT = false;
+	}else{
+		$("#tablaLineasEMT").css("display", "block");
+		$("#verEMT").css("color", "white").css("background-color", colores.emtA);
+		showEMT = true;
+	}
+	//$("#verEMT").on("click", ocultarPanelEmt);
+	//$("#verEMT").on("click", mostrarPanelEmt);
+}
+
+function togglePanelCtan(){
+	if(showCTAN){
+		$("#verCTAN").css("color", "black").css("background-color", "white");
+		showCTAN = false;
+	}else{
+		$("#verCTAN").css("color", "white").css("background-color", colores.ctmamA);
+		showCTAN = true;
+	}
+	//$("#verCTAN").on("click", ocultarPanelCtan);
+	//$("#verCTAN").on("click", mostrarPanelCtan);
+}
+
 /**
  * Recoge un elemento del DOM y lo devuelve rellenado con el HTML adecuado de la barra de control
  * @param {DOM Element} mapDiv
@@ -914,54 +756,46 @@ function paradaIconContent(codPar){
  */
 function ControlRUTPAM(mapDiv){
 	var titulo = $("<h2>", {"text":"RUTPAM"});
-	var descripcion = $("<p>", {"text":"Seguimiento buses EMT en tiempo real"});
+	var descripcion = $("<p>", {"text":"Información de transportes metropolitanos del área de Málaga"});
 	$(mapDiv).append(titulo).append(descripcion);
-	
-	var obtenerLineas = $("<button>", {
-		"id": "getLineas",
+	var botonEMT = $("<button>", {
+		"id": "verEMT",
 		"type": "button",
 		"class": "boton",
-		"text": "Obtener líneas"
-	});
-	obtenerLineas.on("click", getLineas);
+		"text": "Red EMT"
+	}).on("click", togglePanelEmt).css("color", "white").css("background-color", colores.emtA);
+	var botonCTAN = $("<button>", {
+		"id": "verCTAN",
+		"type": "button",
+		"class": "boton",
+		"text": "Red CTMAM"
+	}).on("click", togglePanelCtan).attr("disabled", true);
 	var play = $("<button>", {
 		"id": "play",
 		"type": "button",
 		"class": "boton",
 		"text": "Play"
-	});
-	play.on("click", function(){
-		start();
-	});
-	play.css("display", "none");
+	}).on("click", start).css("display", "none");
 	var refresh = $("<button>", {
 		"id": "refresh",
 		"type": "button",
 		"class": "boton",
 		"text": "Refrescar"
-	});
-	refresh.on("click", function(){
-		motor();
-	});
-	refresh.css("display", "none");
+	}).on("click", motor).css("display", "none");
 	var pause = $("<button>", {
 		"id": "pause",
 		"type": "button",
 		"class": "boton",
 		"text": "Pausa"
-	});
-	pause.on("click", function(){
-		stop();
-	});
-	pause.css("display", "none");
-	$(mapDiv).append(obtenerLineas).append(play).append(refresh).append(pause);
+	}).on("click", stop).css("display", "none");
+	var controles = $("<p>", {id: "controles"}).append(botonEMT).append(botonCTAN).append($("<br>")).append(play).append(refresh).append(pause);
+	$(mapDiv).append(controles);
 	var tabla = $("<table>", {
-		"id": "tablaLineas"
-	});
+		"id": "tablaLineasEMT"
+	})/*.css("display", "none")*/;
 	var encabezado = $("<tr>");
 	$(encabezado).html('<th>Ida</th><th>Vta</th><th>Bus</th><th colspan="2">Línea</th><th>NºB.</th>');
 	$(tabla).append(encabezado);
-	
 	$(mapDiv).append(tabla);
 	$(mapDiv).append('<br><small><a href="#!" onclick="verCopyright()">Acerca de RUTPAM</a></small>')
 	return mapDiv;
@@ -972,7 +806,9 @@ function verCopyright(){
 	Licencia MIT © Néstor M. Lora - 2018<br>\n\
 	<a href="mailto:nestorlora@geeklab.es">nestorlora@geeklab.es</a><br><br>\n\
 	Datos cartográficos: <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i><i class="fab fa-creative-commons-sa"></i> Colaboradores de <a href="https://openstreetmap.org">OpenStreetMap</a><br>\n\
-	Información de líneas: Empresa Malagueña de Transportes S.A.M.<br><br>\n\
+	Información de líneas: Empresa Malagueña de Transportes S.A.M.<br>\n\
+	Ubicaciones en tiempo real: BetterEMT <i class="fab fa-creative-commons"></i><!--<i class="fab fa-creative-commons-by"></i><i class="fab fa-creative-commons-nc-eu"></i><i class="fab fa-creative-commons-sa"></i>--> Eduardo Fernández<br><br>\n\
+	Contiene información proporcionada por el Portal de Datos<br> Abiertos de la Red de Consorcios de Transporte de Andalucía<br><br>\n\
 	Construido con <i title="HTML 5" class="fab fa-html5 fa-2x fa-fw" style="color: orangered"></i> \n\
 	<i title="CSS 3" class="fab fa-css3-alt fa-2x fa-fw" style="color: dodgerblue"></i> \n\
 	<span title="JavaScript" class="fa-2x fa-layers fa-fw">\n\
