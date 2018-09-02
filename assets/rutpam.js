@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-/* global emt_proxy_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url */
+/* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url */
 
 /**
  * @description Variable global para la versión del programa

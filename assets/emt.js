@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-/* global emt_proxy_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url */
+/* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url */
 
 /**
  * @description Función que llama a la API para cargar las líneas. Cambia algunos elementos para preparar la interfaz.
