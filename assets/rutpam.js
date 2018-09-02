@@ -127,7 +127,7 @@ var paradas = [];
  * Función de puesta en marcha cuando finaliza la carga del DOM
  */
 $(document).ready(function(){
-	$("#lineas").html(ControlRUTPAM($("<div>"))); // Rellenamos el div del panel de control con lo que devuelve ControlRUTPAM()
+	$("#control").html(ControlRUTPAM($("<div>"))); // Rellenamos el div del panel de control con lo que devuelve ControlRUTPAM()
 	$("#tablaLineasEMT").hide(); // Ocultamos la tabla de líneas porque todavía está vacía
 	verCopyright(); // Mostramos el "Acerca de RUTPAM"
 	initMap(); // Inicializamos el mapa y todo el layout
@@ -749,7 +749,6 @@ function ControlRUTPAM(mapDiv){
 	var encabezado = $("<tr>");
 	$(encabezado).html('<th>Ida</th><th>Vta</th><th>Bus</th><th colspan="2">Línea</th><th>NºB.</th>');
 	$(tabla).append(encabezado);
-	
 	$(mapDiv).append(tabla);
 	$(mapDiv).append('<br><small><a href="#!" onclick="verCopyright()">Acerca de RUTPAM</a></small>')
 	return mapDiv;
