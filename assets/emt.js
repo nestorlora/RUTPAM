@@ -28,7 +28,7 @@
  * @description Función que llama a la API para cargar las líneas. Cambia algunos elementos para preparar la interfaz.
  * @returns {null}
  */
-function getLineas(){
+function getLineasEmt(){
 	$("#getLineas").remove(); // Eliminamos el botón para pedir las líneas
 	// Petición AJAX
 	$.getJSON({
@@ -38,7 +38,7 @@ function getLineas(){
 			lineas = [];
 			$("#tablaLineas").show();
 			for(var i = 0; i<response.length; i++){
-				addLinea(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
+				addLineaEmt(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
 			}
 			inicializarParadas();
 			motor(); // Llamamos la primera vez al motor
@@ -57,7 +57,7 @@ function getLineas(){
  * @param {Int} idLinea
  * @returns {null}
  */
-function getTrazados(idLinea){
+function getTrazadosEmt(idLinea){
 	// Cambiamos el estado a deshabilitado a la espera de recibir los datos
 	$("#botonIda"+idLinea).prop("indeterminate", false).prop("disabled", true).off('click');
 	$("#botonVta"+idLinea).prop("indeterminate", false).prop("disabled", true).off('click');
@@ -119,7 +119,7 @@ function getTrazados(idLinea){
 	return null;
 }
 
-function getUbicaciones(idLinea){
+function getUbicacionesEmt(idLinea){
 	$.getJSON({
 		//url: emt_proxy_url+'/services/buses/?codLinea='+codLinea
 		url: betteremt_api_url+'/buses/linea/'+codLinea(idLinea)
@@ -129,9 +129,9 @@ function getUbicaciones(idLinea){
                 pos = findBus(response[x].codBus);
                 response[x].idLinea = "EMT-"+response[x].codLinea;
 				if(pos !== null){
-					updateBus(response[x], pos);
+					updateBusEmt(response[x], pos);
 				}else{
-					addBus(response[x]);
+					addBusEmt(response[x]);
 				}
 			}
 			lineas[findLinea(idLinea)].numBuses = response.length;
@@ -140,7 +140,7 @@ function getUbicaciones(idLinea){
 	});
 };
 
-function addBus(Bus){
+function addBusEmt(Bus){
 	console.log("ADDED "+Bus.codBus);
     var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
 	var data = {
@@ -161,7 +161,7 @@ function addBus(Bus){
 	autobuses[pos].marker.addTo(map);
 }
 
-function updateBus(Bus, pos){
+function updateBusEmt(Bus, pos){
 	var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
 	if(!autobuses[pos].marker.getLatLng().equals(coordenadas)){
 		autobuses[pos].marker.setLatLng(coordenadas);
@@ -179,7 +179,7 @@ function updateBus(Bus, pos){
 	}
 }
 
-function addLinea(lin){
+function addLineaEmt(lin){
 	var linea = {
         idLinea: "EMT-"+lin.codLinea,
 		userCodLinea: lin.userCodLinea.replace(/^F-/, "F"),
@@ -200,7 +200,7 @@ function addLinea(lin){
         operadores: "Empresa Malagueña de Transportes"
 	};
 	for(var a = 0; a < lin.paradas.length; a++){
-		addParada(lin.paradas[a].parada, linea.idLinea, lin.paradas[a].sentido);
+		addParadaEmt(lin.paradas[a].parada, linea.idLinea, lin.paradas[a].sentido);
 		if(lin.paradas[a].sentido === 1){
 			linea.paradasIda.push({
 				codPar: lin.paradas[a].parada.codParada,
@@ -222,14 +222,14 @@ function addLinea(lin){
 		"type": "checkbox",
 		"id": "botonIda"+linea.idLinea
 	}).prop('checked', false).prop("indeterminate", true).click(function(){
-		getTrazados(linea.idLinea);
+		getTrazadosEmt(linea.idLinea);
 	});
 	var botonVta = $("<input>", {
 		"type": "checkbox",
 		"id": "botonVta"+linea.idLinea,
 		"checked": true
 	}).prop('checked', false).prop("indeterminate", true).click(function(){
-		getTrazados(linea.idLinea);
+		getTrazadosEmt(linea.idLinea);
 	});
 	var botonBus = $("<input>", {
 		"type": "checkbox",
@@ -247,7 +247,7 @@ function addLinea(lin){
 	$("#tablaLineas").append(fila);
 }
 
-function addParada(parada, idLinea, sentido){
+function addParadaEmt(parada, idLinea, sentido){
 	var pos = findParada(parada.codParada);
 	if(pos !== null){
 		paradas[pos].servicios.push({
