@@ -28,7 +28,7 @@
  * @description Variable global para la versión del programa
  * @type String
  */
-var rutpam_version = "4.7.3";
+var rutpam_version = "4.8";
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -707,7 +707,7 @@ function paradaIconContent(codPar){
  */
 function ControlRUTPAM(mapDiv){
 	var titulo = $("<h2>", {"text":"RUTPAM"});
-	var descripcion = $("<p>", {"text":"Seguimiento buses EMT en tiempo real"});
+	var descripcion = $("<p>", {"text":"Información de transportes metropolitanos del área de Málaga"});
 	$(mapDiv).append(titulo).append(descripcion);
 	var play = $("<button>", {
 		"id": "play",
