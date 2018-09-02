@@ -61,6 +61,14 @@ var default_ttl = ttl_rate_default/refresh_rate;
 var ttl_old = ttl_rate_old/refresh_rate;
 
 /**
+ * @description Tabla de modos de transporte (medios de transporte)
+ * @type Array
+ * @param {Int} idModo Identificador del modo
+ * @param {String} descripcion Descripción del modo
+ */
+var modos = [];
+
+/**
  * @description Tabla de líneas cargadas
  * @type Array
  * @param {Int} codLinea Código interno de la línea
@@ -495,6 +503,23 @@ function findParada(codPar){
 		}
 	}
 	if(pos >= paradas.length){
+		return null;
+	}else{
+		return pos;
+	}
+}
+
+function findModo(idModo){
+	var pos = 0;
+	var found = false;
+	while(pos < modos.length && !found){
+		if(modos[pos].idModo === idModo){
+			found = true;
+		}else{
+			pos++;
+		}
+	}
+	if(pos >= modos.length){
 		return null;
 	}else{
 		return pos;
