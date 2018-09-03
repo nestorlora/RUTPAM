@@ -159,7 +159,9 @@ function addBusEmt(Bus){
 	};
 	var pos = autobuses.push(data)-1;
 	autobuses[pos].marker.bindPopup(autobuses[pos].popup);
+	if(lineas[findLinea(Bus.idLinea)].getBuses){
 	autobuses[pos].marker.addTo(map);
+}
 }
 
 function updateBusEmt(Bus, pos){
@@ -173,7 +175,9 @@ function updateBusEmt(Bus, pos){
 	autobuses[pos].latitud = Bus.latitud;
 	autobuses[pos].longitud = Bus.longitud;
 	autobuses[pos].popup.setContent(busPopupContent(Bus));
+	if(lineas[findLinea(Bus.idLinea)].getBuses){
 	autobuses[pos].marker.addTo(map);
+	}
 	if(autobuses[pos].ttl < default_ttl){
 		autobuses[pos].ttl = default_ttl;
 		autobuses[pos].marker.setIcon(busIconContent(autobuses[pos], 0));
