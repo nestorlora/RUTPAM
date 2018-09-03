@@ -744,9 +744,11 @@ function togglePanelEmt(){
 
 function togglePanelCtan(){
 	if(showCTAN){
+		$("#tablaLineasCTAN").css("display", "none");
 		$("#verCTAN").css("color", "black").css("background-color", "white");
 		showCTAN = false;
 	}else{
+		$("#tablaLineasCTAN").css("display", "block");
 		$("#verCTAN").css("color", "white").css("background-color", colores.ctmamA);
 		showCTAN = true;
 	}
@@ -774,7 +776,7 @@ function ControlRUTPAM(mapDiv){
 		"type": "button",
 		"class": "boton",
 		"text": "Red CTMAM"
-	}).on("click", togglePanelCtan).attr("disabled", true);
+	}).on("click", togglePanelCtan)/*.attr("disabled", true)*/;
 	var play = $("<button>", {
 		"id": "play",
 		"type": "button",
@@ -802,6 +804,13 @@ function ControlRUTPAM(mapDiv){
 	$(encabezadoEmt).html('<th>Ida</th><th>Vta</th><th>Bus</th><th colspan="2">Línea</th><th>NºB.</th>');
 	$(tablaEmt).append(encabezadoEmt);
 	$(mapDiv).append(tablaEmt);
+	var tablaCtan = $("<table>", {
+		"id": "tablaLineasCTAN"
+	}).css("display", "none");
+	var encabezadoCtan = $("<tr>");
+	$(encabezadoCtan).html('<th>Ida</th><th>Vta</th><th colspan="2">Línea</th>');
+	$(tablaCtan).append(encabezadoCtan);
+	$(mapDiv).append(tablaCtan);
 	$(mapDiv).append('<br><small><a href="#!" onclick="verCopyright()">Acerca de RUTPAM</a></small>')
 	return mapDiv;
 }
