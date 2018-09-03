@@ -178,11 +178,12 @@ function initMap() {
  * @returns {null}
  */
 function motor(){
-	for(var y = 0; y < lineas.length; y++){ // Para todo el array de líneas
+	/*for(var y = 0; y < lineas.length; y++){ // Para todo el array de líneas
 		if(lineas[y].getBuses){ // Si hemos activado el refresco de los buses
 			setTimeout(getUbicacionesEmt, y*30, lineas[y].idLinea); // Refrescar los buses (con un tiempo de diferencia para hacerlo escalonadamente)
 		}
-	}
+	}*/
+	getBusesEmt();
 	reducirTTL(); // Reducir TTLs, cambiar iconos y limpiar buses viejos
 	return null;
 }
