@@ -607,7 +607,9 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtN));
 	}else if(/^A$|^E$|^L$/.test(userCodLinea)){ // Lineas Exprés y Lanzaderas
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.express));
-	}else if(/^M/.test(userCodLinea)){ // Líneas Interurbanas CTAN
+	}else if(/^R-|^M-10[1-4]$/.test(userCodLinea)){ // Líneas Urbanas CTAN
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtA));
+	}else if(/^M-/.test(userCodLinea)){ // Líneas Interurbanas CTAN
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamA));
 	}else if(/^91$|^92$/.test(userCodLinea)){ // Servicios Turísticos
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.especial));
