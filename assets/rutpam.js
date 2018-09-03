@@ -795,13 +795,13 @@ function ControlRUTPAM(mapDiv){
 	}).on("click", stop).css("display", "none");
 	var controles = $("<p>", {id: "controles"}).append(botonEMT).append(botonCTAN).append($("<br>")).append(play).append(refresh).append(pause);
 	$(mapDiv).append(controles);
-	var tabla = $("<table>", {
+	var tablaEmt = $("<table>", {
 		"id": "tablaLineasEMT"
 	})/*.css("display", "none")*/;
-	var encabezado = $("<tr>");
-	$(encabezado).html('<th>Ida</th><th>Vta</th><th>Bus</th><th colspan="2">Línea</th><th>NºB.</th>');
-	$(tabla).append(encabezado);
-	$(mapDiv).append(tabla);
+	var encabezadoEmt = $("<tr>");
+	$(encabezadoEmt).html('<th>Ida</th><th>Vta</th><th>Bus</th><th colspan="2">Línea</th><th>NºB.</th>');
+	$(tablaEmt).append(encabezadoEmt);
+	$(mapDiv).append(tablaEmt);
 	$(mapDiv).append('<br><small><a href="#!" onclick="verCopyright()">Acerca de RUTPAM</a></small>')
 	return mapDiv;
 }
