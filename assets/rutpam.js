@@ -184,7 +184,28 @@ function motor(){
 		}
 	}*/
 	getBusesEmt();
-	reducirTTL(); // Reducir TTLs, cambiar iconos y limpiar buses viejos
+	var pos = 0; // Empezamos por el principio
+	while(pos < autobuses.length){ // Para todos los autobuses
+		var poslinea = findLinea(autobuses[pos].idLinea); // Extraemos la dirección de la línea en el array
+		autobuses[pos].ttl--; // Decrementar TTL
+		if(autobuses[pos].ttl <= 0){ // SI su vida útil ha expirado
+			console.log("DROP "+autobuses[pos].codBus); // Registramos que se pierde
+			autobuses[pos].marker.remove(); // Quitamos el marcador del mapa
+			lineas[poslinea].numBuses--; // Decrementamos el número de buses en la línea
+			autobuses.splice(pos, 1); // Borramos el objeto del array
+		}else if(lineas[poslinea].getBuses === false){ // O SI no estamos haciendo un seguimiento de esa línea
+			autobuses[pos].marker.remove(); // Quitamos el marcador del mapa
+			pos++; // Avanzamos de posición
+		}else if(autobuses[pos].ttl <= ttl_old){ // O SI el TTL es bajo y el bus lleva rato sin refrescarse
+			autobuses[pos].marker.setIcon(busIconContent(autobuses[pos], 2)); // Cambiamos el icono para que aparezca como no-actualizado
+			pos++; // Avanzamos de posición
+		}else{ // O Todo está bien
+			pos++; // Avanzamos de posición
+		}
+	}
+	for(var a = 0; a < lineas.length; a++){ // Para todas las líneas
+		$("#cont"+lineas[a].idLinea).text(lineas[a].numBuses); // Actualizamos el indicador de buses en servicio
+	}
 	return null;
 }
 
@@ -217,23 +238,6 @@ function start(){
  * @returns {null}
  */
 function reducirTTL(){
-	var pos = 0; // Empezamos por el principio
-	while(pos < autobuses.length){ // Para todos los autobuses
-		autobuses[pos].ttl--; // Decrementar TTL
-		if(autobuses[pos].ttl <= 0){ // SI su vida útil ha expirado
-			console.log("DROP "+autobuses[pos].codBus); // Registramos que se pierde
-			autobuses[pos].marker.remove(); // Quitamos el marcador del mapa
-			autobuses.splice(pos, 1); // Borramos el objeto del array
-		}else if(lineas[findLinea(autobuses[pos].idLinea)].getBuses === false){ // O SI no estamos haciendo un seguimiento de esa línea
-			autobuses[pos].marker.remove(); // Quitamos el marcador del mapa
-			pos++; // Avanzamos de posición
-		}else if(autobuses[pos].ttl <= ttl_old){ // O SI el TTL es bajo y el bus lleva rato sin refrescarse
-			autobuses[pos].marker.setIcon(busIconContent(autobuses[pos], 2)); // Cambiamos el icono para que aparezca como no-actualizado
-			pos++; // Avanzamos de posición
-		}else{ // O Todo está bien
-			pos++; // Avanzamos de posición
-		}
-	}
 	return null;
 }
 

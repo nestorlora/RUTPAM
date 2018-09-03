@@ -177,9 +177,11 @@ function addBusEmt(Bus){
 	};
 	var pos = autobuses.push(data)-1;
 	autobuses[pos].marker.bindPopup(autobuses[pos].popup);
-	if(lineas[findLinea(Bus.idLinea)].getBuses){
+	var poslinea = findLinea(Bus.idLinea);
+	if(lineas[poslinea].getBuses){
 		autobuses[pos].marker.addTo(map);
 	}
+	lineas[poslinea].numBuses++;
 }
 
 function updateBusEmt(Bus, pos){
