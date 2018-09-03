@@ -616,14 +616,19 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 	}else{ // Líneas Urbanas EMT
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtA));
 	}
+
+	texto = userCodLinea.replace(/^M-/, "M\n").replace(/^R-/, "R");
+
 	if(userCodLinea.length < 3){
-		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-6"));
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-6"));
 	}else if(userCodLinea.length < 5){
-		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-8"));
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-8"));
+	}else if(userCodLinea.length < 6){
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-10"));
 	}else if(userCodLinea.length < 7){
-		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-10"));
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-11"));
 	}else{
-		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-12"));
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-12"));
 	}
 	if(idLinea !== undefined && idLinea !== null){
 		id.click(function(){verInfoLinea(idLinea);});
