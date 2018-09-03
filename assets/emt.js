@@ -37,7 +37,6 @@ function getLineasEmt(){
 		url: emt_proxy_url+'/services/lineas/'
 	}).done(function (response, status){
 		if(status === "success"){
-			lineas = [];
 			for(var i = 0; i<response.length; i++){
 				addLineaEmt(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
 			}
