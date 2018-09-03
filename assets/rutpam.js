@@ -49,21 +49,27 @@ var map;
  * @type Objeto
  */
 var colores = {
-	// EMT SAM
+	// EMT SAM + Urbanos Consorcio
 	emtA: "#1E3180", // Primario, lineas regulares, sentido ida
 	emtB: "#4876FE", // Secundario, sentido vuelta
+	emtC: "#F77F00", // Circulares
+	emtN: "#04141F", // Nocturnos
 	// Consorcio de Transportes
 	ctmamA: "#009639", // Oficial Primario, líneas regulares, sentido ida
 	ctmamB: "#CBE896", // sentido vuelta
-	ctmamC: "#E4D77E", // Oficial Secundario
-	ctmamD: "#0C0A3E", // lineas buho
-	ctmamE: "#4C4878", // líneas urbanas
-	ctmamF: "#71A9F7", // líneas de verano
+	ctmamN: "#0C0A3E", // lineas buho
+	ctmamU: "#E4D77E", // Oficial Secundario, líneas universitarias
+	ctmamV: "#71A9F7", // líneas de verano
 	// Renfe Operadora
 	renfeA: "#8A0072", // Oficial general
 	renfeB: "#EF3340", // Oficial cercanías
 	// Metro Málaga
-	metroA: "#DC241F" // "Oficial"
+	metro: "#DC241F", // "Oficial"
+	// Lineas especiales
+	especial: "#D62828", // Líneas y servicios especiales
+	express: "#AA1155", // Servicios exprés
+	lanzaderas: "#AA1155" // Lanzadera
+	
 };
 
 /**
@@ -595,17 +601,19 @@ function acortarParada(nombre){
 
 function lineaIcon(userCodLinea, zoom, idLinea){
 	var id = $('<span>').addClass('fa-layers fa-'+zoom);
-	if(/^C[1-9]$|^29$/.test(userCodLinea)){ // Circulares
-		id.append($('<i>').addClass('fas fa-circle').css("color", "F77F00"));
-	}else if(/^N[1-9]/.test(userCodLinea)){ // Nocturno
-		id.append($('<i>').addClass('fas fa-circle').css("color", "04151F"));
+	if(/^C[1-9]$|^29$/.test(userCodLinea)){ // Circulares EMT
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtC));
+	}else if(/^N[1-9]/.test(userCodLinea)){ // Nocturno EMT
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtN));
 	}else if(/^A$|^E$|^L$/.test(userCodLinea)){ // Lineas Exprés y Lanzaderas
-		id.append($('<i>').addClass('fas fa-circle').css("color", "AA1155"));
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.express));
+	}else if(/^M/.test(userCodLinea)){ // Líneas Interurbanas CTAN
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamA));
 	}else if(/^91$|^92$/.test(userCodLinea)){ // Servicios Turísticos
-		id.append($('<i>').addClass('fas fa-circle').css("color", "62A87C"));
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.especial));
 	}else if(/^12$|^16$|^26$|^64$|^[A-Z]/.test(userCodLinea)){ // Servicios Especiales
-		id.append($('<i>').addClass('fas fa-circle').css("color", "D62828"));
-	}else{ // Líneas Convencionales
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.especial));
+	}else{ // Líneas Urbanas EMT
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtA));
 	}
 	if(userCodLinea.length < 3){
