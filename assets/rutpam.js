@@ -154,6 +154,7 @@ $(document).ready(function(){
 	initMap(); // Inicializamos el mapa y todo el layout
 	document.title = "RUTPAM "+rutpam_version; // Seteamos el título del documento
 	getLineasEmt(); // Cargamos las líneas
+	getLineasCtan();
 });
 
 /**

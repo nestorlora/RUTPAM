@@ -43,3 +43,62 @@ function getModos(){
 	});
     return null;
 }
+
+function getLineasCtan(){
+    $.getJSON({
+		url: ctan_api_url+'/lineas?lang=ES'
+	}).done(function (response, status){
+		if(status === "success"){
+            response = response.lineas;
+            for(var i = 0; i<response.length; i++){
+				addLineaCtan(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
+			}
+		}
+	});
+	return null;
+}
+
+function addLineaCtan(lin){
+    var linea = {
+        idLinea: "CTAN-"+lin.idLinea,
+        userCodLinea: lin.codigo,
+        nombreLinea: lin.nombre,
+        cabeceraIda: null,
+        cabeceraVta: null,
+        paradasIda: [],
+        paradasVta: [],
+        trazadoIda: null,
+        trazadoVta: null,
+        getBuses: false,
+        getIda: false,
+        getVta: false,
+        verParadas: false,
+        numBuses: null,
+        idModo: parseInt(lin.idModo),
+        hayNoticia: lin.hayNoticias,
+        operadores: (lin.operadores).replace(/, $/, "")
+    };
+    lineas.push(linea);
+
+    var fila = $("<tr>");
+    var botonIda = $("<input>", {
+		"type": "checkbox",
+		"id": "botonIda"+linea.idLinea
+	}).prop('checked', false).prop("indeterminate", true).prop("disabled", true);
+	var botonVta = $("<input>", {
+		"type": "checkbox",
+		"id": "botonVta"+linea.idLinea,
+		"checked": true
+    }).prop('checked', false).prop("indeterminate", true).prop("disabled", true);
+    $(fila).append($("<td>").append(botonIda));
+	$(fila).append($("<td>").append(botonVta));
+	$(fila).append($("<td>").append(lineaIcon(linea.userCodLinea, "3x")));
+	$(fila).append($("<td>").append($("<p>", {text: linea.nombreLinea})));
+
+    switch(linea.idModo){
+        case 1:
+        $("#tablaLineasCTAN").append(fila);
+        break;
+    }
+	
+}
