@@ -34,7 +34,7 @@ function getModos(){
             response = response.modosTransporte;
             for(var i = 0; i<response.length; i++){
 				var modo = {
-                    idModo: response[i].idModo,
+                    idModo: parseInt(response[i].idModo),
                     descripcion: response[i].descripcion
                 }
                 modos.push(modo);
