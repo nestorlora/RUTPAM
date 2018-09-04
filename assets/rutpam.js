@@ -57,7 +57,7 @@ var colores = {
 	// Consorcio de Transportes
 	ctmamA: "#009639", // Oficial Primario, líneas regulares, sentido ida
 	ctmamB: "#CBE896", // sentido vuelta
-	ctmamN: "#0C0A3E", // lineas buho
+	ctmamN: "#0C0A49", // lineas buho
 	ctmamU: "#E4D77E", // Oficial Secundario, líneas universitarias
 	ctmamV: "#71A9F7", // líneas de verano
 	// Renfe Operadora
@@ -66,9 +66,9 @@ var colores = {
 	// Metro Málaga
 	metro: "#DC241F", // "Oficial"
 	// Lineas especiales
-	especial: "#D62828", // Líneas y servicios especiales
-	express: "#AA1155", // Servicios exprés
-	lanzaderas: "#AA1155" // Lanzadera
+	especial: "#F2C900", // Líneas y servicios especiales
+	express: "#AA5825", // Servicios exprés
+	lanzaderas: "#4C4C4C" // Lanzadera
 	
 };
 
