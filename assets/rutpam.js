@@ -607,6 +607,10 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtN));
 	}else if(/^A$|^E$|^L$/.test(userCodLinea)){ // Lineas Exprés y Lanzaderas
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.express));
+	}else if(/N[1-9]$|^M-168$|^M-155$|^M-168$/.test(userCodLinea)){ // Líneas Buho CTAN
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamN));
+	}else if(/^M-5[0-9]{2}$/.test(userCodLinea)){ // Líneas Verano CTAN
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamV));
 	}else if(/^R-|^M-10[1-4]$/.test(userCodLinea)){ // Líneas Urbanas CTAN
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtA));
 	}else if(/^M-/.test(userCodLinea)){ // Líneas Interurbanas CTAN
