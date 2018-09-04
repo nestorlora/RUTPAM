@@ -605,8 +605,10 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtC));
 	}else if(/^N[1-9]/.test(userCodLinea)){ // Nocturno EMT
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtN));
-	}else if(/^A$|^E$|^L$/.test(userCodLinea)){ // Lineas Exprés y Lanzaderas
+	}else if(/^A$|^E$/.test(userCodLinea)){ // Lineas exprés
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.express));
+	}else if(/^L$/.test(userCodLinea)){ // Lineas Lanzaderas
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.lanzaderas));
 	}else if(/N[1-9]$|^M-168$|^M-155$|^M-168$/.test(userCodLinea)){ // Líneas Buho CTAN
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamN));
 	}else if(/^M-5[0-9]{2}$/.test(userCodLinea)){ // Líneas Verano CTAN
