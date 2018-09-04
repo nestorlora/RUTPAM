@@ -833,7 +833,8 @@ function ControlRUTPAM(mapDiv){
 	$(encabezadoCtan).html('<th>Ida</th><th>Vta</th><th colspan="2">Línea</th>');
 	$(tablaCtan).append(encabezadoCtan);
 	$(mapDiv).append(tablaCtan);
-	$(mapDiv).append('<br><small><a href="#!" onclick="verCopyright()">Acerca de RUTPAM</a></small>')
+	$(mapDiv).append('<br><small><a href="#!" onclick="verCopyright()">Acerca de RUTPAM</a></small>');
+	$(mapDiv).append('<br><small><a href="#!" onclick="verAyuda()">Ayuda</a></small>');
 	return mapDiv;
 }
 
@@ -858,6 +859,47 @@ function verCopyright(){
 	$("#infoContent").empty();
 	$("#infoContent").append($("<h3>", {text: "Información"}).css("text-align", "center"));
 	$("#infoContent").append($("<p>", {html: rutpam_credits}).css("text-align", "center"));
+	$("#ventana").show();
+}
+
+function verAyuda(){
+	var ayuda = '<h4>Controles</h4>\n\
+	<p>En proceso...</p>\n\
+	<h4>Leyenda de colores</h4>\n\
+	<p>Cada línea de autobús muestra un color en el disco con su código</p>\n\
+	<h5>Líneas Urbanas</h5>\n\
+	<p>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.emtA+'"></i></span> Líneas convencionales<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.emtC+'"></i></span> Líneas circulares EMT<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.emtN+'"></i></span> Líneas nocturnas<br>\n\
+	</p>\n\
+	<h5>Líneas Interurbanas</h5>\n\
+	<p>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.ctmamA+'"></i></span> Líneas convencionales<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.ctmamN+'"></i></span> Líneas búho<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.ctmamU+'"></i></span> Líneas universitarias<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.ctmamV+'"></i></span> Líneas de verano<br>\n\
+	</p>\n\
+	<h5>Líneas Especiales</h5>\n\
+	<p>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.especial+'"></i></span> Líneas especiales/Servicios especiales<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.express+'"></i></span> Líneas express<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.lanzaderas+'"></i></span> Líneas lanzadera<br>\n\
+	</p>\n\
+	<h5>Próximamente...</h5>\n\
+	<p>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.renfeA+'"></i></span> Renfe Regional/Media Distancia<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.renfeB+'"></i></span> Renfe Cercanías<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.metro+'"></i></span> Metro Málaga<br>\n\
+	</p>\n\
+	<h4>Información de líneas</h4>\n\
+	<p>En proceso...</p>\n\
+	<h4>Información de paradas</h4>\n\
+	<p>En proceso...</p>';
+	$("#ventana").hide();
+	$("#infoContent").empty();
+	$("#infoContent").append($("<h3>", {text: "Ayuda"}).css("text-align", "center"));
+	$("#infoContent").append($("<div>", {html: ayuda}));
 	$("#ventana").show();
 }
 
