@@ -841,7 +841,7 @@ function verCopyright(){
 	<a href="mailto:nestorlora@geeklab.es">nestorlora@geeklab.es</a><br><br>\n\
 	Datos cartográficos: <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i><i class="fab fa-creative-commons-sa"></i> Colaboradores de <a href="https://openstreetmap.org">OpenStreetMap</a><br>\n\
 	Información de líneas: Empresa Malagueña de Transportes S.A.M.<br>\n\
-	Ubicaciones en tiempo real: BetterEMT <i class="fab fa-creative-commons"></i><!--<i class="fab fa-creative-commons-by"></i><i class="fab fa-creative-commons-nc-eu"></i><i class="fab fa-creative-commons-sa"></i>--> Eduardo Fernández<br><br>\n\
+	Ubicaciones en tiempo real: BetterEMT ©<!--<i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i><i class="fab fa-creative-commons-nc-eu"></i><i class="fab fa-creative-commons-sa"></i>--> Eduardo Fernández<br><br>\n\
 	Contiene información proporcionada por el Portal de Datos<br> Abiertos de la Red de Consorcios de Transporte de Andalucía<br><br>\n\
 	Construido con <i title="HTML 5" class="fab fa-html5 fa-2x fa-fw" style="color: orangered"></i> \n\
 	<i title="CSS 3" class="fab fa-css3-alt fa-2x fa-fw" style="color: dodgerblue"></i> \n\
