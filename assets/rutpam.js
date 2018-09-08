@@ -90,6 +90,9 @@ var default_ttl = ttl_rate_default/refresh_rate;
  */
 var ttl_old = ttl_rate_old/refresh_rate;
 
+var showEMT = false;
+var showCTAN = false;
+
 /**
  * @description Tabla de modos de transporte (medios de transporte)
  * @type Array
