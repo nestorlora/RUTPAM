@@ -59,6 +59,10 @@ span .fa-layers-text{
 	overflow-y: auto;
 	top: 1%;
 	max-height: 97%;
+	border-style: solid;
+	border-width: 1px;
+	border-color: black;
+	box-shadow: 5px 5px 10px grey;
 }
 .panelLineas {
 	position: absolute;

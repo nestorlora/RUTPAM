@@ -30,7 +30,7 @@
  * @description Variable global para la versión del programa
  * @type String
  */
-var rutpam_version = "4.8";
+var rutpam_version = "4.9";
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -49,21 +49,27 @@ var map;
  * @type Objeto
  */
 var colores = {
-	// EMT SAM
+	// EMT SAM + Urbanos Consorcio
 	emtA: "#1E3180", // Primario, lineas regulares, sentido ida
 	emtB: "#4876FE", // Secundario, sentido vuelta
+	emtC: "#F77F00", // Circulares
+	emtN: "#04141F", // Nocturnos
 	// Consorcio de Transportes
 	ctmamA: "#009639", // Oficial Primario, líneas regulares, sentido ida
 	ctmamB: "#CBE896", // sentido vuelta
-	ctmamC: "#E4D77E", // Oficial Secundario
-	ctmamD: "#0C0A3E", // lineas buho
-	ctmamE: "#4C4878", // líneas urbanas
-	ctmamF: "#71A9F7", // líneas de verano
+	ctmamN: "#0C0A49", // lineas buho
+	ctmamU: "#E4D77E", // Oficial Secundario, líneas universitarias
+	ctmamV: "#71A9F7", // líneas de verano
 	// Renfe Operadora
 	renfeA: "#8A0072", // Oficial general
 	renfeB: "#EF3340", // Oficial cercanías
 	// Metro Málaga
-	metroA: "#DC241F" // "Oficial"
+	metro: "#DC241F", // "Oficial"
+	// Lineas especiales
+	especial: "#F2C900", // Líneas y servicios especiales
+	express: "#AA5825", // Servicios exprés
+	lanzaderas: "#4C4C4C" // Lanzadera
+	
 };
 
 /**
@@ -83,6 +89,9 @@ var default_ttl = ttl_rate_default/refresh_rate;
  * @type Int
  */
 var ttl_old = ttl_rate_old/refresh_rate;
+
+var showEMT = false;
+var showCTAN = false;
 
 /**
  * @description Tabla de modos de transporte (medios de transporte)
@@ -154,6 +163,7 @@ $(document).ready(function(){
 	initMap(); // Inicializamos el mapa y todo el layout
 	document.title = "RUTPAM "+rutpam_version; // Seteamos el título del documento
 	getLineasEmt(); // Cargamos las líneas
+	getLineasCtan();
 });
 
 /**
@@ -178,12 +188,34 @@ function initMap() {
  * @returns {null}
  */
 function motor(){
-	for(var y = 0; y < lineas.length; y++){ // Para todo el array de líneas
+	/*for(var y = 0; y < lineas.length; y++){ // Para todo el array de líneas
 		if(lineas[y].getBuses){ // Si hemos activado el refresco de los buses
 			setTimeout(getUbicacionesEmt, y*30, lineas[y].idLinea); // Refrescar los buses (con un tiempo de diferencia para hacerlo escalonadamente)
 		}
+	}*/
+	getBusesEmt();
+	var pos = 0; // Empezamos por el principio
+	while(pos < autobuses.length){ // Para todos los autobuses
+		var poslinea = findLinea(autobuses[pos].idLinea); // Extraemos la dirección de la línea en el array
+		autobuses[pos].ttl--; // Decrementar TTL
+		if(autobuses[pos].ttl <= 0){ // SI su vida útil ha expirado
+			console.log("DROP "+autobuses[pos].codBus); // Registramos que se pierde
+			autobuses[pos].marker.remove(); // Quitamos el marcador del mapa
+			lineas[poslinea].numBuses--; // Decrementamos el número de buses en la línea
+			autobuses.splice(pos, 1); // Borramos el objeto del array
+		}else if(lineas[poslinea].getBuses === false){ // O SI no estamos haciendo un seguimiento de esa línea
+			autobuses[pos].marker.remove(); // Quitamos el marcador del mapa
+			pos++; // Avanzamos de posición
+		}else if(autobuses[pos].ttl <= ttl_old){ // O SI el TTL es bajo y el bus lleva rato sin refrescarse
+			autobuses[pos].marker.setIcon(busIconContent(autobuses[pos], 2)); // Cambiamos el icono para que aparezca como no-actualizado
+			pos++; // Avanzamos de posición
+		}else{ // O Todo está bien
+			pos++; // Avanzamos de posición
+		}
 	}
-	reducirTTL(); // Reducir TTLs, cambiar iconos y limpiar buses viejos
+	for(var a = 0; a < lineas.length; a++){ // Para todas las líneas
+		$("#cont"+lineas[a].idLinea).text(lineas[a].numBuses); // Actualizamos el indicador de buses en servicio
+	}
 	return null;
 }
 
@@ -216,23 +248,6 @@ function start(){
  * @returns {null}
  */
 function reducirTTL(){
-	var pos = 0; // Empezamos por el principio
-	while(pos < autobuses.length){ // Para todos los autobuses
-		autobuses[pos].ttl--; // Decrementar TTL
-		if(autobuses[pos].ttl <= 0){ // SI su vida útil ha expirado
-			console.log("DROP "+autobuses[pos].codBus); // Registramos que se pierde
-			autobuses[pos].marker.remove(); // Quitamos el marcador del mapa
-			autobuses.splice(pos, 1); // Borramos el objeto del array
-		}else if(lineas[findLinea(autobuses[pos].idLinea)].getBuses === false){ // O SI no estamos haciendo un seguimiento de esa línea
-			autobuses[pos].marker.remove(); // Quitamos el marcador del mapa
-			pos++; // Avanzamos de posición
-		}else if(autobuses[pos].ttl <= ttl_old){ // O SI el TTL es bajo y el bus lleva rato sin refrescarse
-			autobuses[pos].marker.setIcon(busIconContent(autobuses[pos], 2)); // Cambiamos el icono para que aparezca como no-actualizado
-			pos++; // Avanzamos de posición
-		}else{ // O Todo está bien
-			pos++; // Avanzamos de posición
-		}
-	}
 	return null;
 }
 
@@ -589,27 +604,42 @@ function acortarParada(nombre){
 
 function lineaIcon(userCodLinea, zoom, idLinea){
 	var id = $('<span>').addClass('fa-layers fa-'+zoom);
-	if(/^C[1-9]$|^29$/.test(userCodLinea)){ // Circulares
-		id.append($('<i>').addClass('fas fa-circle').css("color", "F77F00"));
-	}else if(/^N[1-9]/.test(userCodLinea)){ // Nocturno
-		id.append($('<i>').addClass('fas fa-circle').css("color", "04151F"));
-	}else if(/^A$|^E$|^L$/.test(userCodLinea)){ // Lineas Exprés y Lanzaderas
-		id.append($('<i>').addClass('fas fa-circle').css("color", "AA1155"));
+	if(/^C[1-9]$|^29$/.test(userCodLinea)){ // Circulares EMT
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtC));
+	}else if(/^N[1-9]/.test(userCodLinea)){ // Nocturno EMT
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtN));
+	}else if(/^A$|^E$/.test(userCodLinea)){ // Lineas exprés
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.express));
+	}else if(/^L$/.test(userCodLinea)){ // Lineas Lanzaderas
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.lanzaderas));
+	}else if(/N[1-9]$|^M-168$|^M-155$|^M-168$/.test(userCodLinea)){ // Líneas Buho CTAN
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamN));
+	}else if(/^M-5[0-9]{2}$/.test(userCodLinea)){ // Líneas Verano CTAN
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamV));
+	}else if(/^R-|^M-10[1-4]$/.test(userCodLinea)){ // Líneas Urbanas CTAN
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtA));
+	}else if(/^M-/.test(userCodLinea)){ // Líneas Interurbanas CTAN
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamA));
 	}else if(/^91$|^92$/.test(userCodLinea)){ // Servicios Turísticos
-		id.append($('<i>').addClass('fas fa-circle').css("color", "62A87C"));
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.especial));
 	}else if(/^12$|^16$|^26$|^64$|^[A-Z]/.test(userCodLinea)){ // Servicios Especiales
-		id.append($('<i>').addClass('fas fa-circle').css("color", "D62828"));
-	}else{ // Líneas Convencionales
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.especial));
+	}else{ // Líneas Urbanas EMT
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtA));
 	}
+
+	texto = userCodLinea.replace(/^M-/, "M\n").replace(/^R-/, "R");
+
 	if(userCodLinea.length < 3){
-		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-6"));
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-6"));
 	}else if(userCodLinea.length < 5){
-		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-8"));
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-8"));
+	}else if(userCodLinea.length < 6){
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-10"));
 	}else if(userCodLinea.length < 7){
-		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-10"));
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-11"));
 	}else{
-		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(userCodLinea).attr("data-fa-transform", "shrink-12"));
+		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-12"));
 	}
 	if(idLinea !== undefined && idLinea !== null){
 		id.click(function(){verInfoLinea(idLinea);});
@@ -739,9 +769,11 @@ function togglePanelEmt(){
 
 function togglePanelCtan(){
 	if(showCTAN){
+		$("#tablaLineasCTAN").css("display", "none");
 		$("#verCTAN").css("color", "black").css("background-color", "white");
 		showCTAN = false;
 	}else{
+		$("#tablaLineasCTAN").css("display", "block");
 		$("#verCTAN").css("color", "white").css("background-color", colores.ctmamA);
 		showCTAN = true;
 	}
@@ -763,13 +795,13 @@ function ControlRUTPAM(mapDiv){
 		"type": "button",
 		"class": "boton",
 		"text": "Red EMT"
-	}).on("click", togglePanelEmt).css("color", "white").css("background-color", colores.emtA);
+	}).on("click", togglePanelEmt);
 	var botonCTAN = $("<button>", {
 		"id": "verCTAN",
 		"type": "button",
 		"class": "boton",
 		"text": "Red CTMAM"
-	}).on("click", togglePanelCtan).attr("disabled", true);
+	}).on("click", togglePanelCtan);
 	var play = $("<button>", {
 		"id": "play",
 		"type": "button",
@@ -790,14 +822,22 @@ function ControlRUTPAM(mapDiv){
 	}).on("click", stop).css("display", "none");
 	var controles = $("<p>", {id: "controles"}).append(botonEMT).append(botonCTAN).append($("<br>")).append(play).append(refresh).append(pause);
 	$(mapDiv).append(controles);
-	var tabla = $("<table>", {
+	var tablaEmt = $("<table>", {
 		"id": "tablaLineasEMT"
-	})/*.css("display", "none")*/;
-	var encabezado = $("<tr>");
-	$(encabezado).html('<th>Ida</th><th>Vta</th><th>Bus</th><th colspan="2">Línea</th><th>NºB.</th>');
-	$(tabla).append(encabezado);
-	$(mapDiv).append(tabla);
-	$(mapDiv).append('<br><small><a href="#!" onclick="verCopyright()">Acerca de RUTPAM</a></small>')
+	}).css("display", "none");
+	var encabezadoEmt = $("<tr>");
+	$(encabezadoEmt).html('<th>Ida</th><th>Vta</th><th>Bus</th><th colspan="2">Línea</th><th>NºB.</th>');
+	$(tablaEmt).append(encabezadoEmt);
+	$(mapDiv).append(tablaEmt);
+	var tablaCtan = $("<table>", {
+		"id": "tablaLineasCTAN"
+	}).css("display", "none");
+	var encabezadoCtan = $("<tr>");
+	$(encabezadoCtan).html('<th>Ida</th><th>Vta</th><th colspan="2">Línea</th>');
+	$(tablaCtan).append(encabezadoCtan);
+	$(mapDiv).append(tablaCtan);
+	$(mapDiv).append('<br><small><a href="#!" onclick="verCopyright()">Acerca de RUTPAM</a></small>');
+	$(mapDiv).append('<br><small><a href="#!" onclick="verAyuda()">Ayuda</a></small>');
 	return mapDiv;
 }
 
@@ -807,7 +847,7 @@ function verCopyright(){
 	<a href="mailto:nestorlora@geeklab.es">nestorlora@geeklab.es</a><br><br>\n\
 	Datos cartográficos: <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i><i class="fab fa-creative-commons-sa"></i> Colaboradores de <a href="https://openstreetmap.org">OpenStreetMap</a><br>\n\
 	Información de líneas: Empresa Malagueña de Transportes S.A.M.<br>\n\
-	Ubicaciones en tiempo real: BetterEMT <i class="fab fa-creative-commons"></i><!--<i class="fab fa-creative-commons-by"></i><i class="fab fa-creative-commons-nc-eu"></i><i class="fab fa-creative-commons-sa"></i>--> Eduardo Fernández<br><br>\n\
+	Ubicaciones en tiempo real: <a href="https://betteremt.edufdezsoy.es">BetterEMT</a> ©<!--<i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i><i class="fab fa-creative-commons-nc-eu"></i><i class="fab fa-creative-commons-sa"></i>--> Eduardo Fernández<br><br>\n\
 	Contiene información proporcionada por el Portal de Datos<br> Abiertos de la Red de Consorcios de Transporte de Andalucía<br><br>\n\
 	Construido con <i title="HTML 5" class="fab fa-html5 fa-2x fa-fw" style="color: orangered"></i> \n\
 	<i title="CSS 3" class="fab fa-css3-alt fa-2x fa-fw" style="color: dodgerblue"></i> \n\
@@ -822,6 +862,47 @@ function verCopyright(){
 	$("#infoContent").empty();
 	$("#infoContent").append($("<h3>", {text: "Información"}).css("text-align", "center"));
 	$("#infoContent").append($("<p>", {html: rutpam_credits}).css("text-align", "center"));
+	$("#ventana").show();
+}
+
+function verAyuda(){
+	var ayuda = '<h4>Controles</h4>\n\
+	<p>En proceso...</p>\n\
+	<h4>Leyenda de colores</h4>\n\
+	<p>Cada línea de autobús muestra un color en el disco con su código</p>\n\
+	<h5>Líneas Urbanas</h5>\n\
+	<p>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.emtA+'"></i></span> Líneas convencionales<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.emtC+'"></i></span> Líneas circulares EMT<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.emtN+'"></i></span> Líneas nocturnas<br>\n\
+	</p>\n\
+	<h5>Líneas Interurbanas</h5>\n\
+	<p>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.ctmamA+'"></i></span> Líneas convencionales<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.ctmamN+'"></i></span> Líneas búho<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.ctmamU+'"></i></span> Líneas universitarias<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.ctmamV+'"></i></span> Líneas de verano<br>\n\
+	</p>\n\
+	<h5>Líneas Especiales</h5>\n\
+	<p>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.especial+'"></i></span> Líneas especiales/Servicios especiales<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.express+'"></i></span> Líneas express<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.lanzaderas+'"></i></span> Líneas lanzadera<br>\n\
+	</p>\n\
+	<h5>Próximamente...</h5>\n\
+	<p>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.renfeA+'"></i></span> Renfe Regional/Media Distancia<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.renfeB+'"></i></span> Renfe Cercanías<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.metro+'"></i></span> Metro Málaga<br>\n\
+	</p>\n\
+	<h4>Información de líneas</h4>\n\
+	<p>En proceso...</p>\n\
+	<h4>Información de paradas</h4>\n\
+	<p>En proceso...</p>';
+	$("#ventana").hide();
+	$("#infoContent").empty();
+	$("#infoContent").append($("<h3>", {text: "Ayuda"}).css("text-align", "center"));
+	$("#infoContent").append($("<div>", {html: ayuda}));
 	$("#ventana").show();
 }
 

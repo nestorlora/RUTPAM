@@ -37,7 +37,6 @@ function getLineasEmt(){
 		url: emt_proxy_url+'/services/lineas/'
 	}).done(function (response, status){
 		if(status === "success"){
-			lineas = [];
 			for(var i = 0; i<response.length; i++){
 				addLineaEmt(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
 			}
@@ -141,6 +140,24 @@ function getUbicacionesEmt(idLinea){
 	});
 };
 
+function getBusesEmt(){
+	$.getJSON({
+		url: betteremt_api_url+'/buses/all'
+	}).done(function (response, status){
+		if(status === "success"){
+			for(var x = 0; x < response.length; x++){
+                pos = findBus(response[x].codBus);
+                response[x].idLinea = "EMT-"+response[x].codLinea;
+				if(pos !== null){
+					updateBusEmt(response[x], pos);
+				}else{
+					addBusEmt(response[x]);
+				}
+			}
+		}		
+	});
+}
+
 function addBusEmt(Bus){
 	console.log("ADDED "+Bus.codBus);
     var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
@@ -159,7 +176,11 @@ function addBusEmt(Bus){
 	};
 	var pos = autobuses.push(data)-1;
 	autobuses[pos].marker.bindPopup(autobuses[pos].popup);
-	autobuses[pos].marker.addTo(map);
+	var poslinea = findLinea(Bus.idLinea);
+	if(lineas[poslinea].getBuses){
+		autobuses[pos].marker.addTo(map);
+	}
+	lineas[poslinea].numBuses++;
 }
 
 function updateBusEmt(Bus, pos){
@@ -173,7 +194,9 @@ function updateBusEmt(Bus, pos){
 	autobuses[pos].latitud = Bus.latitud;
 	autobuses[pos].longitud = Bus.longitud;
 	autobuses[pos].popup.setContent(busPopupContent(Bus));
-	autobuses[pos].marker.addTo(map);
+	if(lineas[findLinea(Bus.idLinea)].getBuses){
+		autobuses[pos].marker.addTo(map);
+	}
 	if(autobuses[pos].ttl < default_ttl){
 		autobuses[pos].ttl = default_ttl;
 		autobuses[pos].marker.setIcon(busIconContent(autobuses[pos], 0));
