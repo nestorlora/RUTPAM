@@ -792,13 +792,13 @@ function ControlRUTPAM(mapDiv){
 		"type": "button",
 		"class": "boton",
 		"text": "Red EMT"
-	}).on("click", togglePanelEmt).css("color", "white").css("background-color", colores.emtA);
+	}).on("click", togglePanelEmt);
 	var botonCTAN = $("<button>", {
 		"id": "verCTAN",
 		"type": "button",
 		"class": "boton",
 		"text": "Red CTMAM"
-	}).on("click", togglePanelCtan)/*.attr("disabled", true)*/;
+	}).on("click", togglePanelCtan);
 	var play = $("<button>", {
 		"id": "play",
 		"type": "button",
@@ -821,7 +821,7 @@ function ControlRUTPAM(mapDiv){
 	$(mapDiv).append(controles);
 	var tablaEmt = $("<table>", {
 		"id": "tablaLineasEMT"
-	})/*.css("display", "none")*/;
+	}).css("display", "none");
 	var encabezadoEmt = $("<tr>");
 	$(encabezadoEmt).html('<th>Ida</th><th>Vta</th><th>Bus</th><th colspan="2">Línea</th><th>NºB.</th>');
 	$(tablaEmt).append(encabezadoEmt);
