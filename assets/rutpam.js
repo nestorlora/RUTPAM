@@ -604,6 +604,7 @@ function acortarParada(nombre){
 
 function lineaIcon(userCodLinea, zoom, idLinea){
 	var id = $('<span>').addClass('fa-layers fa-'+zoom);
+	var esNegro = false;
 	if(/^C[1-9]$|^29$/.test(userCodLinea)){ // Circulares EMT
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtC));
 	}else if(/^N[1-9]/.test(userCodLinea)){ // Nocturno EMT
@@ -618,31 +619,38 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamV));
 	}else if(/^M-114$|^M-116$|^M-143$|^M-166$/.test(userCodLinea)){ // Líneas Universitarias CTAN
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamU));
+		esNegro = true;
 	}else if(/^R-|^M-10[1-4]$/.test(userCodLinea)){ // Líneas Urbanas CTAN
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtA));
 	}else if(/^M-/.test(userCodLinea)){ // Líneas Interurbanas CTAN
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamA));
 	}else if(/^91$|^92$/.test(userCodLinea)){ // Servicios Turísticos
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.especial));
+		esNegro = true;
 	}else if(/^12$|^16$|^26$|^64$|^[A-Z]/.test(userCodLinea)){ // Servicios Especiales
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.especial));
+		esNegro = true;
 	}else{ // Líneas Urbanas EMT
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtA));
 	}
 
-	texto = userCodLinea.replace(/^M-/, "M\n").replace(/^R-/, "R");
-
+	var texto = userCodLinea.replace(/^M-/, "M\n").replace(/^R-/, "R");
+	var textdiv;
 	if(userCodLinea.length < 3){
-		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-6"));
+		textdiv = $('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-6");
 	}else if(userCodLinea.length < 5){
-		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-8"));
+		textdiv = $('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-8");
 	}else if(userCodLinea.length < 6){
-		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-10"));
+		textdiv = $('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-10");
 	}else if(userCodLinea.length < 7){
-		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-11"));
+		textdiv = $('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-11");
 	}else{
-		id.append($('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-12"));
+		textdiv = $('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-12");
 	}
+	if(esNegro){
+		textdiv.css("color", "black");
+	}
+	id.append(textdiv);
 	if(idLinea !== undefined && idLinea !== null){
 		id.click(function(){verInfoLinea(idLinea);});
 	}
