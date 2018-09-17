@@ -30,7 +30,7 @@
  * @description Variable global para la versión del programa
  * @type String
  */
-var rutpam_version = "4.9";
+var rutpam_version = "4.9.1";
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -610,7 +610,7 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtN));
 	}else if(/^A$|^E$/.test(userCodLinea)){ // Lineas exprés
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.express));
-	}else if(/^L$/.test(userCodLinea)){ // Lineas Lanzaderas
+	}else if(/^L$|^P$/.test(userCodLinea)){ // Lineas Lanzaderas
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.lanzaderas));
 	}else if(/N[1-9]$|^M-168$|^M-155$|^M-168$/.test(userCodLinea)){ // Líneas Buho CTAN
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamN));
