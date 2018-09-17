@@ -30,7 +30,7 @@
  * @description Variable global para la versión del programa
  * @type String
  */
-var rutpam_version = "4.9.1";
+var rutpam_version = "4.9.3";
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -325,7 +325,9 @@ function verInfoLinea(id){
 			}
 		});
 	}
-	$("#infoContent").append($("<p>").append(botonParadas));
+	if(linea.paradasIda.length > 0){
+		$("#infoContent").append($("<p>").append(botonParadas));
+	}
 	var tabla = $("<table>");
 	var cabecera = $("<tr>");
 	if(linea.cabeceraVta !== null){
@@ -359,7 +361,9 @@ function verInfoLinea(id){
 		}
 		tabla.append(fila);
 	}
-	$("#infoContent").append(tabla);
+	if(linea.paradasIda.length > 0){
+		$("#infoContent").append(tabla);
+	}
 	$("#ventana").show();
 	return null;
 }
