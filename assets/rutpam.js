@@ -617,7 +617,7 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 	}else if(/^M-5[0-9]{2}$/.test(userCodLinea)){ // Líneas Verano CTAN
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamV));
 	}else if(/^M-114$|^M-116$|^M-143$|^M-166$/.test(userCodLinea)){ // Líneas Universitarias CTAN
-		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamV));
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamU));
 	}else if(/^R-|^M-10[1-4]$/.test(userCodLinea)){ // Líneas Urbanas CTAN
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtA));
 	}else if(/^M-/.test(userCodLinea)){ // Líneas Interurbanas CTAN
