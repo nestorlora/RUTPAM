@@ -268,16 +268,17 @@ function verInfoLinea(id){
 	$("#infoContent").append($("<h3>", {text: "Línea "+linea.userCodLinea}).css("text-align", "center"));
 	$("#infoContent").append($("<h4>", {text: linea.nombreLinea}).css("text-align", "center"));
 	$("#infoContent").append($("<p>", {text: "Id. interno: "+linea.idLinea}));
-	var distanciaIda = Math.floor(distanciaTrazado(linea.trazadoIda));
-	var distanciaVuelta = Math.floor(distanciaTrazado(linea.trazadoVta));
-	var tiempoIda = Math.floor(distanciaIda/1000/13.5*60);
-	var tiempoVuelta = Math.floor(distanciaVuelta/1000/13.5*60);
+	var distanciaIda, distanciaVuelta, tiempoIda, tiempoVuelta;
 	var datosTrazado = $("<table>");
 	if(linea.getIda){
+		distanciaIda = Math.floor(distanciaTrazado(linea.trazadoIda));
+		tiempoIda = Math.floor(distanciaIda/1000/13.5*60);
 		datosTrazado.append($("<tr>").append($("<td>")).append($("<th>", {text: "Longitud"})).append($("<th>", {text: "Tiempo de viaje (estimado)"})));
 		datosTrazado.append($("<tr>").append($("<th>", {text: "Ida"})).append($("<td>", {text: distanciaIda+" m"})).append($("<td>", {text: tiempoIda+" min"})));	
 	}
 	if(linea.getVta){
+		distanciaVuelta = Math.floor(distanciaTrazado(linea.trazadoVta));
+		tiempoVuelta = Math.floor(distanciaVuelta/1000/13.5*60);
 		datosTrazado.append($("<tr>").append($("<th>", {text: "Vuelta"})).append($("<td>", {text: distanciaVuelta+" m"})).append($("<td>", {text: tiempoVuelta+" min"})));
 	}
 	$("#infoContent").append(datosTrazado);
