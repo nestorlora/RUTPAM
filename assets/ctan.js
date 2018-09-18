@@ -102,3 +102,11 @@ function addLineaCtan(lin){
     }
 	
 }
+
+function getParadasLineaCtan(){
+    
+}
+
+function idLinea(id){
+    return idLinea.replace(/^CTAN-/, "");
+}
