@@ -127,7 +127,7 @@ var zonas = [];
  * @param {Bool} getVta
  * @param {Bool} verParadas Indica si esta activa sobre el mapa la visualización de las paradas de la línea
  * @param {Int} numBuses Indica la cantidad de buses que ahora mismo están operando en la línea
- * @param {Int} idModo ID del modo de transporte de la línea
+ * @param {String} modo Modo de transporte de la línea
  * @param {Bool} hayNoticia Indica si hay o no noticias relacionadas con la línea
  * @param {String} operadores Lista de operadores de la línea
  */

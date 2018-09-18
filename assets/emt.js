@@ -223,7 +223,7 @@ function addLineaEmt(lin){
 		getVta: false,
 		verParadas: false,
         numBuses: 0,
-        idModo: 1,
+        modo: "Autobús",
         hayNoticia: null,
         operadores: "Empresa Malagueña de Transportes S.A.M."
 	};

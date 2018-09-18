@@ -92,7 +92,7 @@ function addLineaCtan(lin){
         getVta: false,
         verParadas: false,
         numBuses: null,
-        idModo: parseInt(lin.idModo),
+        modo: lin.modo,
         hayNoticia: lin.hayNoticias,
         operadores: (lin.operadores).replace(/, $/, "")
     };
@@ -113,8 +113,8 @@ function addLineaCtan(lin){
 	$(fila).append($("<td>").append(lineaIcon(linea.userCodLinea, "3x")));
 	$(fila).append($("<td>").append($("<a>", {text: linea.nombreLinea, href: "#!"}).click(function(){verInfoLinea(linea.idLinea);})));
 
-    switch(linea.idModo){
-        case 1:
+    switch(linea.modo){
+        case "Autobús":
         $("#tablaLineasCTAN").append(fila);
         break;
     }
