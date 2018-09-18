@@ -274,7 +274,7 @@ function verInfoLinea(id){
 	datosLinea.append($("<tr>").append($("<th>", {text: "Id. interno"})).append($("<td>", {text: linea.idLinea})));
 	datosLinea.append($("<tr>").append($("<th>", {text: "Operador"})).append($("<td>", {text: linea.operadores})));
 	$("#infoContent").append(datosLinea);
-	var distanciaIda, distanciaVuelta, tiempoIda, tiempoVuelta; // Creamos variables para los datos numéricos
+	var distanciaIda = distanciaVuelta = tiempoIda = tiempoVuelta = 0 // Creamos variables para los datos numéricos
 	var datosTrazado = $("<table>"); // Tabla para los datos numéricos del trazado
 	if(linea.getIda){ // SI se ha cargado el trazado de ida
 		distanciaIda = Math.floor(distanciaTrazado(linea.trazadoIda)); // Calcular la distancia de la ruta
