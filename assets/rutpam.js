@@ -273,7 +273,7 @@ function verInfoLinea(id){
 	var datosLinea = $("<table>");
 	datosLinea.append($("<tr>").append($("<th>", {text: "Id. interno"})).append($("<td>", {text: linea.idLinea})));
 	datosLinea.append($("<tr>").append($("<th>", {text: "Operador"})).append($("<td>", {text: linea.operadores})));
-	$("#infoContent").append(datosLinea);
+	$("#infoContent").append($("<p>").append(datosLinea));
 	var distanciaIda = distanciaVuelta = tiempoIda = tiempoVuelta = 0 // Creamos variables para los datos numéricos
 	var datosTrazado = $("<table>"); // Tabla para los datos numéricos del trazado
 	if(linea.getIda){ // SI se ha cargado el trazado de ida
@@ -287,7 +287,7 @@ function verInfoLinea(id){
 		tiempoVuelta = Math.floor(distanciaVuelta/1000/13.5*60); // Estimar el tiempo de viaje
 		datosTrazado.append($("<tr>").append($("<th>", {text: "Vuelta"})).append($("<td>", {text: distanciaVuelta+" m"})).append($("<td>", {text: tiempoVuelta+" min"}))); // Añadimos los datos de la vuelta
 	}
-	$("#infoContent").append(datosTrazado); // Añadimos la tabla a la ventana
+	$("#infoContent").append($("<p>").append(datosTrazado)); // Añadimos la tabla a la ventana
 	if(linea.numBuses > 0 && linea.getIda){ // SI hay buses en la línea Y se ha cargado su trazado
 		var distanciaTotal = distanciaIda + distanciaVuelta; // Calculamos la distancia ida+vuelta
 		var distanciaEntreBuses = distanciaTotal/linea.numBuses; // Calculamos la media de distancia entre buses en servicio
@@ -295,10 +295,10 @@ function verInfoLinea(id){
 		var datosPaso = $("<table>"); // Creamos la tabla para estos datos
 		datosPaso.append($("<tr>").append($("<th>", {text: "Frecuencia media teórica estimada"})).append($("<td>", {text: Math.floor(frecuenciaTeorica*100)/100+" min"}))); // Incluimos la frecuencia media teórica
 		datosPaso.append($("<tr>").append($("<th>", {text: "Distancia media entre coches"})).append($("<td>", {text: Math.floor(distanciaEntreBuses*100)/100+" m"}))); // Incluimos la distancia entre buses
-		$("#infoContent").append(datosPaso); // Añadimos lz tabla a la ventana
+		$("#infoContent").append($("<p>").append(datosPaso)); // Añadimos lz tabla a la ventana
 	}
 	if(linea.paradasIda.length > 0){
-		$("#infoContent").append(generarTablaParadas(linea));
+		$("#infoContent").append($("<p>").append(generarTablaParadas(linea)));
 	}
 	$("#ventana").show();
 	return null;
