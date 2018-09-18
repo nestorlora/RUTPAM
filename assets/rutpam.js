@@ -263,48 +263,48 @@ function inicializarParadas(){
 
 function verInfoLinea(id){
 	var linea = lineas[findLinea(id)];
-	$("#ventana").hide();
-	$("#infoContent").empty();
-	$("#infoContent").append($("<h3>", {text: "Línea "+linea.userCodLinea}).css("text-align", "center"));
-	$("#infoContent").append($("<h4>", {text: linea.nombreLinea}).css("text-align", "center"));
+	$("#ventana").hide(); // Escondemos la ventana
+	$("#infoContent").empty(); // Eliminamos contenido anterior
+	$("#infoContent").append($("<h3>", {text: "Línea "+linea.userCodLinea}).css("text-align", "center")); // Título de la ventana
+	$("#infoContent").append($("<h4>", {text: linea.nombreLinea}).css("text-align", "center")); // Subtítulo (nombre línea)
 	$("#infoContent").append($("<p>", {text: "Id. interno: "+linea.idLinea}));
-	var distanciaIda, distanciaVuelta, tiempoIda, tiempoVuelta;
-	var datosTrazado = $("<table>");
-	if(linea.getIda){
-		distanciaIda = Math.floor(distanciaTrazado(linea.trazadoIda));
-		tiempoIda = Math.floor(distanciaIda/1000/13.5*60);
-		datosTrazado.append($("<tr>").append($("<td>")).append($("<th>", {text: "Longitud"})).append($("<th>", {text: "Tiempo de viaje (estimado)"})));
-		datosTrazado.append($("<tr>").append($("<th>", {text: "Ida"})).append($("<td>", {text: distanciaIda+" m"})).append($("<td>", {text: tiempoIda+" min"})));	
+	var distanciaIda, distanciaVuelta, tiempoIda, tiempoVuelta; // Creamos variables para los datos numéricos
+	var datosTrazado = $("<table>"); // Tabla para los datos numéricos del trazado
+	if(linea.getIda){ // SI se ha cargado el trazado de ida
+		distanciaIda = Math.floor(distanciaTrazado(linea.trazadoIda)); // Calcular la distancia de la ruta
+		tiempoIda = Math.floor(distanciaIda/1000/13.5*60); // Estimar el tiempo de viaje
+		datosTrazado.append($("<tr>").append($("<td>")).append($("<th>", {text: "Longitud"})).append($("<th>", {text: "Tiempo de viaje (estimado)"}))); // Cabecera de la tabla para los datos numéricos del trazado
+		datosTrazado.append($("<tr>").append($("<th>", {text: "Ida"})).append($("<td>", {text: distanciaIda+" m"})).append($("<td>", {text: tiempoIda+" min"}))); // Añadimos los datos de la ida
 	}
-	if(linea.getVta){
-		distanciaVuelta = Math.floor(distanciaTrazado(linea.trazadoVta));
-		tiempoVuelta = Math.floor(distanciaVuelta/1000/13.5*60);
-		datosTrazado.append($("<tr>").append($("<th>", {text: "Vuelta"})).append($("<td>", {text: distanciaVuelta+" m"})).append($("<td>", {text: tiempoVuelta+" min"})));
+	if(linea.getVta){ // SI se ha cargado el trazado de vuelta (también se ha cargado el de ida)
+		distanciaVuelta = Math.floor(distanciaTrazado(linea.trazadoVta)); // Calcular la distancia de la ruta
+		tiempoVuelta = Math.floor(distanciaVuelta/1000/13.5*60); // Estimar el tiempo de viaje
+		datosTrazado.append($("<tr>").append($("<th>", {text: "Vuelta"})).append($("<td>", {text: distanciaVuelta+" m"})).append($("<td>", {text: tiempoVuelta+" min"}))); // Añadimos los datos de la vuelta
 	}
-	$("#infoContent").append(datosTrazado);
-	if(linea.numBuses > 0 && linea.getIda){
-		var distanciaTotal = distanciaIda + distanciaVuelta;
-		var distanciaEntreBuses = distanciaTotal/linea.numBuses;
-		var frecuenciaTeorica = distanciaEntreBuses/1000/13.5*60;
-		var datosPaso = $("<table>");
-		datosPaso.append($("<tr>").append($("<th>", {text: "Frecuencia media teórica estimada"})).append($("<td>", {text: Math.floor(frecuenciaTeorica*100)/100+" min"})));
-		datosPaso.append($("<tr>").append($("<th>", {text: "Distancia media entre coches"})).append($("<td>", {text: Math.floor(distanciaEntreBuses*100)/100+" m"})));
-		$("#infoContent").append(datosPaso);
+	$("#infoContent").append(datosTrazado); // Añadimos la tabla a la ventana
+	if(linea.numBuses > 0 && linea.getIda){ // SI hay buses en la línea Y se ha cargado su trazado
+		var distanciaTotal = distanciaIda + distanciaVuelta; // Calculamos la distancia ida+vuelta
+		var distanciaEntreBuses = distanciaTotal/linea.numBuses; // Calculamos la media de distancia entre buses en servicio
+		var frecuenciaTeorica = distanciaEntreBuses/1000/13.5*60; // Estimamos la frecuencia media teórica
+		var datosPaso = $("<table>"); // Creamos la tabla para estos datos
+		datosPaso.append($("<tr>").append($("<th>", {text: "Frecuencia media teórica estimada"})).append($("<td>", {text: Math.floor(frecuenciaTeorica*100)/100+" min"}))); // Incluimos la frecuencia media teórica
+		datosPaso.append($("<tr>").append($("<th>", {text: "Distancia media entre coches"})).append($("<td>", {text: Math.floor(distanciaEntreBuses*100)/100+" m"}))); // Incluimos la distancia entre buses
+		$("#infoContent").append(datosPaso); // Añadimos lz tabla a la ventana
 	}
-	if(linea.paradasIda.length > 0){
-		$("#infoContent").append($("<p>").append(generarBotonToggleParadas(id)));
+	if(linea.paradasIda.length > 0){ // SI tenemos almacenadas paradas de la línea
+		$("#infoContent").append($("<p>").append(generarBotonToggleParadas(id))); // Insertar en la ventana botón para activar/desactivar las paradas sobre el mapa
 	}
-	var tabla = $("<table>");
-	var cabecera = $("<tr>");
-	if(linea.cabeceraVta !== null){
-		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraVta));
-		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraIda));
-	}else{
-		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraIda));
+	var tabla = $("<table>"); // Creamos la tabla de paradas
+	var cabecera = $("<tr>"); // Creamos una cabecera
+	if(linea.cabeceraVta !== null){ // SI la línea es de ida y vuelta
+		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraVta)); // Columna sentido ida
+		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraIda)); // Columna sentido vuelta
+	}else{ // ELSE la línea es circular
+		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraIda)); // Columna sentido único
 	}
-	tabla.append(cabecera);
-	for(var a = 0; a <= Math.max(linea.paradasIda.length, linea.paradasVta.length); a++){
-		var fila = $("<tr>");
+	tabla.append(cabecera); // Añadimos la cabecera a la tabla
+	for(var a = 0; a <= Math.max(linea.paradasIda.length, linea.paradasVta.length); a++){ // PARA el máximo de paradas entre ida y vuelta
+		var fila = $("<tr>"); // Creamos una fila
 		if(a < linea.paradasIda.length){
 			var codPar = linea.paradasIda[a].codPar;
 			fila = generarFilaParada(fila, codPar, linea.idLinea);
@@ -325,7 +325,7 @@ function verInfoLinea(id){
 				fila = generarFilaParada(fila);
 			}
 		}
-		tabla.append(fila);
+		tabla.append(fila); // Añadimos la fila
 	}
 	if(linea.paradasIda.length > 0){
 		$("#infoContent").append(tabla);
