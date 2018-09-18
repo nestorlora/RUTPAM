@@ -130,6 +130,8 @@ var zonas = [];
  * @param {String} modo Modo de transporte de la línea
  * @param {Bool} hayNoticia Indica si hay o no noticias relacionadas con la línea
  * @param {String} operadores Lista de operadores de la línea
+ * @param {Bool} tieneIda Indica si la línea tiene trayecto de ida
+ * @param {Bool} tieneVuelta Indica si la línea tiene trayecto de vuelta
  */
 var lineas = [];
 

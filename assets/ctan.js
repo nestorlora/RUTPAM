@@ -67,10 +67,22 @@ function getLineasCtan(){
 		url: ctan_api_url+'/lineas?lang=ES'
 	}).done(function (response, status){
 		if(status === "success"){
-            response = response.lineas;
+			response = response.lineas;
             for(var i = 0; i<response.length; i++){
-				addLineaCtan(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
+				addLineaCtan(response[i]);
+				setTimeout(getLineaCtan, 5000+(150*i), response[i].idLinea);
 			}
+		}
+	});
+	return null;
+}
+
+function getLineaCtan(ctanId){
+	$.getJSON({
+		url: ctan_api_url+'/lineas/'+ctanId+'?lang=ES'
+	}).done(function (response, status){
+		if(status === "success"){
+			updateLineaCtan(response); // Pasamos la línea por addLinea()
 		}
 	});
 	return null;
@@ -94,9 +106,13 @@ function addLineaCtan(lin){
         numBuses: null,
         modo: lin.modo,
         hayNoticia: lin.hayNoticias,
-        operadores: (lin.operadores).replace(/, $/, "")
+		operadores: (lin.operadores).replace(/, $/, ""),
+		tieneIda: null,
+		tieneVuelta: null
     };
     lineas.push(linea);
+
+	getParadasLineaCtan(linea.idLinea);
 
     var fila = $("<tr>");
     var botonIda = $("<input>", {
@@ -118,13 +134,76 @@ function addLineaCtan(lin){
         $("#tablaLineasCTAN").append(fila);
         break;
     }
-	
 }
 
-function getParadasLineaCtan(){
-    
+function updateLineaCtan(lin){
+	posLinea = findLinea("CTAN-"+lin.idLinea);
+	lineas[posLinea].tieneIda = lin.tieneIda;
+	lineas[posLinea].tieneVuelta = lin.tieneVuelta;
+	if(lin.tieneVuelta){
+		lineas[posLinea].cabeceraIda = paradas[findParada(lineas[posLinea].paradasIda[0].codPar)].nombreParada;
+		lineas[posLinea].cabeceraVta = paradas[findParada(lineas[posLinea].paradasVta[0].codPar)].nombreParada;
+	}else{
+		lineas[posLinea].cabeceraIda = paradas[findParada(lineas[posLinea].paradasIda[0].codPar)].nombreParada;
+	}
+}
+
+function getParadasLineaCtan(id){
+    $.getJSON({
+		url: ctan_api_url+'/lineas/'+idLinea(id)+'/paradas?lang=ES'
+	}).done(function (response, status){
+		if(status === "success"){
+			linea = lineas[findLinea(id)];
+			response = response.paradas;
+            for(var i = 0; i<response.length; i++){
+                addParadaCtan(response[i], id); // Para cada línea de la respuesta la pasamos por addLinea()
+                if(response[i].sentido == 1){
+                    linea.paradasIda.push({
+                        codPar: response[i].idParada,
+                        orden: response[i].orden
+					});
+                }else if(response[i].sentido == 2){
+                    linea.paradasVta.push({
+                        codPar: response[i].idParada,
+                        orden: response[i].orden
+					});
+                }
+			}
+		}
+	});
+}
+
+function addParadaCtan(parada, idLinea){
+	var pos = findParada(parada.idParada);
+	if(pos !== null){
+		paradas[pos].servicios.push({
+			idLinea: idLinea,
+			sentido: parada.sentido,
+			espera: null
+		});
+	}else{
+		pos = paradas.push({
+			codPar: parada.idParada,
+			nombreParada: parada.nombre,
+			direccion: null,
+			idNucleo: parada.idNucleo,
+			idZona: parada.idZona,
+			servicios: [],
+			latitud: parada.latitud,
+			longitud: parada.longitud,
+			modos: parada.modos,
+			marker: null,
+			popup: null,
+			viewCont: 0
+		})-1;
+		paradas[pos].servicios.push({
+			idLinea: idLinea,
+			sentido: parada.sentido,
+			espera: null
+		});
+	}
 }
 
 function idLinea(id){
-    return idLinea.replace(/^CTAN-/, "");
+    return id.replace(/^CTAN-/, "");
 }
