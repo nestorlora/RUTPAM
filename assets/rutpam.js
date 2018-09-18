@@ -294,41 +294,8 @@ function verInfoLinea(id){
 	if(linea.paradasIda.length > 0){ // SI tenemos almacenadas paradas de la línea
 		$("#infoContent").append($("<p>").append(generarBotonToggleParadas(id))); // Insertar en la ventana botón para activar/desactivar las paradas sobre el mapa
 	}
-	var tabla = $("<table>"); // Creamos la tabla de paradas
-	var cabecera = $("<tr>"); // Creamos una cabecera
-	if(linea.cabeceraVta !== null){ // SI la línea es de ida y vuelta
-		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraVta)); // Columna sentido ida
-		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraIda)); // Columna sentido vuelta
-	}else{ // ELSE la línea es circular
-		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraIda)); // Columna sentido único
-	}
-	tabla.append(cabecera); // Añadimos la cabecera a la tabla
-	for(var a = 0; a <= Math.max(linea.paradasIda.length, linea.paradasVta.length); a++){ // PARA el máximo de paradas entre ida y vuelta
-		var fila = $("<tr>"); // Creamos una fila
-		if(a < linea.paradasIda.length){
-			var codPar = linea.paradasIda[a].codPar;
-			fila = generarFilaParada(fila, codPar, linea.idLinea);
-		}else if(a === linea.paradasIda.length && linea.cabeceraVta !== null){
-			var codPar = linea.paradasVta[0].codPar;
-			fila = generarFilaParada(fila, codPar, linea.idLinea);
-		}else if(linea.cabeceraVta !== null){
-			fila = generarFilaParada(fila);
-		}
-		if(linea.cabeceraVta !== null){
-			if(a < linea.paradasVta.length){
-				var codPar = linea.paradasVta[a].codPar;
-				fila = generarFilaParada(fila, codPar, linea.idLinea);
-			}else if(a === linea.paradasVta.length && linea.cabeceraVta !== null){
-				var codPar = linea.paradasIda[0].codPar;
-				fila = generarFilaParada(fila, codPar, linea.idLinea);
-			}else{
-				fila = generarFilaParada(fila);
-			}
-		}
-		tabla.append(fila); // Añadimos la fila
-	}
 	if(linea.paradasIda.length > 0){
-		$("#infoContent").append(tabla);
+		$("#infoContent").append(generarTablaParadas(linea));
 	}
 	$("#ventana").show();
 	return null;
@@ -363,8 +330,41 @@ function generarBotonToggleParadas(idLinea){
 	return botonParadas;
 }
 
-function generarTablaParadas(div, idLinea){
-
+function generarTablaParadas(linea){
+	var tabla = $("<table>"); // Creamos la tabla de paradas
+	var cabecera = $("<tr>"); // Creamos una cabecera
+	if(linea.cabeceraVta !== null){ // SI la línea es de ida y vuelta
+		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraVta)); // Columna sentido ida
+		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraIda)); // Columna sentido vuelta
+	}else{ // ELSE la línea es circular
+		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraIda)); // Columna sentido único
+	}
+	tabla.append(cabecera); // Añadimos la cabecera a la tabla
+	for(var a = 0; a <= Math.max(linea.paradasIda.length, linea.paradasVta.length); a++){ // PARA el máximo de paradas entre ida y vuelta
+		var fila = $("<tr>"); // Creamos una fila
+		if(a < linea.paradasIda.length){
+			var codPar = linea.paradasIda[a].codPar;
+			fila = generarFilaParada(fila, codPar, linea.idLinea);
+		}else if(a === linea.paradasIda.length && linea.cabeceraVta !== null){
+			var codPar = linea.paradasVta[0].codPar;
+			fila = generarFilaParada(fila, codPar, linea.idLinea);
+		}else if(linea.cabeceraVta !== null){
+			fila = generarFilaParada(fila);
+		}
+		if(linea.cabeceraVta !== null){
+			if(a < linea.paradasVta.length){
+				var codPar = linea.paradasVta[a].codPar;
+				fila = generarFilaParada(fila, codPar, linea.idLinea);
+			}else if(a === linea.paradasVta.length && linea.cabeceraVta !== null){
+				var codPar = linea.paradasIda[0].codPar;
+				fila = generarFilaParada(fila, codPar, linea.idLinea);
+			}else{
+				fila = generarFilaParada(fila);
+			}
+		}
+		tabla.append(fila); // Añadimos la fila
+	}
+	return tabla;
 }
 
 function generarFilaParada(div, codPar, idLinea){
