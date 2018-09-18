@@ -202,12 +202,7 @@ function initMap() {
  * @returns {null}
  */
 function motor(){
-	/*for(var y = 0; y < lineas.length; y++){ // Para todo el array de líneas
-		if(lineas[y].getBuses){ // Si hemos activado el refresco de los buses
-			setTimeout(getUbicacionesEmt, y*30, lineas[y].idLinea); // Refrescar los buses (con un tiempo de diferencia para hacerlo escalonadamente)
-		}
-	}*/
-	getBusesEmt();
+	getBusesEmt(); // Pedimos toda la información actualizada de los buses
 	var pos = 0; // Empezamos por el principio
 	while(pos < autobuses.length){ // Para todos los autobuses
 		var poslinea = findLinea(autobuses[pos].idLinea); // Extraemos la dirección de la línea en el array

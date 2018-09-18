@@ -119,6 +119,10 @@ function getTrazadosEmt(idLinea){
 	return null;
 }
 
+/**
+ * @deprecated
+ * @param {String} idLinea 
+ */
 function getUbicacionesEmt(idLinea){
 	$.getJSON({
 		//url: emt_proxy_url+'/services/buses/?codLinea='+codLinea
