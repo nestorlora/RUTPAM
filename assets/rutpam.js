@@ -267,6 +267,9 @@ function verInfoLinea(id){
 	$("#infoContent").empty(); // Eliminamos contenido anterior
 	$("#infoContent").append($("<h3>", {text: "Línea "+linea.userCodLinea}).css("text-align", "center")); // Título de la ventana
 	$("#infoContent").append($("<h4>", {text: linea.nombreLinea}).css("text-align", "center")); // Subtítulo (nombre línea)
+	if(linea.paradasIda.length > 0){ // SI tenemos almacenadas paradas de la línea
+		$("#infoContent").append($("<p>").append(generarBotonToggleParadas(id))); // Insertar en la ventana botón para activar/desactivar las paradas sobre el mapa
+	}
 	var datosLinea = $("<table>");
 	datosLinea.append($("<tr>").append($("<th>", {text: "Id. interno"})).append($("<td>", {text: linea.idLinea})));
 	datosLinea.append($("<tr>").append($("<th>", {text: "Operador"})).append($("<td>", {text: linea.operadores})));
@@ -293,9 +296,6 @@ function verInfoLinea(id){
 		datosPaso.append($("<tr>").append($("<th>", {text: "Frecuencia media teórica estimada"})).append($("<td>", {text: Math.floor(frecuenciaTeorica*100)/100+" min"}))); // Incluimos la frecuencia media teórica
 		datosPaso.append($("<tr>").append($("<th>", {text: "Distancia media entre coches"})).append($("<td>", {text: Math.floor(distanciaEntreBuses*100)/100+" m"}))); // Incluimos la distancia entre buses
 		$("#infoContent").append(datosPaso); // Añadimos lz tabla a la ventana
-	}
-	if(linea.paradasIda.length > 0){ // SI tenemos almacenadas paradas de la línea
-		$("#infoContent").append($("<p>").append(generarBotonToggleParadas(id))); // Insertar en la ventana botón para activar/desactivar las paradas sobre el mapa
 	}
 	if(linea.paradasIda.length > 0){
 		$("#infoContent").append(generarTablaParadas(linea));
