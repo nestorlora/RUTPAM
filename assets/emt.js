@@ -284,9 +284,12 @@ function addParadaEmt(parada, idLinea, sentido){
 			codPar: parada.codParada,
 			nombreParada: parada.nombreParada,
 			direccion: parada.direccion,
+			idNucleo: 0,
+			idZona: "A",
 			servicios: [],
 			latitud: parada.latitud,
 			longitud: parada.longitud,
+			modos: "Autobús",
 			marker: null,
 			popup: null,
 			viewCont: 0
