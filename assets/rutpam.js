@@ -156,7 +156,7 @@ var autobuses = [];
  * @param {String} direccion Dirección postal de la parada
  * @param {Array} servicios Array de servicios {idLinea, sentido, espera} que hay en esa parada
  * @param {Float} latitud Ubicación
- * @param {Float} longitua Ubicación
+ * @param {Float} longitud Ubicación
  * @param {L.marker} marker Objeto del marcador asociado a la parada
  * @param {L.popup} popup Objeto del cuadro de información asociado a la parada
  * @param {Int} viewCont Contador del número de líneas o acciones del usuario están solicitando ver esta parada
