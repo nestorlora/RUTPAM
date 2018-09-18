@@ -142,7 +142,7 @@ var autobuses = [];
 /**
  * @description Tabla de paradas cargadas
  * @type Array
- * @param {Int} idLinea Código de la parada
+ * @param {Int} codPar Código de la parada
  * @param {String} nombreParada Nombre de la parada
  * @param {String} direccion Dirección postal de la parada
  * @param {Array} servicios Array de servicios {idLinea, sentido, espera} que hay en esa parada
