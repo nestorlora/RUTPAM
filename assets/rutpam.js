@@ -272,20 +272,23 @@ function verInfoLinea(id){
 	var distanciaVuelta = Math.floor(distanciaTrazado(linea.trazadoVta));
 	var tiempoIda = Math.floor(distanciaIda/1000/13.5*60);
 	var tiempoVuelta = Math.floor(distanciaVuelta/1000/13.5*60);
+	var datosTrazado = $("<table>");
 	if(linea.getIda){
-		$("#infoContent").append($("<p>", {text: "Longitud Ida: "+distanciaIda+" m"}));
-		$("#infoContent").append($("<p>", {text: "Tiempo viaje ida (est.): "+ tiempoIda + " min"}));
+		datosTrazado.append($("<tr>").append($("<td>")).append($("<th>", {text: "Longitud"})).append($("<th>", {text: "Tiempo de viaje (estimado)"})));
+		datosTrazado.append($("<tr>").append($("<th>", {text: "Ida"})).append($("<td>", {text: distanciaIda+" m"})).append($("<td>", {text: tiempoIda+" min"})));	
 	}
 	if(linea.getVta){
-		$("#infoContent").append($("<p>", {text: "Longitud Vuelta: "+distanciaVuelta+" m"}));
-		$("#infoContent").append($("<p>", {text: "Tiempo viaje vuelta (est.): "+ tiempoVuelta + " min"}));
+		datosTrazado.append($("<tr>").append($("<th>", {text: "Vuelta"})).append($("<td>", {text: distanciaVuelta+" m"})).append($("<td>", {text: tiempoVuelta+" min"})));
 	}
+	$("#infoContent").append(datosTrazado);
 	if(linea.numBuses > 0 && linea.getIda){
 		var distanciaTotal = distanciaIda + distanciaVuelta;
 		var distanciaEntreBuses = distanciaTotal/linea.numBuses;
 		var frecuenciaTeorica = distanciaEntreBuses/1000/13.5*60;
-		$("#infoContent").append($("<p>", {text: "Frecuencia media teórica: "+Math.floor(frecuenciaTeorica*100)/100+" min"}));
-		$("#infoContent").append($("<p>", {text: "Distancia media entre coches: "+Math.floor(distanciaEntreBuses*100)/100+" m"}));
+		var datosPaso = $("<table>");
+		datosPaso.append($("<tr>").append($("<th>", {text: "Frecuencia media teórica estimada"})).append($("<td>", {text: Math.floor(frecuenciaTeorica*100)/100+" min"})));
+		datosPaso.append($("<tr>").append($("<th>", {text: "Distancia media entre coches"})).append($("<td>", {text: Math.floor(distanciaEntreBuses*100)/100+" m"})));
+		$("#infoContent").append(datosPaso);
 	}
 	var botonParadas = $("<button>", {
 		"type": "button",
