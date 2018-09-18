@@ -44,6 +44,24 @@ function getModos(){
     return null;
 }
 
+function getZonas(){
+    $.getJSON({
+		url: ctan_api_url+'/zonas?lang=ES'
+	}).done(function (response, status){
+		if(status === "success"){
+            response = response.zonas;
+            for(var i = 0; i<response.length; i++){
+				var zona = {
+                    idZona: response[i].idZona,
+                    nombre: response[i].nombre,
+                    color: response[i].color
+                };
+                zonas.push(zona);
+			}
+		}
+	});
+}
+
 function getLineasCtan(){
     $.getJSON({
 		url: ctan_api_url+'/lineas?lang=ES'

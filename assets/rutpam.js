@@ -102,6 +102,15 @@ var showCTAN = false;
 var modos = [];
 
 /**
+ * @description Tabla de zonas del CTAN
+ * @type Array
+ * @param {String} idZona Identificador de la zona
+ * @param {String} nombre Nombre de la zona
+ * @param {String} color Color de la zona
+ */
+var zonas = [];
+
+/**
  * @description Tabla de líneas cargadas
  * @type Array
  * @param {String} idLinea Identificador único de la línea (EMT+CTAN)
