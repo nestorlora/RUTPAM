@@ -171,6 +171,8 @@ $(document).ready(function(){
 	verCopyright(); // Mostramos el "Acerca de RUTPAM"
 	initMap(); // Inicializamos el mapa y todo el layout
 	document.title = "RUTPAM "+rutpam_version; // Seteamos el título del documento
+	getModos(); // Cargamos los modos de transporte
+	getZonas(); // Cargamos las zonas
 	getLineasEmt(); // Cargamos las líneas
 	getLineasCtan();
 });
