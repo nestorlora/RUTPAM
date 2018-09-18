@@ -291,33 +291,8 @@ function verInfoLinea(id){
 		datosPaso.append($("<tr>").append($("<th>", {text: "Distancia media entre coches"})).append($("<td>", {text: Math.floor(distanciaEntreBuses*100)/100+" m"})));
 		$("#infoContent").append(datosPaso);
 	}
-	var botonParadas = $("<button>", {
-		"type": "button",
-		"class": "boton"
-	});
-	$(botonParadas).text("Mostrar/Ocultar paradas");
-	$(botonParadas).on("click", function(){
-		linea = lineas[findLinea(id)];
-		if(linea.verParadas === true){
-			for(var a = 0; a < linea.paradasIda.length; a++){
-				hideParada(linea.paradasIda[a].codPar);
-			}
-			for(var a = 0; a < linea.paradasVta.length; a++){
-				hideParada(linea.paradasVta[a].codPar);
-			}
-			linea.verParadas = false;
-		}else if(linea.verParadas === false){
-			for(var a = 0; a < linea.paradasIda.length; a++){
-				showParada(linea.paradasIda[a].codPar);
-			}
-			for(var a = 0; a < linea.paradasVta.length; a++){
-				showParada(linea.paradasVta[a].codPar);
-			}
-			linea.verParadas = true;
-		}
-	});
 	if(linea.paradasIda.length > 0){
-		$("#infoContent").append($("<p>").append(botonParadas));
+		$("#infoContent").append($("<p>").append(generarBotonToggleParadas(id)));
 	}
 	var tabla = $("<table>");
 	var cabecera = $("<tr>");
@@ -357,6 +332,35 @@ function verInfoLinea(id){
 	}
 	$("#ventana").show();
 	return null;
+}
+
+function generarBotonToggleParadas(idLinea){
+	var botonParadas = $("<button>", {
+		"type": "button",
+		"class": "boton"
+	});
+	$(botonParadas).text("Mostrar/Ocultar paradas");
+	$(botonParadas).on("click", function(){
+		linea = lineas[findLinea(idLinea)];
+		if(linea.verParadas === true){
+			for(var a = 0; a < linea.paradasIda.length; a++){
+				hideParada(linea.paradasIda[a].codPar);
+			}
+			for(var a = 0; a < linea.paradasVta.length; a++){
+				hideParada(linea.paradasVta[a].codPar);
+			}
+			linea.verParadas = false;
+		}else if(linea.verParadas === false){
+			for(var a = 0; a < linea.paradasIda.length; a++){
+				showParada(linea.paradasIda[a].codPar);
+			}
+			for(var a = 0; a < linea.paradasVta.length; a++){
+				showParada(linea.paradasVta[a].codPar);
+			}
+			linea.verParadas = true;
+		}
+	});
+	return botonParadas;
 }
 
 function generarTablaParadas(div, idLinea){
