@@ -295,40 +295,27 @@ function verInfoLinea(id){
 		"type": "button",
 		"class": "boton"
 	});
-	if(linea.verParadas){
-		// Ocultar paradas
-		$(botonParadas).text("Ocultar paradas");
-		$(botonParadas).on("click", function(){
-			linea = lineas[findLinea(id)];
-			if(linea.verParadas === true){
-				for(var a = 0; a < linea.paradasIda.length; a++){
-					hideParada(linea.paradasIda[a].codPar);
-				}
-				for(var a = 0; a < linea.paradasVta.length; a++){
-					hideParada(linea.paradasVta[a].codPar);
-				}
-				linea.verParadas = false;
-				verInfoLinea(id);
+	$(botonParadas).text("Mostrar/Ocultar paradas");
+	$(botonParadas).on("click", function(){
+		linea = lineas[findLinea(id)];
+		if(linea.verParadas === true){
+			for(var a = 0; a < linea.paradasIda.length; a++){
+				hideParada(linea.paradasIda[a].codPar);
 			}
-			
-		});
-	}else{
-		// Mostrar paradas
-		$(botonParadas).text("Ubicar paradas");
-		$(botonParadas).on("click", function(){
-			linea = lineas[findLinea(id)];
-			if(linea.verParadas === false){
-				for(var a = 0; a < linea.paradasIda.length; a++){
-					showParada(linea.paradasIda[a].codPar);
-				}
-				for(var a = 0; a < linea.paradasVta.length; a++){
-					showParada(linea.paradasVta[a].codPar);
-				}
-				linea.verParadas = true;
-				verInfoLinea(id);
+			for(var a = 0; a < linea.paradasVta.length; a++){
+				hideParada(linea.paradasVta[a].codPar);
 			}
-		});
-	}
+			linea.verParadas = false;
+		}else if(linea.verParadas === false){
+			for(var a = 0; a < linea.paradasIda.length; a++){
+				showParada(linea.paradasIda[a].codPar);
+			}
+			for(var a = 0; a < linea.paradasVta.length; a++){
+				showParada(linea.paradasVta[a].codPar);
+			}
+			linea.verParadas = true;
+		}
+	});
 	if(linea.paradasIda.length > 0){
 		$("#infoContent").append($("<p>").append(botonParadas));
 	}
@@ -370,6 +357,10 @@ function verInfoLinea(id){
 	}
 	$("#ventana").show();
 	return null;
+}
+
+function generarTablaParadas(div, idLinea){
+
 }
 
 function generarFilaParada(div, codPar, idLinea){
