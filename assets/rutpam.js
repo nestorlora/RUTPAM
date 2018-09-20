@@ -402,7 +402,9 @@ function verInfoParada(id){
 	$("#infoContent").empty();
 	$("#infoContent").append($("<h3>", {text: "Parada "+parada.codPar}).css("text-align", "center"));
 	$("#infoContent").append($("<h4>", {text: parada.nombreParada}).css("text-align", "center"));
-	$("#infoContent").append($("<p>", {text: "Dirección: "+parada.direccion}));
+	if(parada.direccion != null){
+		$("#infoContent").append($("<p>", {text: "Dirección: "+parada.direccion}));
+	}
 	var tabla = $("<table>");
 	var cabecera = $("<tr>");
 	cabecera.append($("<th>", {text: "Servicios"}).attr("colspan", /*3*/2));
