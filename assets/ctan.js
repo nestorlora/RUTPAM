@@ -124,8 +124,8 @@ function addLineaCtan(lin){
 		"id": "botonVta"+linea.idLinea,
 		"checked": true
     }).prop('checked', false).prop("indeterminate", true).prop("disabled", true);
-    $(fila).append($("<td>").append(botonIda));
-	$(fila).append($("<td>").append(botonVta));
+   	//$(fila).append($("<td>").append(botonIda));
+	//$(fila).append($("<td>").append(botonVta));
 	$(fila).append($("<td>").append(lineaIcon(linea.userCodLinea, "3x")));
 	$(fila).append($("<td>").append($("<a>", {text: linea.nombreLinea, href: "#!"}).click(function(){verInfoLinea(linea.idLinea);})));
 
