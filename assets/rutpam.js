@@ -30,7 +30,7 @@
  * @description Variable global para la versión del programa
  * @type String
  */
-var rutpam_version = "4.9.6";
+var rutpam_version = "4.9.7";
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -779,12 +779,14 @@ function busIconContent(Bus, estado){
 function paradaIconContent(codPar){
 	if(isNaN(codPar)){
 		var id = codPar.replace(/^CTAN-/, "C");
+		var clase = "paradaC";
 	}else{
 		var id = codPar;
+		var clase = "paradaE"
 	}
 	console.log(id);
 	return L.divIcon({
-		className: 'marker parada',
+		className: 'marker '+clase,
 		iconSize: [36, 15],
 		iconAnchor: [18, 7],
 		popupAnchor: [0, -7],
