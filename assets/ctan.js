@@ -163,12 +163,12 @@ function getParadasLineaCtan(id){
                 addParadaCtan(response[i], id); // Para cada línea de la respuesta la pasamos por addLinea()
                 if(response[i].sentido == 1){
                     linea.paradasIda.push({
-                        codPar: response[i].idParada,
+                        codPar: "CTAN-"+response[i].idParada,
                         orden: response[i].orden
 					});
                 }else if(response[i].sentido == 2){
                     linea.paradasVta.push({
-                        codPar: response[i].idParada,
+                        codPar: "CTAN-"+response[i].idParada,
                         orden: response[i].orden
 					});
                 }
@@ -182,7 +182,7 @@ function getParadasLineaCtan(id){
 }
 
 function addParadaCtan(parada, idLinea){
-	var pos = findParada(parada.idParada);
+	var pos = findParada("CTAN-"+parada.idParada);
 	if(pos !== null){
 		paradas[pos].servicios.push({
 			idLinea: idLinea,
@@ -191,7 +191,7 @@ function addParadaCtan(parada, idLinea){
 		});
 	}else{
 		pos = paradas.push({
-			codPar: parada.idParada,
+			codPar: "CTAN-"+parada.idParada,
 			nombreParada: parada.nombre,
 			direccion: null,
 			idNucleo: parada.idNucleo,

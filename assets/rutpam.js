@@ -30,7 +30,7 @@
  * @description Variable global para la versión del programa
  * @type String
  */
-var rutpam_version = "4.9.3";
+var rutpam_version = "4.9.5";
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -776,12 +776,18 @@ function busIconContent(Bus, estado){
 }
 
 function paradaIconContent(codPar){
+	if(isNaN(codPar)){
+		var id = codPar.replace(/^CTAN-/, "C");
+	}else{
+		var id = codPar;
+	}
+	console.log(id);
 	return L.divIcon({
 		className: 'marker parada',
 		iconSize: [36, 15],
 		iconAnchor: [18, 7],
 		popupAnchor: [0, -7],
-		html: codPar
+		html: id
 	});
 }
 
@@ -929,6 +935,7 @@ function verAyuda(){
 	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.metro+'"></i></span> Metro Málaga<br>\n\
 	</p>\n\
 	<h4>Información de líneas</h4>\n\
+	<p>Las paradas pertenecen o bien a la EMT o bien al consorcio por lo que aparecen como EMT-XXXX o CTAN-XXXX y EXXXX o CXXXX en las versiones cortas</p>\n\
 	<p>En proceso...</p>\n\
 	<h4>Información de paradas</h4>\n\
 	<p>En proceso...</p>';
