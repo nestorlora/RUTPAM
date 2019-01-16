@@ -30,7 +30,6 @@
  * @description Variable global para la versión del programa
  * @type String
  */
-var rutpam_version = "4.9.7";
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -280,6 +279,7 @@ function inicializarParadas(){
 	if(lineasCargadas < lineas.length || lineasCargadas < 80){
 		setTimeout(inicializarParadas, 1500);
 	}else{
+		$("#loader").remove();
 		for(var a = 0; a < paradas.length; a++){
 			paradas[a].marker = L.marker({lat: paradas[a].latitud, lng: paradas[a].longitud}, {
 				icon: paradaIconContent(paradas[a].codPar)
@@ -287,7 +287,7 @@ function inicializarParadas(){
 			paradas[a].popup = L.popup({autoPan: false, autoClose: false}).setContent(paradaPopupContent(paradas[a].codPar));
 			paradas[a].marker.bindPopup(paradas[a].popup);
 		}
-		alert("Paradas inicializadas!");
+		paradasInicializadas = true;
 	}
 }
 
@@ -343,26 +343,31 @@ function generarBotonToggleParadas(idLinea){
 		"class": "boton"
 	});
 	$(botonParadas).text("Mostrar/Ocultar paradas");
-	$(botonParadas).on("click", function(){
-		linea = lineas[findLinea(idLinea)];
-		if(linea.verParadas === true){
-			for(var a = 0; a < linea.paradasIda.length; a++){
-				hideParada(linea.paradasIda[a].codPar);
+	if(paradasInicializadas){
+		$(botonParadas).on("click", function(){
+			linea = lineas[findLinea(idLinea)];
+			if(linea.verParadas === true){
+				for(var a = 0; a < linea.paradasIda.length; a++){
+					hideParada(linea.paradasIda[a].codPar);
+				}
+				for(var a = 0; a < linea.paradasVta.length; a++){
+					hideParada(linea.paradasVta[a].codPar);
+				}
+				linea.verParadas = false;
+			}else if(linea.verParadas === false){
+				for(var a = 0; a < linea.paradasIda.length; a++){
+					showParada(linea.paradasIda[a].codPar);
+				}
+				for(var a = 0; a < linea.paradasVta.length; a++){
+					showParada(linea.paradasVta[a].codPar);
+				}
+				linea.verParadas = true;
 			}
-			for(var a = 0; a < linea.paradasVta.length; a++){
-				hideParada(linea.paradasVta[a].codPar);
-			}
-			linea.verParadas = false;
-		}else if(linea.verParadas === false){
-			for(var a = 0; a < linea.paradasIda.length; a++){
-				showParada(linea.paradasIda[a].codPar);
-			}
-			for(var a = 0; a < linea.paradasVta.length; a++){
-				showParada(linea.paradasVta[a].codPar);
-			}
-			linea.verParadas = true;
-		}
-	});
+		});
+	}else{
+		$(botonParadas).attr("disabled", true);
+	}
+	
 	return botonParadas;
 }
 
@@ -848,7 +853,8 @@ function togglePanelCtan(){
 function ControlRUTPAM(mapDiv){
 	var titulo = $("<h2>", {"text":"RUTPAM"});
 	var descripcion = $("<p>", {"text":"Información de transportes metropolitanos del área de Málaga"});
-	$(mapDiv).append(titulo).append(descripcion);
+	var loader = $("<p>", {"id": "loader", "text": "Todavía cargando datos..."}).css("color", "white").css("background-color", "red");
+	$(mapDiv).append(titulo).append(descripcion).append(loader);
 	var botonEMT = $("<button>", {
 		"id": "verEMT",
 		"type": "button",
