@@ -24,7 +24,7 @@
 
 /* Este archivo forma parte de R.U.T.P.A.M. no funcionará por separado */
 
-/* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url */
+/* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url, tareas */
 
 /**
  * @description Función que llama a la API para cargar las líneas. Cambia algunos elementos para preparar la interfaz.
@@ -33,6 +33,7 @@
 function getLineasEmt(){
 	//$("#getLineas").remove(); // Eliminamos el botón para pedir las líneas
 	// Petición AJAX
+	tareas++; // Incrementamos las tareas AJAX en curso
 	$.getJSON({
 		url: emt_proxy_url+'/services/lineas/'
 	}).done(function (response, status){
@@ -40,7 +41,6 @@ function getLineasEmt(){
 			for(var i = 0; i<response.length; i++){
 				addLineaEmt(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
 			}
-			inicializarParadas();
 			motor(); // Llamamos la primera vez al motor
 			start(); // Programamos que se ejecute periódicamente
 			// Mostramos la botoner de control del motor
@@ -48,6 +48,8 @@ function getLineasEmt(){
 			$("#refresh").css("display", "inline-block");
 			$("#pause").css("display", "inline-block");
 		}
+	}).always(function(){
+		tareas--; // Decrementamos las tareas AJAX en curso
 	});
 	return null;
 };
@@ -61,7 +63,8 @@ function getTrazadosEmt(idLinea){
 	// Cambiamos el estado a deshabilitado a la espera de recibir los datos
 	$("#botonIda"+idLinea).prop("indeterminate", false).prop("disabled", true).off('click');
 	$("#botonVta"+idLinea).prop("indeterminate", false).prop("disabled", true).off('click');
-	// Llamada AJAX
+	// Llamada AJAX Ida
+	tareas++; // Incrementamos las tareas AJAX en curso
 	$.getJSON({
 		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea(idLinea)+'&sentido=1'
 	}).done(function (response, status){
@@ -88,7 +91,11 @@ function getTrazadosEmt(idLinea){
 			});
 			$("#botonIda"+idLinea).trigger("change");
 		}
+	}).always(function(){
+		tareas--; // Decrementamos las tareas AJAX en curso
 	});
+	// Llamada AJAX Vuelta
+	tareas++; // Incrementamos las tareas AJAX en curso
 	$.getJSON({
 		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea(idLinea)+'&sentido=2'
 	}).done(function (response, status){
@@ -115,6 +122,8 @@ function getTrazadosEmt(idLinea){
 			});
 			$("#botonVta"+idLinea).trigger("change");
 		}		
+	}).always(function(){
+		tareas--; // Decrementamos las tareas AJAX en curso
 	});
 	return null;
 }

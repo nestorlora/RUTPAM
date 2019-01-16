@@ -95,6 +95,12 @@ var showEMT = false;
 var showCTAN = false;
 
 /**
+ * @description Contador de los pedidos AJAX en curso
+ * @type Number
+ */
+var tareas = 0;
+
+/**
  * @description Tabla de modos de transporte (medios de transporte)
  * @type Array
  * @param {Int} idModo Identificador del modo
@@ -179,8 +185,9 @@ $(document).ready(function(){
 	document.title = "RUTPAM "+rutpam_version; // Seteamos el título del documento
 	getModos(); // Cargamos los modos de transporte
 	getZonas(); // Cargamos las zonas
-	getLineasEmt(); // Cargamos las líneas
-	getLineasCtan();
+	getLineasEmt(); // Cargamos las líneas de la EMT
+	getLineasCtan(); // Cargamos las líneas del CTAN
+	inicializarParadas(); // Inicializamos los marcadores de las paradas
 });
 
 /**
@@ -264,12 +271,17 @@ function reducirTTL(){
 }
 
 function inicializarParadas(){
-	for(var a = 0; a < paradas.length; a++){
-		paradas[a].marker = L.marker({lat: paradas[a].latitud, lng: paradas[a].longitud}, {
-			icon: paradaIconContent(paradas[a].codPar)
-		});
-		paradas[a].popup = L.popup({autoPan: false, autoClose: false}).setContent(paradaPopupContent(paradas[a].codPar));
-		paradas[a].marker.bindPopup(paradas[a].popup);
+	if(tareas > 0){
+		setTimeout(inicializarParadas, 1000);
+	}else{
+		for(var a = 0; a < paradas.length; a++){
+			paradas[a].marker = L.marker({lat: paradas[a].latitud, lng: paradas[a].longitud}, {
+				icon: paradaIconContent(paradas[a].codPar)
+			});
+			paradas[a].popup = L.popup({autoPan: false, autoClose: false}).setContent(paradaPopupContent(paradas[a].codPar));
+			paradas[a].marker.bindPopup(paradas[a].popup);
+		}
+		alert("Paradas inicializadas!");
 	}
 }
 
