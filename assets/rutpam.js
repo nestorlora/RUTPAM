@@ -801,20 +801,22 @@ function busIconContent(Bus, estado){
 
 function paradaIconContent(codPar){
 	if(isNaN(codPar)){
-		var id = codPar.replace(/^CTAN-/, "C");
-		var clase = "paradaC";
+		return L.divIcon({
+			className: 'marker paradaC',
+			iconSize: [36, 15],
+			iconAnchor: [0, 0],
+			popupAnchor: [0, 0],
+			html: codPar.replace(/^CTAN-/, "C")
+		});
 	}else{
-		var id = codPar;
-		var clase = "paradaE"
+		return L.divIcon({
+			className: 'marker paradaE',
+			iconSize: [36, 15],
+			iconAnchor: [18, 7],
+			popupAnchor: [0, -7],
+			html: codPar
+		});
 	}
-	console.log(id);
-	return L.divIcon({
-		className: 'marker '+clase,
-		iconSize: [36, 15],
-		iconAnchor: [18, 7],
-		popupAnchor: [0, -7],
-		html: id
-	});
 }
 
 function togglePanelEmt(){
