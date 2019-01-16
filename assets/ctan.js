@@ -70,14 +70,14 @@ function getLineasCtan(){
 			response = response.lineas;
             for(var i = 0; i<response.length; i++){
 				addLineaCtan(response[i]);
-				setTimeout(getLineaCtan, 5000+(150*i), response[i].idLinea);
+				setTimeout(getLineaCompletaCtan, 5000+(150*i), response[i].idLinea);
 			}
 		}
 	});
 	return null;
 }
 
-function getLineaCtan(ctanId){
+function getLineaCompletaCtan(ctanId){
 	$.getJSON({
 		url: ctan_api_url+'/lineas/'+ctanId+'?lang=ES'
 	}).done(function (response, status){
