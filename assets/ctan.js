@@ -84,6 +84,10 @@ function getLineaCompletaCtan(ctanId){
 		if(status === "success"){
 			updateLineaCtan(response); // Pasamos la línea por addLinea()
 		}
+	}).fail(function (response, status, error){
+		if(error === "Bad Request"){ //Si el servidor no ha atendido la petición, se vuelve a hacer con recursividad
+			getLineaCompletaCtan(ctanId);
+		}
 	});
 	return null;
 }
@@ -169,6 +173,10 @@ function getParadasLineaCtan(id){
 					});
                 }
 			}
+		}
+	}).fail(function (response, status, error){
+		if(error === "Bad Request"){ //Si el servidor no ha atendido la petición, se vuelve a hacer con recursividad
+			getParadasLineaCtan(id);
 		}
 	});
 }
