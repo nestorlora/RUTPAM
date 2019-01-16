@@ -70,7 +70,6 @@ var colores = {
 	especial: "#FCCC0A", // Líneas y servicios especiales
 	express: "#996633", // Servicios exprés
 	lanzaderas: "#808183" // Lanzadera
-	
 };
 
 /**
