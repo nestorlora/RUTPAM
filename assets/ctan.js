@@ -105,7 +105,7 @@ function addLineaCtan(lin){
         verParadas: false,
         numBuses: null,
         modo: lin.modo,
-        hayNoticia: lin.hayNoticias,
+        hayNoticia: lin.hayNoticia,
 		operadores: (lin.operadores).replace(/, $/, ""),
 		tieneIda: null,
 		tieneVuelta: null
