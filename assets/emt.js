@@ -225,7 +225,9 @@ function addLineaEmt(lin){
         numBuses: 0,
         modo: "Autobús",
         hayNoticia: null,
-        operadores: "Empresa Malagueña de Transportes S.A.M."
+        operadores: "Empresa Malagueña de Transportes S.A.M.",
+		tieneIdea: null,
+		tieneVuelta: null,
 	};
 	for(var a = 0; a < lin.paradas.length; a++){
 		addParadaEmt(lin.paradas[a].parada, linea.idLinea, lin.paradas[a].sentido);

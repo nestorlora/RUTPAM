@@ -142,8 +142,8 @@ function addLineaCtan(lin){
 
 function updateLineaCtan(lin){
 	posLinea = findLinea("CTAN-"+lin.idLinea);
-	lineas[posLinea].tieneIda = lin.tieneIda;
-	lineas[posLinea].tieneVuelta = lin.tieneVuelta;
+	lineas[posLinea].tieneIda = lin.tieneIda===1?true:false;
+	lineas[posLinea].tieneVuelta = lin.tieneVuelta===1?true:false;
 	if(lin.tieneVuelta){
 		lineas[posLinea].cabeceraIda = paradas[findParada(lineas[posLinea].paradasIda[0].codPar)].nombreParada;
 		lineas[posLinea].cabeceraVta = paradas[findParada(lineas[posLinea].paradasVta[0].codPar)].nombreParada;
