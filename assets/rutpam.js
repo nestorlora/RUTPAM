@@ -95,10 +95,16 @@ var showEMT = false;
 var showCTAN = false;
 
 /**
- * @description Contador de los pedidos AJAX en curso
+ * @description Contador de las líneas que han sido cargadas en detalle
  * @type Number
  */
-var tareas = 0;
+var lineasCargadas = 0;
+
+/**
+ * @description Indica si la función de inicializar los marcadores se ha ejecutado ya y habilita los botones de marcar paradas en el mapa
+ * @type Boolean
+ */
+var paradasInicializadas = false;
 
 /**
  * @description Tabla de modos de transporte (medios de transporte)
@@ -271,8 +277,8 @@ function reducirTTL(){
 }
 
 function inicializarParadas(){
-	if(tareas > 0){
-		setTimeout(inicializarParadas, 1000);
+	if(lineasCargadas < lineas.length || lineasCargadas < 80){
+		setTimeout(inicializarParadas, 1500);
 	}else{
 		for(var a = 0; a < paradas.length; a++){
 			paradas[a].marker = L.marker({lat: paradas[a].latitud, lng: paradas[a].longitud}, {

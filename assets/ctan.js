@@ -24,11 +24,10 @@
 
 /* Este archivo forma parte de R.U.T.P.A.M. no funcionará por separado */
 
-/* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url, lineas, modos, zonas, paradas  */
+/* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url, lineas, modos, zonas, paradas, lineasCargadas  */
 
 function getModos(){
 	// Petición AJAX
-	tareas++; // Incrementamos las tareas AJAX en curso
 	$.getJSON({
 		url: ctan_api_url+'/modostransporte?lang=ES'
 	}).done(function (response, status){
@@ -42,15 +41,12 @@ function getModos(){
                 modos.push(modo);
 			}
 		}
-	}).always(function(){
-		tareas--; // Decrementamos las tareas AJAX en curso
 	});
     return null;
 }
 
 function getZonas(){
     // Petición AJAX
-	tareas++; // Incrementamos las tareas AJAX en curso
 	$.getJSON({
 		url: ctan_api_url+'/zonas?lang=ES'
 	}).done(function (response, status){
@@ -65,14 +61,11 @@ function getZonas(){
                 zonas.push(zona);
 			}
 		}
-	}).always(function(){
-		tareas--; // Decrementamos las tareas AJAX en curso
 	});
 }
 
 function getLineasCtan(){
     // Petición AJAX
-	tareas++; // Incrementamos las tareas AJAX en curso
 	$.getJSON({
 		url: ctan_api_url+'/lineas?lang=ES'
 	}).done(function (response, status){
@@ -83,27 +76,23 @@ function getLineasCtan(){
 				setTimeout(getLineaCompletaCtan, 5000+(150*i), response[i].idLinea);
 			}
 		}
-	}).always(function(){
-		tareas--; // Decrementamos las tareas AJAX en curso
 	});
 	return null;
 }
 
 function getLineaCompletaCtan(ctanId){
 	// Petición AJAX
-	tareas++; // Incrementamos las tareas AJAX en curso
 	$.getJSON({
 		url: ctan_api_url+'/lineas/'+ctanId+'?lang=ES'
 	}).done(function (response, status){
 		if(status === "success"){
 			updateLineaCtan(response); // Pasamos la línea por addLinea()
+			lineasCargadas++;
 		}
 	}).fail(function (response, status, error){
 		if(error === "Bad Request"){ //Si el servidor no ha atendido la petición, se vuelve a hacer con recursividad
 			getLineaCompletaCtan(ctanId);
 		}
-	}).always(function(){
-		tareas--; // Decrementamos las tareas AJAX en curso
 	});
 	return null;
 }
@@ -170,7 +159,6 @@ function updateLineaCtan(lin){
 
 function getParadasLineaCtan(id){
     // Petición AJAX
-	tareas++; // Incrementamos las tareas AJAX en curso
 	$.getJSON({
 		url: ctan_api_url+'/lineas/'+idLinea(id)+'/paradas?lang=ES'
 	}).done(function (response, status){
@@ -196,8 +184,6 @@ function getParadasLineaCtan(id){
 		if(error === "Bad Request"){ //Si el servidor no ha atendido la petición, se vuelve a hacer con recursividad
 			getParadasLineaCtan(id);
 		}
-	}).always(function(){
-		tareas--; // Decrementamos las tareas AJAX en curso
 	});
 }
 
