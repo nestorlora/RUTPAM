@@ -73,7 +73,7 @@ function getLineasCtan(){
 			response = response.lineas;
             for(var i = 0; i<response.length; i++){
 				addLineaCtan(response[i]);
-				setTimeout(getLineaCompletaCtan, 5000+(150*i), response[i].idLinea);
+				setTimeout(getLineaCompletaCtan, 1000+(90*i), response[i].idLinea);
 			}
 		}
 	});
