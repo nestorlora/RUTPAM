@@ -24,7 +24,7 @@
 
 /* Este archivo forma parte de R.U.T.P.A.M. no funcionará por separado */
 
-/* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url, tareas */
+/* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url, lineas, modos, zonas, paradas  */
 
 function getModos(){
 	// Petición AJAX
@@ -38,7 +38,7 @@ function getModos(){
 				var modo = {
                     idModo: parseInt(response[i].idModo),
                     descripcion: response[i].descripcion
-                }
+                };
                 modos.push(modo);
 			}
 		}
