@@ -30,7 +30,7 @@
  * @description Variable global para la versión del programa
  * @type String
  */
-var rutpam_version = "4.9.8";
+var rutpam_version = "4.9.9";
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -800,13 +800,13 @@ function busIconContent(Bus, estado){
 }
 
 function paradaIconContent(codPar){
-	if(isNaN(codPar)){
+	if(/^CTAN-/.test(codPar)){
 		return L.divIcon({
 			className: 'marker paradaC',
 			iconSize: [36, 15],
-			iconAnchor: [0, 0],
-			popupAnchor: [0, 0],
-			html: codPar.replace(/^CTAN-/, "C")
+			iconAnchor: [60, 10],
+			popupAnchor: [-42, -10],
+			html: codPar.replace(/^CTAN-/, "")
 		});
 	}else{
 		return L.divIcon({
@@ -814,7 +814,7 @@ function paradaIconContent(codPar){
 			iconSize: [36, 15],
 			iconAnchor: [18, 7],
 			popupAnchor: [0, -7],
-			html: codPar
+			html: codPar.replace(/^EMT-/, "")
 		});
 	}
 }

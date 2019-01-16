@@ -234,13 +234,13 @@ function addLineaEmt(lin){
 		addParadaEmt(lin.paradas[a].parada, linea.idLinea, lin.paradas[a].sentido);
 		if(lin.paradas[a].sentido === 1){
 			linea.paradasIda.push({
-				codPar: lin.paradas[a].parada.codParada,
+				codPar: "EMT-"+lin.paradas[a].parada.codParada,
 				orden: lin.paradas[a].orden
 			});
 		}
 		if(lin.paradas[a].sentido === 2){
 			linea.paradasVta.push({
-				codPar: lin.paradas[a].parada.codParada,
+				codPar: "EMT-"+lin.paradas[a].parada.codParada,
 				orden: lin.paradas[a].orden
 			});
 		}
@@ -288,7 +288,7 @@ function addParadaEmt(parada, idLinea, sentido){
 		});
 	}else{
 		pos = paradas.push({
-			codPar: parada.codParada,
+			codPar: "EMT-"+parada.codParada,
 			nombreParada: parada.nombreParada,
 			direccion: parada.direccion,
 			idNucleo: 0,
