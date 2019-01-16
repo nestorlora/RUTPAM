@@ -30,6 +30,7 @@
  * @description Variable global para la versión del programa
  * @type String
  */
+var rutpam_version = "4.9.8";
 
 /**
  * @description Variable global para almacenar el timer maestro
