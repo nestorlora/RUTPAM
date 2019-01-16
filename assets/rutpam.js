@@ -30,7 +30,7 @@
  * @description Variable global para la versión del programa
  * @type String
  */
-var rutpam_version = "4.9.5";
+var rutpam_version = "4.9.6";
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -57,18 +57,19 @@ var colores = {
 	// Consorcio de Transportes
 	ctmamA: "#009639", // Oficial Primario, líneas regulares, sentido ida
 	ctmamB: "#CBE896", // sentido vuelta
-	ctmamN: "#0C0A49", // lineas buho
-	ctmamU: "#E4D77E", // Oficial Secundario, líneas universitarias
-	ctmamV: "#71A9F7", // líneas de verano
+	ctmamN: "#006983", // lineas buho
+	ctmamT: "#E4D77E", // Oficial Secundario, líneas estacionales
+	/*ctmamU: "#E4D77E", // líneas universitarias
+	ctmamV: "#71A9F7", // líneas de verano*/
 	// Renfe Operadora
 	renfeA: "#8A0072", // Oficial general
 	renfeB: "#EF3340", // Oficial cercanías
 	// Metro Málaga
 	metro: "#DC241F", // "Oficial"
 	// Lineas especiales
-	especial: "#F2C900", // Líneas y servicios especiales
-	express: "#AA5825", // Servicios exprés
-	lanzaderas: "#4C4C4C" // Lanzadera
+	especial: "#FCCC0A", // Líneas y servicios especiales
+	express: "#996633", // Servicios exprés
+	lanzaderas: "#808183" // Lanzadera
 	
 };
 
@@ -638,9 +639,9 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 	}else if(/N[1-9]$|^M-168$|^M-155$|^M-168$/.test(userCodLinea)){ // Líneas Buho CTAN
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamN));
 	}else if(/^M-5[0-9]{2}$/.test(userCodLinea)){ // Líneas Verano CTAN
-		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamV));
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamT));
 	}else if(/^M-114$|^M-116$|^M-143$|^M-166$/.test(userCodLinea)){ // Líneas Universitarias CTAN
-		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamU));
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamT));
 		esNegro = true;
 	}else if(/^R-|^T-|^M-10[1-4]$/.test(userCodLinea)){ // Líneas Urbanas CTAN
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtA));
@@ -919,8 +920,7 @@ function verAyuda(){
 	<p>\n\
 	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.ctmamA+'"></i></span> Líneas convencionales<br>\n\
 	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.ctmamN+'"></i></span> Líneas búho<br>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.ctmamU+'"></i></span> Líneas universitarias<br>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.ctmamV+'"></i></span> Líneas de verano<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.ctmamT+'"></i></span> Líneas estacionales<br>\n\
 	</p>\n\
 	<h5>Líneas Especiales</h5>\n\
 	<p>\n\
