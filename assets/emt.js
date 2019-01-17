@@ -291,7 +291,7 @@ function addLineaEmt(lin){
 }
 
 function addParadaEmt(parada, idLinea, sentido){
-	var pos = findParada(parada.codParada);
+	var pos = findParada("EMT-"+parada.codParada);
 	if(pos !== null){
 		paradas[pos].servicios.push({
 			idLinea: idLinea,
