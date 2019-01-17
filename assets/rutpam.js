@@ -30,7 +30,7 @@
  * @description Variable global para la versión del programa
  * @type String
  */
-var rutpam_version = "4.9.9";
+var rutpam_version = "4.10.0";
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -914,9 +914,9 @@ function verCopyright(){
 	Licencia MIT © Néstor M. Lora - 2018<br>\n\
 	<a href="mailto:nestorlora@geeklab.es">nestorlora@geeklab.es</a><br><br>\n\
 	Datos cartográficos: <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i><i class="fab fa-creative-commons-sa"></i> Colaboradores de <a href="https://openstreetmap.org">OpenStreetMap</a><br>\n\
-	Información de líneas: Empresa Malagueña de Transportes S.A.M.<br>\n\
-	Ubicaciones en tiempo real: <a href="https://betteremt.edufdezsoy.es">BetterEMT</a> ©<!--<i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i><i class="fab fa-creative-commons-nc-eu"></i><i class="fab fa-creative-commons-sa"></i>--> Eduardo Fernández<br><br>\n\
-	Contiene información proporcionada por el Portal de Datos<br> Abiertos de la Red de Consorcios de Transporte de Andalucía<br><br>\n\
+	<i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i></i><i class="fab fa-creative-commons-sa"></i> Datos Abiertos del Ayuntamiento de Málaga<br>\n\
+	Datos Abiertos de la Red de Consorcios de Transporte de Andalucía<br>\n\
+	<br>\n\
 	Construido con <i title="HTML 5" class="fab fa-html5 fa-2x fa-fw" style="color: orangered"></i> \n\
 	<i title="CSS 3" class="fab fa-css3-alt fa-2x fa-fw" style="color: dodgerblue"></i> \n\
 	<span title="JavaScript" class="fa-2x fa-layers fa-fw">\n\

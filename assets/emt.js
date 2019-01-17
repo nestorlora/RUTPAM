@@ -147,9 +147,21 @@ function getUbicacionesEmt(idLinea){
 
 function getBusesEmt(){
 	$.getJSON({
-		url: betteremt_api_url+'/buses/all'
+		//url: betteremt_api_url+'/buses/all'
+		url: odm_api_url+'datastore_search_sql?sql=SELECT * from "9bc05288-1c11-4eec-8792-d74b679c8fcf" WHERE last_update=(SELECT MAX(last_update) from "9bc05288-1c11-4eec-8792-d74b679c8fcf")'
 	}).done(function (response, status){
 		if(status === "success"){
+			/* Limpieza Open Data Málaga */
+			response = response.result.records;
+			for(var x = 0; x < response.length; x++){
+				response[x].codBus = Number(response[x].codBus);
+				response[x].codLinea = Number(response[x].codLinea);
+				response[x].codParIni = Number(response[x].codParIni);
+				response[x].latitud = Number(response[x].lat);
+				response[x].longitud = Number(response[x].lon);
+				response[x].sentido = Number(response[x].sentido);
+			}
+			/* Procesado de ubicaciones con normalidad */
 			for(var x = 0; x < response.length; x++){
                 pos = findBus(response[x].codBus);
                 response[x].idLinea = "EMT-"+response[x].codLinea;
