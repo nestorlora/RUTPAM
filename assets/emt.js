@@ -24,7 +24,7 @@
 
 /* Este archivo forma parte de R.U.T.P.A.M. no funcionará por separado */
 
-/* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url, lineasCargadas */
+/* global emt_proxy_url, betteremt_api_url, odm_api_url, ttl_new, default_ttl, refresh_rate, L, map, lineasCargadas, lineas, paradas, autobuses */
 
 /**
  * @description Función que llama a la API para cargar las líneas. Cambia algunos elementos para preparar la interfaz.
@@ -240,7 +240,7 @@ function addLineaEmt(lin){
         hayNoticia: null,
         operadores: "Empresa Malagueña de Transportes S.A.M.",
 		tieneIdea: null,
-		tieneVuelta: null,
+		tieneVuelta: null
 	};
 	for(var a = 0; a < lin.paradas.length; a++){
 		addParadaEmt(lin.paradas[a].parada, linea.idLinea, lin.paradas[a].sentido);
