@@ -201,7 +201,7 @@ function addParadaCtan(parada, idLinea){
 	if(pos !== null){
 		paradas[pos].servicios.push({
 			idLinea: idLinea,
-			sentido: parada.sentido,
+			sentido: Number(parada.sentido),
 			espera: null
 		});
 	}else{
@@ -221,7 +221,7 @@ function addParadaCtan(parada, idLinea){
 		})-1;
 		paradas[pos].servicios.push({
 			idLinea: idLinea,
-			sentido: parada.sentido,
+			sentido: Number(parada.sentido),
 			espera: null
 		});
 	}
