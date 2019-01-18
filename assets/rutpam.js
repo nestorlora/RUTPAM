@@ -757,15 +757,19 @@ function paradaPopupContent(id){
 }
 
 function busIconContent(Bus, estado){
-	var linea = lineas[findLinea(Bus.idLinea)].userCodLinea;
-	var html = linea+"<br>"+Bus.codBus;
+	var linea = lineas[findLinea(Bus.idLinea)];
+	var html = linea.userCodLinea+"<br>"+Bus.codBus;
 	var clase;
 	switch (Bus.sentido){
 		case 1:
 			clase = 'marker ida';
 			break;
 		case 2:
-			clase = 'marker vta';
+			if(linea.tieneVuelta){
+				clase = 'marker vta';
+			}else{
+				clase = 'marker ida'
+			}
 			break;
 		default:
 			clase = 'marker desconocido';
