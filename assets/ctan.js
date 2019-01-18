@@ -165,8 +165,17 @@ function getParadasLineaCtan(id){
 		if(status === "success"){
 			linea = lineas[findLinea(id)];
 			response = response.paradas;
+			var cabeceraIda, cabeceraVta;
             for(var i = 0; i<response.length; i++){
-                addParadaCtan(response[i], id); // Para cada línea de la respuesta la pasamos por addLinea()
+				if(Number(response[i].sentido) === 1 && response[i].orden === 1){
+					cabeceraIda = response[i].idParada;
+					addParadaCtan(response[i], id); // Pasamos por addLinea() la cabecera
+				}else if(Number(response[i].sentido) === 2 && response[i].orden === 1){
+					cabeceraVta = response[i].idParada;
+					addParadaCtan(response[i], id); // Pasamos por addLinea() la cabecera
+				}else if(response[i].idParada !== cabeceraIda && response[i].idParada !== cabeceraVta){
+					addParadaCtan(response[i], id); // Pasamos por addLinea() el resto de líneas menos la ultima parada si coincide con la cabecera
+				}
                 if(response[i].sentido == 1){
                     linea.paradasIda.push({
                         codPar: "CTAN-"+response[i].idParada,

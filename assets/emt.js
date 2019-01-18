@@ -266,6 +266,23 @@ function addLineaEmt(lin){
 		linea.cabeceraIda = "Circular";
 		linea.cabeceraVta = "Circular";
 	}
+	// Corrección en paradas
+	if(linea.tieneIda){
+		var maxIda = linea.paradasIda.length;
+		for(var x = 0; x < linea.paradasVta.length; x++){
+			linea.paradasVta[x].orden -= maxIda;
+		}
+		if(linea.tieneVuelta){
+			linea.paradasIda.push({
+				codPar: linea.paradasVta[0].codPar,
+				orden: -1
+			});
+			linea.paradasVta.push({
+				codPar: linea.paradasIda[0].codPar,
+				orden: -1
+			});
+		}
+	}
 	lineas.push(linea);
 	//getTrazados(linea.idLinea);
 	

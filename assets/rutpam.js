@@ -381,25 +381,25 @@ function generarTablaParadas(linea){
 		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraIda)); // Columna sentido único
 	}
 	tabla.append(cabecera); // Añadimos la cabecera a la tabla
-	for(var a = 0; a <= Math.max(linea.paradasIda.length, linea.paradasVta.length); a++){ // PARA el máximo de paradas entre ida y vuelta
+	for(var a = 0; a < Math.max(linea.paradasIda.length, linea.paradasVta.length); a++){ // PARA el máximo de paradas entre ida y vuelta
 		var fila = $("<tr>"); // Creamos una fila
 		if(a < linea.paradasIda.length){
 			var codPar = linea.paradasIda[a].codPar;
 			fila = generarFilaParada(fila, codPar, linea.idLinea);
-		}else if(a === linea.paradasIda.length && linea.tieneVuelta){
+		}else /*if(a === linea.paradasIda.length && linea.tieneVuelta){
 			var codPar = linea.paradasVta[0].codPar;
 			fila = generarFilaParada(fila, codPar, linea.idLinea);
-		}else if(linea.tieneVuelta){
+		}else if(linea.tieneVuelta)*/{
 			fila = generarFilaParada(fila);
 		}
 		if(linea.tieneVuelta){
 			if(a < linea.paradasVta.length){
 				var codPar = linea.paradasVta[a].codPar;
 				fila = generarFilaParada(fila, codPar, linea.idLinea);
-			}else if(a === linea.paradasVta.length && linea.tieneVuelta){
+			}else /*if(a === linea.paradasVta.length && linea.tieneVuelta){
 				var codPar = linea.paradasIda[0].codPar;
 				fila = generarFilaParada(fila, codPar, linea.idLinea);
-			}else{
+			}else*/{
 				fila = generarFilaParada(fila);
 			}
 		}
