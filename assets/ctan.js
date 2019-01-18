@@ -150,10 +150,11 @@ function updateLineaCtan(lin){
 	lineas[posLinea].tieneIda = lin.tieneIda===1?true:false;
 	lineas[posLinea].tieneVuelta = lin.tieneVuelta===1?true:false;
 	if(lin.tieneVuelta){
-		lineas[posLinea].cabeceraIda = paradas[findParada(lineas[posLinea].paradasIda[0].codPar)].nombreParada;
-		lineas[posLinea].cabeceraVta = paradas[findParada(lineas[posLinea].paradasVta[0].codPar)].nombreParada;
+		lineas[posLinea].cabeceraIda = /*paradas[findParada(lineas[posLinea].paradasIda[0].codPar)].nombreParada*/"Vuelta";
+		lineas[posLinea].cabeceraVta = /*paradas[findParada(lineas[posLinea].paradasVta[0].codPar)].nombreParada*/"Ida";
 	}else{
-		lineas[posLinea].cabeceraIda = paradas[findParada(lineas[posLinea].paradasIda[0].codPar)].nombreParada;
+		lineas[posLinea].cabeceraIda = /*paradas[findParada(lineas[posLinea].paradasIda[0].codPar)].nombreParada*/"Ida";
+		lineas[posLinea].cabeceraVta = "Ida";
 	}
 }
 
