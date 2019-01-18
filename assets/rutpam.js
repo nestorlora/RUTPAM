@@ -907,7 +907,7 @@ function ControlRUTPAM(mapDiv){
 
 function verCopyright(){
 	var rutpam_credits = 'R.U.T.P.A.M. v'+rutpam_version+'<br>\n\
-	Licencia MIT © Néstor M. Lora - 2018<br>\n\
+	Licencia MIT © Néstor M. Lora - 2018/2019<br>\n\
 	<a href="mailto:nestorlora@geeklab.es">nestorlora@geeklab.es</a><br><br>\n\
 	Datos cartográficos: <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i><i class="fab fa-creative-commons-sa"></i> Colaboradores de <a href="https://openstreetmap.org">OpenStreetMap</a><br>\n\
 	<i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i></i><i class="fab fa-creative-commons-sa"></i> Datos Abiertos del Ayuntamiento de Málaga<br>\n\
