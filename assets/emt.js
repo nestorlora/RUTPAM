@@ -239,7 +239,7 @@ function addLineaEmt(lin){
         modo: "Autobús",
         hayNoticia: null,
         operadores: "Empresa Malagueña de Transportes S.A.M.",
-		tieneIdea: null,
+		tieneIda: null,
 		tieneVuelta: null
 	};
 	for(var a = 0; a < lin.paradas.length; a++){
@@ -256,6 +256,15 @@ function addLineaEmt(lin){
 				orden: lin.paradas[a].orden
 			});
 		}
+	}
+	if(linea.paradasIda.length > 1){
+		linea.tieneIda = true;
+	}
+	if(linea.paradasVta.length > 1){
+		linea.tieneVuelta = true;
+	}else{
+		linea.cabeceraIda = "Circular";
+		linea.cabeceraVta = "Circular";
 	}
 	lineas.push(linea);
 	//getTrazados(linea.idLinea);

@@ -374,7 +374,7 @@ function generarBotonToggleParadas(idLinea){
 function generarTablaParadas(linea){
 	var tabla = $("<table>"); // Creamos la tabla de paradas
 	var cabecera = $("<tr>"); // Creamos una cabecera
-	if(linea.cabeceraVta !== null){ // SI la línea es de ida y vuelta
+	if(linea.tieneVuelta){ // SI la línea es de ida y vuelta
 		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraVta)); // Columna sentido ida
 		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraIda)); // Columna sentido vuelta
 	}else{ // ELSE la línea es circular
@@ -386,17 +386,17 @@ function generarTablaParadas(linea){
 		if(a < linea.paradasIda.length){
 			var codPar = linea.paradasIda[a].codPar;
 			fila = generarFilaParada(fila, codPar, linea.idLinea);
-		}else if(a === linea.paradasIda.length && linea.cabeceraVta !== null){
+		}else if(a === linea.paradasIda.length && linea.tieneVuelta){
 			var codPar = linea.paradasVta[0].codPar;
 			fila = generarFilaParada(fila, codPar, linea.idLinea);
-		}else if(linea.cabeceraVta !== null){
+		}else if(linea.tieneVuelta){
 			fila = generarFilaParada(fila);
 		}
-		if(linea.cabeceraVta !== null){
+		if(linea.tieneVuelta){
 			if(a < linea.paradasVta.length){
 				var codPar = linea.paradasVta[a].codPar;
 				fila = generarFilaParada(fila, codPar, linea.idLinea);
-			}else if(a === linea.paradasVta.length && linea.cabeceraVta !== null){
+			}else if(a === linea.paradasVta.length && linea.tieneVuelta){
 				var codPar = linea.paradasIda[0].codPar;
 				fila = generarFilaParada(fila, codPar, linea.idLinea);
 			}else{
@@ -438,11 +438,7 @@ function verInfoParada(id){
 		var sentido;
 		switch (parada.servicios[a].sentido){
 			case 1:
-				if(linea.cabeceraVta !== null){
-					sentido = linea.cabeceraVta;
-				}else{
-					sentido = linea.cabeceraIda;
-				}
+				sentido = linea.cabeceraVta;
 				break;
 			case 2:
 				sentido = linea.cabeceraIda;
@@ -741,11 +737,7 @@ function paradaPopupContent(id){
 		var sentido;
 		switch (parada.servicios[a].sentido){
 			case 1:
-				if(linea.cabeceraVta !== null){
-					sentido = linea.cabeceraVta;
-				}else{
-					sentido = linea.cabeceraIda;
-				}
+				sentido = linea.cabeceraVta;
 				break;
 			case 2:
 				sentido = linea.cabeceraIda;
