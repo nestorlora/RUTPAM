@@ -768,7 +768,7 @@ function busIconContent(Bus, estado){
 			if(linea.tieneVuelta){
 				clase = 'marker vta';
 			}else{
-				clase = 'marker ida'
+				clase = 'marker ida';
 			}
 			break;
 		default:
