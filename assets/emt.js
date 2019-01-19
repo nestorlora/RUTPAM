@@ -24,7 +24,7 @@
 
 /* Este archivo forma parte de R.U.T.P.A.M. no funcionará por separado */
 
-/* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url */
+/* global emt_proxy_url, betteremt_api_url, odm_api_url, ttl_new, default_ttl, refresh_rate, L, map, lineasCargadas, lineas, paradas, autobuses */
 
 /**
  * @description Función que llama a la API para cargar las líneas. Cambia algunos elementos para preparar la interfaz.
@@ -39,8 +39,8 @@ function getLineasEmt(){
 		if(status === "success"){
 			for(var i = 0; i<response.length; i++){
 				addLineaEmt(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
+				lineasCargadas++;
 			}
-			inicializarParadas();
 			motor(); // Llamamos la primera vez al motor
 			start(); // Programamos que se ejecute periódicamente
 			// Mostramos la botoner de control del motor
@@ -61,7 +61,7 @@ function getTrazadosEmt(idLinea){
 	// Cambiamos el estado a deshabilitado a la espera de recibir los datos
 	$("#botonIda"+idLinea).prop("indeterminate", false).prop("disabled", true).off('click');
 	$("#botonVta"+idLinea).prop("indeterminate", false).prop("disabled", true).off('click');
-	// Llamada AJAX
+	// Llamada AJAX Ida
 	$.getJSON({
 		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea(idLinea)+'&sentido=1'
 	}).done(function (response, status){
@@ -89,6 +89,7 @@ function getTrazadosEmt(idLinea){
 			$("#botonIda"+idLinea).trigger("change");
 		}
 	});
+	// Llamada AJAX Vuelta
 	$.getJSON({
 		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea(idLinea)+'&sentido=2'
 	}).done(function (response, status){
@@ -119,6 +120,10 @@ function getTrazadosEmt(idLinea){
 	return null;
 }
 
+/**
+ * @deprecated
+ * @param {String} idLinea 
+ */
 function getUbicacionesEmt(idLinea){
 	$.getJSON({
 		//url: emt_proxy_url+'/services/buses/?codLinea='+codLinea
@@ -142,9 +147,21 @@ function getUbicacionesEmt(idLinea){
 
 function getBusesEmt(){
 	$.getJSON({
-		url: betteremt_api_url+'/buses/all'
+		//url: betteremt_api_url+'/buses/all'
+		url: odm_api_url+'datastore_search_sql?sql=SELECT * from "9bc05288-1c11-4eec-8792-d74b679c8fcf" WHERE last_update=(SELECT MAX(last_update) from "9bc05288-1c11-4eec-8792-d74b679c8fcf")'
 	}).done(function (response, status){
 		if(status === "success"){
+			/* Limpieza Open Data Málaga */
+			response = response.result.records;
+			for(var x = 0; x < response.length; x++){
+				response[x].codBus = Number(response[x].codBus);
+				response[x].codLinea = Number(response[x].codLinea);
+				response[x].codParIni = Number(response[x].codParIni);
+				response[x].latitud = Number(response[x].lat);
+				response[x].longitud = Number(response[x].lon);
+				response[x].sentido = Number(response[x].sentido);
+			}
+			/* Procesado de ubicaciones con normalidad */
 			for(var x = 0; x < response.length; x++){
                 pos = findBus(response[x].codBus);
                 response[x].idLinea = "EMT-"+response[x].codLinea;
@@ -219,22 +236,50 @@ function addLineaEmt(lin){
 		getVta: false,
 		verParadas: false,
         numBuses: 0,
-        idModo: 1,
+        modo: "Autobús",
         hayNoticia: null,
-        operadores: "Empresa Malagueña de Transportes"
+        operadores: "Empresa Malagueña de Transportes S.A.M.",
+		tieneIda: null,
+		tieneVuelta: null
 	};
 	for(var a = 0; a < lin.paradas.length; a++){
 		addParadaEmt(lin.paradas[a].parada, linea.idLinea, lin.paradas[a].sentido);
 		if(lin.paradas[a].sentido === 1){
 			linea.paradasIda.push({
-				codPar: lin.paradas[a].parada.codParada,
+				codPar: "EMT-"+lin.paradas[a].parada.codParada,
 				orden: lin.paradas[a].orden
 			});
 		}
 		if(lin.paradas[a].sentido === 2){
 			linea.paradasVta.push({
-				codPar: lin.paradas[a].parada.codParada,
+				codPar: "EMT-"+lin.paradas[a].parada.codParada,
 				orden: lin.paradas[a].orden
+			});
+		}
+	}
+	if(linea.paradasIda.length > 1){
+		linea.tieneIda = true;
+	}
+	if(linea.paradasVta.length > 1){
+		linea.tieneVuelta = true;
+	}else{
+		linea.cabeceraIda = "Circular";
+		linea.cabeceraVta = "Circular";
+	}
+	// Corrección en paradas
+	if(linea.tieneIda){
+		var maxIda = linea.paradasIda.length;
+		for(var x = 0; x < linea.paradasVta.length; x++){
+			linea.paradasVta[x].orden -= maxIda;
+		}
+		if(linea.tieneVuelta){
+			linea.paradasIda.push({
+				codPar: linea.paradasVta[0].codPar,
+				orden: -1
+			});
+			linea.paradasVta.push({
+				codPar: linea.paradasIda[0].codPar,
+				orden: -1
 			});
 		}
 	}
@@ -272,7 +317,7 @@ function addLineaEmt(lin){
 }
 
 function addParadaEmt(parada, idLinea, sentido){
-	var pos = findParada(parada.codParada);
+	var pos = findParada("EMT-"+parada.codParada);
 	if(pos !== null){
 		paradas[pos].servicios.push({
 			idLinea: idLinea,
@@ -281,12 +326,15 @@ function addParadaEmt(parada, idLinea, sentido){
 		});
 	}else{
 		pos = paradas.push({
-			codPar: parada.codParada,
+			codPar: "EMT-"+parada.codParada,
 			nombreParada: parada.nombreParada,
 			direccion: parada.direccion,
+			idNucleo: 0,
+			idZona: "A",
 			servicios: [],
 			latitud: parada.latitud,
 			longitud: parada.longitud,
+			modos: "Autobús",
 			marker: null,
 			popup: null,
 			viewCont: 0
