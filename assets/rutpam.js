@@ -763,9 +763,10 @@ function busPopupContent(Bus){
 		default:
 			sentido = "¿? Desconocido ("+Bus.sentido+") ¿?";
 	}
+	var parada = paradas[findParada(Bus.codParIni)];
 	return "Bus: "+Bus.codBus+"<br>"+
 	"Línea: "+linea.userCodLinea+"<br>"+
-	"Última parada realizada: "+Bus.codParIni+"<br>"+
+	"Ult. Par. Realizada: "+Bus.codParIni+"<br>"+parada.nombreParada+"<br>"+
 	"Sentido: "+sentido+"<br>"+
 	"<a href='http://buscabus.tk/bus/?bus="+Bus.codBus+"' target='_blank'>Ver en BuscaBus</a>";
 }
