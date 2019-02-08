@@ -30,7 +30,7 @@
  * @description Variable global para la versión del programa
  * @type String
  */
-var rutpam_version = "4.10.3";
+var rutpam_version = "4.10.4";
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -197,6 +197,7 @@ $(document).ready(function(){
 	verCopyright(); // Mostramos el "Acerca de RUTPAM"
 	initMap(); // Inicializamos el mapa y todo el layout
 	document.title = "RUTPAM "+rutpam_version; // Seteamos el título del documento
+	initKeys(); // Inicializamos las teclas de control
 	getModos(); // Cargamos los modos de transporte
 	getZonas(); // Cargamos las zonas
 	getLineasEmt(); // Cargamos las líneas de la EMT
@@ -219,6 +220,42 @@ function initMap() {
 		attributionControl: false // Deshabilitamos el footer de copyright porque ya tenemos una ventana para ello
 	});
 	return null;
+}
+
+/**
+ * @description Pone en marcha los triggers adecuados para las teclas de control
+ * @returns {null}
+ */
+function initKeys(){
+	document.addEventListener('keydown', function(k){
+		//console.log(k);
+		switch(k.key){
+			case "Escape":
+				closeInfo();
+				break;
+			case "Backspace":
+				for(var a = 0; a < lineas.length; a++){ // Para todas las líneas
+					if(lineas[a].trazadoIda !== null){ // Si está cargado su trazado
+						hideTrazado(lineas[a].idLinea, 1);
+					}
+					if(lineas[a].trazadoVta !== null){
+						hideTrazado(lineas[a].idLinea, 2);
+					}
+				}
+				break;
+			case "?":
+				verAyuda();
+				break;
+			case "1":
+				togglePanelEmt();
+				break;
+			case "2":
+				togglePanelCtan();
+				break;
+			default:
+				break;
+		}
+	});
 }
 
 /**
@@ -509,16 +546,16 @@ function hideTrazado(idLinea, sentido){
 		lineas[findLinea(idLinea)].trazadoIda.remove();
 		$("#botonIda"+idLinea).prop("checked", false);
 		$("#botonIda"+idLinea).unbind("click");
-		$("#botonIda"+idLinea).click(function(){
+		/*$("#botonIda"+idLinea).click(function(){
 			showTrazado(idLinea, sentido);
-		});
+		});*/
 	}else if(sentido === 2){
 		lineas[findLinea(idLinea)].trazadoVta.remove();
 		$("#botonVta"+idLinea).prop("checked", false);
 		$("#botonVta"+idLinea).unbind("click");
-		$("#botonVta"+idLinea).click(function(){
+		/*$("#botonVta"+idLinea).click(function(){
 			showTrazado(idLinea, sentido);
-		});
+		});*/
 	}
 }
 
@@ -941,7 +978,21 @@ function verCopyright(){
 
 function verAyuda(){
 	var ayuda = '<h4>Controles</h4>\n\
-	<p>En proceso...</p>\n\
+	<p>\n\
+		<table>\n\
+			<tbody>\n\
+				<tr><th colspan="2">Mapa</th></tr>\n\
+				<tr><td>-</td><td>Reducir Zoom</td></tr>\n\
+				<tr><td>+</td><td>Aumentar Zoom</td></tr>\n\
+				<tr><th colspan="2">Ventanas</th></tr>\n\
+				<tr><td>Esc</td><td>Cierra todas las ventanas</td></tr>\n\
+				<tr><td>?</td><td>Muestra la ventana de ayuda</td></tr>\n\
+				<tr><th colspan="2">Redes</th></tr>\n\
+				<tr><td>1</td><td>Muestra/oculta Red EMT</td></tr>\n\
+				<tr><td>2</td><td>Muestra/oculta Red CTMAM</td></tr>\n\
+			</tbody>\n\
+		</table>\n\
+	</p>\n\
 	<h4>Leyenda de colores</h4>\n\
 	<p>Cada línea de autobús muestra un color en el disco con su código</p>\n\
 	<h5>Líneas Urbanas</h5>\n\
