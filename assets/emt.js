@@ -165,6 +165,7 @@ function getBusesEmt(){
 			for(var x = 0; x < response.length; x++){
                 pos = findBus(response[x].codBus);
                 response[x].idLinea = "EMT-"+response[x].codLinea;
+				 response[x].codParIni = "EMT-"+response[x].codParIni;
 				if(pos !== null){
 					updateBusEmt(response[x], pos);
 				}else{
