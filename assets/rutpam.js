@@ -316,7 +316,7 @@ function verInfoLinea(id){
 		datosLinea.append($("<tr>").append($("<th>", {text: "Num. Coches"})).append($("<td>", {text: linea.numBuses})));
 	}
 	$("#infoContent").append($("<p>").append(datosLinea));
-	var distanciaIda = distanciaVuelta = tiempoIda = tiempoVuelta = 0 // Creamos variables para los datos numéricos
+	var distanciaIda = distanciaVuelta = tiempoIda = tiempoVuelta = 0; // Creamos variables para los datos numéricos
 	var datosTrazado = $("<table>"); // Tabla para los datos numéricos del trazado
 	if(linea.getIda){ // SI se ha cargado el trazado de ida
 		distanciaIda = Math.floor(distanciaTrazado(linea.trazadoIda)); // Calcular la distancia de la ruta
@@ -420,7 +420,7 @@ function generarTablaParadas(linea){
 function generarFilaParada(div, codPar, idLinea){
 	if(codPar !== undefined && codPar !== null){
 		var nombre = paradas[findParada(codPar)].nombreParada;
-		div.append($("<td>").append($("<a>", {text: codPar, href: "#!"}).click(function(){verInfoParada(codPar)})));
+		div.append($("<td>").append($("<a>", {text: codPar, href: "#!"}).click(function(){verInfoParada(codPar);})));
 		div.append($("<td>", {html: acortarParada(nombre)}));
 		div.append(extrarCorrespondencias($("<td>"),codPar, idLinea));
 	}else{
@@ -435,7 +435,7 @@ function verInfoParada(id){
 	$("#infoContent").empty();
 	$("#infoContent").append($("<h3>", {text: "Parada "+parada.codPar}).css("text-align", "center"));
 	$("#infoContent").append($("<h4>", {text: parada.nombreParada}).css("text-align", "center"));
-	if(parada.direccion != null){
+	if(parada.direccion !== null){
 		$("#infoContent").append($("<p>", {text: "Dirección: "+parada.direccion}));
 	}
 	var tabla = $("<table>");
@@ -443,7 +443,7 @@ function verInfoParada(id){
 	cabecera.append($("<th>", {text: "Servicios"}).prop("colspan", /*3*/2));
 	tabla.append(cabecera);
 	for(var a = 0; a < parada.servicios.length; a++){
-		var linea = lineas[findLinea(parada.servicios[a].idLinea)]
+		var linea = lineas[findLinea(parada.servicios[a].idLinea)];
 		var sentido;
 		switch (parada.servicios[a].sentido){
 			case 1:
@@ -743,7 +743,7 @@ function paradaPopupContent(id){
 	$(cabecera).append($("<th>", {text: "Servicios"}).prop("colspan", /*3 2));
 	$(tabla).append(cabecera);*/
 	for(var a = 0; a < parada.servicios.length; a++){
-		var linea = lineas[findLinea(parada.servicios[a].idLinea)]
+		var linea = lineas[findLinea(parada.servicios[a].idLinea)];
 		var sentido;
 		switch (parada.servicios[a].sentido){
 			case 1:
