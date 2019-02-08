@@ -972,7 +972,9 @@ function verAyuda(){
 	<p>Las paradas pertenecen o bien a la EMT o bien al consorcio por lo que aparecen como EMT-XXXX o CTAN-XXXX y EXXXX o CXXXX en las versiones cortas</p>\n\
 	<p>En proceso...</p>\n\
 	<h4>Información de paradas</h4>\n\
-	<p>En proceso...</p>';
+	<p>En proceso...</p>\n\
+	<h4>Información de vehículos</h4>\n\
+	<p>Los marcadores de cada vehículo muestran su código, la línea que están sirviendo, el destino y, si es posible, la última parada realizada. En los vehículos de la EMT también hay un enlace a Busca Bus para consultar la información relativa al vehículo</p>';
 	$("#ventana").hide();
 	$("#infoContent").empty();
 	$("#infoContent").append($("<h3>", {text: "Ayuda"}).css("text-align", "center"));
