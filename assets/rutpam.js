@@ -30,7 +30,7 @@
  * @description Variable global para la versión del programa
  * @type String
  */
-var rutpam_version = "4.10.4";
+var rutpam_version = "4.11";
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -1026,7 +1026,8 @@ function verAyuda(){
 	<h4>Información de paradas</h4>\n\
 	<p>En proceso...</p>\n\
 	<h4>Información de vehículos</h4>\n\
-	<p>Los marcadores de cada vehículo muestran su código, la línea que están sirviendo, el destino y, si es posible, la última parada realizada. En los vehículos de la EMT también hay un enlace a Busca Bus para consultar la información relativa al vehículo</p>';
+	<p>Los marcadores de cada vehículo muestran su código, la línea que están sirviendo, el destino y, si es posible, la última parada realizada. En los vehículos de la EMT también hay un enlace a Busca Bus para consultar la información relativa al vehículo<br>\n\
+	Bus, Línea, Última Parada Realizada, Sentido, link a BuscaBus</p>';
 	$("#ventana").hide();
 	$("#infoContent").empty();
 	$("#infoContent").append($("<h3>", {text: "Ayuda"}).css("text-align", "center"));
