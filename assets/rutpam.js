@@ -90,7 +90,16 @@ var default_ttl = ttl_rate_default/refresh_rate;
  */
 var ttl_old = ttl_rate_old/refresh_rate;
 
+/**
+ * @description Indicador de estado de si se están mostrando las líneas de la EMT
+ * @type Boolean
+ */
 var showEMT = false;
+
+/**
+ * @description Indicador de estado de si se están mostrando las líneas del consorcio
+ * @type Boolean
+ */
 var showCTAN = false;
 
 /**
