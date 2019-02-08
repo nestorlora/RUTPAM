@@ -729,7 +729,8 @@ function busPopupContent(Bus){
 	return "Bus: "+Bus.codBus+"<br>"+
 	"Línea: "+linea.userCodLinea+"<br>"+
 	"Última parada realizada: "+Bus.codParIni+"<br>"+
-	"Sentido: "+sentido;
+	"Sentido: "+sentido+"<br>"+
+	"<a href='http://buscabus.tk/bus/?bus="+Bus.codBus+"' target='_blank'>Ver en BuscaBus</a>";
 }
 
 function paradaPopupContent(id){
