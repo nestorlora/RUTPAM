@@ -258,9 +258,9 @@ function motor(){
  */
 function stop(){
 	clearInterval(timer);
-	$("#pause").attr("disabled", true);
-	$("#play").attr("disabled", false);
-	$("#refresh").attr("disabled", false);
+	$("#pause").prop("disabled", true);
+	$("#play").prop("disabled", false);
+	$("#refresh").prop("disabled", false);
 	return null;
 }
 
@@ -270,9 +270,9 @@ function stop(){
  */
 function start(){
 	timer = setInterval(motor, refresh_rate*1000);
-	$("#pause").attr("disabled", false);
-	$("#play").attr("disabled", true);
-	$("#refresh").attr("disabled", true);
+	$("#pause").prop("disabled", false);
+	$("#play").prop("disabled", true);
+	$("#refresh").prop("disabled", true);
 	return null;
 }
 
@@ -374,7 +374,7 @@ function generarBotonToggleParadas(idLinea){
 			}
 		});
 	}else{
-		$(botonParadas).attr("disabled", true);
+		$(botonParadas).prop("disabled", true);
 	}
 	
 	return botonParadas;
@@ -384,10 +384,10 @@ function generarTablaParadas(linea){
 	var tabla = $("<table>"); // Creamos la tabla de paradas
 	var cabecera = $("<tr>"); // Creamos una cabecera
 	if(linea.tieneVuelta){ // SI la línea es de ida y vuelta
-		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraVta)); // Columna sentido ida
-		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraIda)); // Columna sentido vuelta
+		cabecera.append($("<th>", {text: "Sentido"}).prop("colspan", 3).append($("<br>")).append(linea.cabeceraVta)); // Columna sentido ida
+		cabecera.append($("<th>", {text: "Sentido"}).prop("colspan", 3).append($("<br>")).append(linea.cabeceraIda)); // Columna sentido vuelta
 	}else{ // ELSE la línea es circular
-		cabecera.append($("<th>", {text: "Sentido"}).attr("colspan", 3).append($("<br>")).append(linea.cabeceraIda)); // Columna sentido único
+		cabecera.append($("<th>", {text: "Sentido"}).prop("colspan", 3).append($("<br>")).append(linea.cabeceraIda)); // Columna sentido único
 	}
 	tabla.append(cabecera); // Añadimos la cabecera a la tabla
 	for(var a = 0; a < Math.max(linea.paradasIda.length, linea.paradasVta.length); a++){ // PARA el máximo de paradas entre ida y vuelta
@@ -440,7 +440,7 @@ function verInfoParada(id){
 	}
 	var tabla = $("<table>");
 	var cabecera = $("<tr>");
-	cabecera.append($("<th>", {text: "Servicios"}).attr("colspan", /*3*/2));
+	cabecera.append($("<th>", {text: "Servicios"}).prop("colspan", /*3*/2));
 	tabla.append(cabecera);
 	for(var a = 0; a < parada.servicios.length; a++){
 		var linea = lineas[findLinea(parada.servicios[a].idLinea)]
@@ -470,7 +470,7 @@ function verInfoParada(id){
 
 function enableBusUpdate(idLinea){
 	lineas[findLinea(idLinea)].getBuses = true;
-	$("#botonBus"+idLinea).attr("checked", true);
+	$("#botonBus"+idLinea).prop("checked", true);
 	$("#botonBus"+idLinea).unbind("click");
 	$("#botonBus"+idLinea).click(function(){
 		disableBusUpdate(idLinea);
@@ -479,7 +479,7 @@ function enableBusUpdate(idLinea){
 
 function disableBusUpdate(idLinea){
 	lineas[findLinea(idLinea)].getBuses = false;
-	$("#botonBus"+idLinea).attr("checked", false);
+	$("#botonBus"+idLinea).prop("checked", false);
 	$("#botonBus"+idLinea).unbind("click");
 	$("#botonBus"+idLinea).click(function(){
 		enableBusUpdate(idLinea);
@@ -507,14 +507,14 @@ function showTrazado(idLinea, sentido){
 function hideTrazado(idLinea, sentido){
 	if(sentido === 1){
 		lineas[findLinea(idLinea)].trazadoIda.remove();
-		$("#botonIda"+idLinea).attr("checked", false);
+		$("#botonIda"+idLinea).prop("checked", false);
 		$("#botonIda"+idLinea).unbind("click");
 		$("#botonIda"+idLinea).click(function(){
 			showTrazado(idLinea, sentido);
 		});
 	}else if(sentido === 2){
 		lineas[findLinea(idLinea)].trazadoVta.remove();
-		$("#botonVta"+idLinea).attr("checked", false);
+		$("#botonVta"+idLinea).prop("checked", false);
 		$("#botonVta"+idLinea).unbind("click");
 		$("#botonVta"+idLinea).click(function(){
 			showTrazado(idLinea, sentido);
@@ -740,7 +740,7 @@ function paradaPopupContent(id){
 	$(div).append($("<h4>", {text: parada.nombreParada}).css("text-align", "center"));
 	var tabla = $("<table>");
 	/*var cabecera = $("<tr>");
-	$(cabecera).append($("<th>", {text: "Servicios"}).attr("colspan", /*3 2));
+	$(cabecera).append($("<th>", {text: "Servicios"}).prop("colspan", /*3 2));
 	$(tabla).append(cabecera);*/
 	for(var a = 0; a < parada.servicios.length; a++){
 		var linea = lineas[findLinea(parada.servicios[a].idLinea)]
