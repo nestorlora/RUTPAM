@@ -75,6 +75,7 @@ span .fa-layers-text{
 .panelInfo {
 	position: absolute;
 	left: 1%;
+	max-width: 50%;
 	z-index: 2200;
 	display:none;
 }
