@@ -98,10 +98,11 @@ input[type=checkbox]{
 	transform: scale(1.5);
 }
 .marker{
+	font-size: 12px;
 	text-align: center;
 	border-width: 5px;
 	border-color: black;
-	border-radius: 15%;
+	border-radius: 20%;
 }
 .paradaE{
 	background-color: #00A1DE;
