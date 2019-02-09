@@ -764,9 +764,14 @@ function busPopupContent(Bus){
 			sentido = "¿? Desconocido ("+Bus.sentido+") ¿?";
 	}
 	var parada = paradas[findParada(Bus.codParIni)];
+	if(parada !== undefined){
+		parada = "Ult. Par. Realizada: "+Bus.codParIni+"<br>"+parada.nombreParada;
+	}else{
+		parada = "Ult. Par. Realizada: "+Bus.codParIni;
+	}
 	return "Bus: "+Bus.codBus+"<br>"+
 	"Línea: "+linea.userCodLinea+"<br>"+
-	"Ult. Par. Realizada: "+Bus.codParIni+"<br>"+parada.nombreParada+"<br>"+
+	parada+"<br>"+
 	"Sentido: "+sentido+"<br>"+
 	"<a href='http://buscabus.tk/bus/?bus="+Bus.codBus+"' target='_blank'>Ver en BuscaBus</a>";
 }
