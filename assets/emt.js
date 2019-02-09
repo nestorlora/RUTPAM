@@ -72,7 +72,7 @@ function getTrazadosEmt(idLinea){
 				trazado.push({lat: response[a].latitud, lng: response[a].longitud});  // Rellenamos con los datos de la respuesta
 			}
 			lineas[posLinea].trazadoIda = L.polyline(trazado, {
-				color: '#1E3180', // Fijamos el color de la ida
+				color: colores.emtA, // Fijamos el color de la ida
 				opacity: 1.0, // Opacidad
 				weight: 3 // Grosor
 			});
@@ -100,7 +100,7 @@ function getTrazadosEmt(idLinea){
 				trazado.push({lat: response[a].latitud, lng: response[a].longitud}); // Rellenamos con los datos de la respuesta
 			}
 			lineas[posLinea].trazadoVta = L.polyline(trazado, {
-				color: '#4876FE', // Fijamos el color de la vuelta
+				color: colores.emtB, // Fijamos el color de la vuelta
 				opacity: 1.0, // Opacidad
 				weight: 3 // Grosor
 			});
