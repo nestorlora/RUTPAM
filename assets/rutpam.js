@@ -56,7 +56,7 @@ var colores = {
 	emtN: "#04141F", // Nocturnos
 	// Consorcio de Transportes
 	ctmamA: "#009639", // Oficial Primario, líneas regulares, sentido ida
-	ctmamB: "#CBE896", // sentido vuelta
+	ctmamB: "#11B237", // sentido vuelta
 	ctmamN: "#006983", // lineas buho
 	ctmamT: "#E4D77E", // Oficial Secundario, líneas estacionales
 	/*ctmamU: "#E4D77E", // líneas universitarias
