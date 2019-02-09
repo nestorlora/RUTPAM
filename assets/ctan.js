@@ -133,8 +133,8 @@ function addLineaCtan(lin){
 		"id": "botonVta"+linea.idLinea,
 		"checked": true
     }).prop('checked', false).prop("indeterminate", true).prop("disabled", true);
-   	//$(fila).append($("<td>").append(botonIda));
-	//$(fila).append($("<td>").append(botonVta));
+   	$(fila).append($("<td>").append(botonIda));
+	$(fila).append($("<td>").append(botonVta));
 	$(fila).append($("<td>").append(lineaIcon(linea.userCodLinea, "3x")));
 	$(fila).append($("<td>").append($("<a>", {text: linea.nombreLinea, href: "#!"}).click(function(){verInfoLinea(linea.idLinea);})));
 
@@ -147,6 +147,7 @@ function addLineaCtan(lin){
 
 function updateLineaCtan(lin){
 	posLinea = findLinea("CTAN-"+lin.idLinea);
+	var idLinea = lineas[posLinea].idLinea;
 	lineas[posLinea].tieneIda = lin.tieneIda===1?true:false;
 	lineas[posLinea].tieneVuelta = lin.tieneVuelta===1?true:false;
 	if(lin.tieneVuelta){
@@ -155,6 +156,51 @@ function updateLineaCtan(lin){
 	}else{
 		lineas[posLinea].cabeceraIda = /*paradas[findParada(lineas[posLinea].paradasIda[0].codPar)].nombreParada*/"Ida";
 		lineas[posLinea].cabeceraVta = "Ida";
+	}
+	// Polilíneas de trazado
+	var trazadoIda = []; // Creamos un array con los puntos de latitud y longitud del polígono
+	var trazadoVta = []; // Creamos un array con los puntos de latitud y longitud del polígono
+	for(var a = 0; a < lin.polilinea.length; a++){
+		var lat, lon, sentido;
+		var punto = lin.polilinea[a][0].split(","); // Parseamos el string con la información del punto
+		lat = punto[0];
+		lon = punto[1];
+		sentido = punto[2];
+		if(sentido === "1" || sentido === undefined){
+			trazadoIda.push({lat: lat, lng: lon});  // Rellenamos con los datos de la respuesta
+		}else if(sentido === "2"){
+			trazadoVta.push({lat: lat, lng: lon});  // Rellenamos con los datos de la respuesta
+		}
+	}
+	lineas[posLinea].trazadoIda = L.polyline(trazadoIda, {
+		color: colores.ctmamA, // Fijamos el color de la ida
+		opacity: 1.0, // Opacidad
+		weight: 3 // Grosor
+	});
+	$("#botonIda"+idLinea).prop("indeterminate", false).prop("disabled", false); // Cambiamos el estado del botón a habilitado
+	$("#botonIda"+idLinea).change(function(){
+		var isChecked = $(this).is(':checked');
+		if(isChecked){
+			showTrazado(idLinea, 1); // Mostramos el trazado
+		}else{
+			hideTrazado(idLinea, 1); // Ocultamos el trazado
+		}
+	});
+	if(trazadoVta.length !== 0){
+		lineas[posLinea].trazadoVta = L.polyline(trazadoVta, {
+			color: colores.ctmamB, // Fijamos el color de la vuelta
+			opacity: 1.0, // Opacidad
+			weight: 3 // Grosor
+		});
+		$("#botonVta"+idLinea).prop("indeterminate", false).prop("disabled", false); // Cambiamos el estado del botón a habilitado
+		$("#botonVta"+idLinea).change(function(){
+			var isChecked = $(this).is(':checked');
+			if(isChecked){
+				showTrazado(idLinea, 2); // Mostramos el trazado
+			}else{
+				hideTrazado(idLinea, 2); // Ocultamos el trazado
+			}
+		});
 	}
 }
 

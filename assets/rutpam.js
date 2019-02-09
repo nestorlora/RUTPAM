@@ -948,8 +948,8 @@ function ControlRUTPAM(mapDiv){
 		"id": "tablaLineasCTAN"
 	}).css("display", "none");
 	var encabezadoCtan = $("<tr>");
-	//$(encabezadoCtan).html('<th>Ida</th><th>Vta</th><th colspan="2">Línea</th>');
-	$(encabezadoCtan).html('<th colspan="2">Línea</th>');
+	$(encabezadoCtan).html('<th>Ida</th><th>Vta</th><th colspan="2">Línea</th>');
+	//$(encabezadoCtan).html('<th colspan="2">Línea</th>');
 	$(tablaCtan).append(encabezadoCtan);
 	$(mapDiv).append(tablaCtan);
 	$(mapDiv).append('<br><small><a href="#!" onclick="verCopyright()">Acerca de RUTPAM</a></small>');
