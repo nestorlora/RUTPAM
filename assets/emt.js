@@ -24,7 +24,7 @@
 
 /* Este archivo forma parte de R.U.T.P.A.M. no funcionará por separado */
 
-/* global emt_proxy_url, betteremt_api_url, odm_api_url, ttl_new, default_ttl, refresh_rate, L, map, lineasCargadas, lineas, paradas, autobuses */
+/* global emt_proxy_url, betteremt_api_url, odm_api_url, ttl_new, default_ttl, refresh_rate, L, map, lineasCargadas, lineas, paradas, autobuses, colores */
 
 /**
  * @description Función que llama a la API para cargar las líneas. Cambia algunos elementos para preparar la interfaz.

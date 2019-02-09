@@ -26,10 +26,13 @@ THE SOFTWARE.
     Author     : Nestor Manuel Lora Romero <nestorlora@geeklab.es>
 */
 
-html, body {
+html, body{
 	height: 100%;
 	margin: 0;
 	padding: 0;
+	font-family: 'Rubik', 'Roboto', sans-serif;
+}
+button{
 	font-family: 'Rubik', 'Roboto', sans-serif;
 }
 table{

@@ -24,7 +24,7 @@
 
 /* Este archivo forma parte de R.U.T.P.A.M. no funcionará por separado */
 
-/* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url, lineas, modos, zonas, paradas, lineasCargadas  */
+/* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url, lineas, modos, zonas, paradas, lineasCargadas, colores  */
 
 function getModos(){
 	// Petición AJAX
@@ -223,12 +223,12 @@ function getParadasLineaCtan(id){
 				}else if(response[i].idParada !== cabeceraIda && response[i].idParada !== cabeceraVta){
 					addParadaCtan(response[i], id); // Pasamos por addLinea() el resto de líneas menos la ultima parada si coincide con la cabecera
 				}
-                if(response[i].sentido == 1){
+                if(Number(response[i].sentido) === 1){
                     linea.paradasIda.push({
                         codPar: "CTAN-"+response[i].idParada,
                         orden: response[i].orden
 					});
-                }else if(response[i].sentido == 2){
+                }else if(Number(response[i].sentido) === 2){
                     linea.paradasVta.push({
                         codPar: "CTAN-"+response[i].idParada,
                         orden: response[i].orden
