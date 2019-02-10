@@ -724,13 +724,13 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 
 	var texto = userCodLinea.replace(/^M-/, "M\n").replace(/^R-/, "R").replace(/^T-/, "T");
 	var textdiv;
-	if(userCodLinea.length < 3){
+	if(texto.length < 3){
 		textdiv = $('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-6");
-	}else if(userCodLinea.length < 5){
+	}else if(texto.length < 5){
 		textdiv = $('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-8");
-	}else if(userCodLinea.length < 6){
+	}else if(texto.length < 6){
 		textdiv = $('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-10");
-	}else if(userCodLinea.length < 7){
+	}else if(texto.length < 7){
 		textdiv = $('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-11");
 	}else{
 		textdiv = $('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-12");
