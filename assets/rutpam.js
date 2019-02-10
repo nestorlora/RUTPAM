@@ -30,7 +30,7 @@
  * @description Variable global para la versión del programa
  * @type String
  */
-var rutpam_version = "4.13.1";
+var rutpam_version = "4.13.2";
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -680,13 +680,18 @@ function distanciaTrazado(trazado){
 function extrarCorrespondencias(div, codPar, idLinea){
 	$(div).css("max-width", "73px");
 	var parada = paradas[findParada(codPar)];
-	var cont = 0;
 	for(var a = 0; a < parada.servicios.length; a++){
 		var servicio = parada.servicios[a].idLinea;
 		if(servicio !== idLinea){
-			var linea = lineas[findLinea(servicio)];
-			var spanIcon = lineaIcon(linea.userCodLinea, "2x", linea.idLinea);
-			$(div).append(spanIcon);
+			if(a === 0){
+				var linea = lineas[findLinea(servicio)];
+				var spanIcon = lineaIcon(linea.userCodLinea, "2x", linea.idLinea);
+				$(div).append(spanIcon);
+			}else if(servicio !== parada.servicios[a-1].idLinea){
+				var linea = lineas[findLinea(servicio)];
+				var spanIcon = lineaIcon(linea.userCodLinea, "2x", linea.idLinea);
+				$(div).append(spanIcon);
+			}
 		}
 	}
 	return div;
