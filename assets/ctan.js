@@ -255,6 +255,12 @@ function getParadasLineaCtan(id){
 					});
                 }
 			}
+			if(linea.paradasIda.length !== 0){
+				linea.getIda = true;
+			}
+			if(linea.paradasVta.length !== 0){
+				linea.getVta = true;
+			}
 		}
 	}).fail(function (response, status, error){
 		if(error === "Bad Request"){ //Si el servidor no ha atendido la petición, se vuelve a hacer con recursividad
