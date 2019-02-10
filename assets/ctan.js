@@ -134,14 +134,22 @@ function addLineaCtan(lin){
 		"checked": true
     }).prop('checked', false).prop("indeterminate", true).prop("disabled", true);
    	$(fila).append($("<td>").append(botonIda));
-	$(fila).append($("<td>").append(botonVta));
+	if(linea.modo !== "Tren" && linea.modo !== "Metro"){
+		$(fila).append($("<td>").append(botonVta));
+	}
 	$(fila).append($("<td>").append(lineaIcon(linea.userCodLinea, "3x")));
 	$(fila).append($("<td>").append($("<a>", {text: linea.nombreLinea, href: "#!"}).click(function(){verInfoLinea(linea.idLinea);})));
 
     switch(linea.modo){
         case "Autobús":
-        $("#tablaLineasCTAN").append(fila);
-        break;
+			$("#tablaLineasCTAN").append(fila);
+			break;
+		case "Metro":
+			$("#tablaLineasMetro").append(fila);
+			break;
+		case "Tren":
+			$("#tablaLineasRenfe").append(fila);
+			break;
     }
 }
 
@@ -172,8 +180,20 @@ function updateLineaCtan(lin){
 			trazadoVta.push({lat: lat, lng: lon});  // Rellenamos con los datos de la respuesta
 		}
 	}
+	var color;
+	switch(lin.modo){
+		case "Autobús":
+			color = colores.ctmamA;
+			break;
+		case "Metro":
+			color = colores.metro;
+			break;
+		case "Tren":
+			color = colores.renfeA;
+			break;
+	}
 	lineas[posLinea].trazadoIda = L.polyline(trazadoIda, {
-		color: colores.ctmamA, // Fijamos el color de la ida
+		color: color, // Fijamos el color de la ida
 		opacity: 1.0, // Opacidad
 		weight: 3 // Grosor
 	});
@@ -188,7 +208,7 @@ function updateLineaCtan(lin){
 	});
 	if(trazadoVta.length !== 0){
 		lineas[posLinea].trazadoVta = L.polyline(trazadoVta, {
-			color: colores.ctmamB, // Fijamos el color de la vuelta
+			color: colores.ctmamB, // Fijamos el color de la vuelta (solo los buses tienen vuelta)
 			opacity: 1.0, // Opacidad
 			weight: 3 // Grosor
 		});

@@ -252,6 +252,12 @@ function initKeys(){
 			case "2":
 				togglePanelCtan();
 				break;
+			case "3":
+				togglePanelMetro()();
+				break;
+			case "4":
+				togglePanelRenfe()();
+				break;
 			default:
 				break;
 		}
@@ -715,6 +721,10 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 	}else if(/^91$|^92$/.test(userCodLinea)){ // Servicios Turísticos
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.especial));
 		esNegro = true;
+	}else if(/^METRO-[1-2]$/.test(userCodLinea)){ // Metro
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.metro));
+	}else if(/^C-[1-2]$/.test(userCodLinea)){ // Cercanías
+		id.append($('<i>').addClass('fas fa-circle').css("color", colores.renfeA));
 	}else if(/^12$|^16$|^26$|^64$|^[A-Z]/.test(userCodLinea)){ // Servicios Especiales
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.especial));
 		esNegro = true;
@@ -722,7 +732,7 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtA));
 	}
 
-	var texto = userCodLinea.replace(/^M-/, "M\n").replace(/^R-/, "R").replace(/^T-/, "T");
+	var texto = userCodLinea.replace(/^M-/, "M\n").replace(/^R-/, "R").replace(/^T-/, "T").replace(/^METRO-/, "").replace(/^C-/, "C");
 	var textdiv;
 	if(texto.length < 3){
 		textdiv = $('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-6");
@@ -895,6 +905,34 @@ function togglePanelCtan(){
 	//$("#verCTAN").on("click", mostrarPanelCtan);
 }
 
+function togglePanelMetro(){
+	if(showEMT){
+		$("#tablaLineasMetro").css("display", "none");
+		$("#verMetro").css("color", "black").css("background-color", "white");
+		showEMT = false;
+	}else{
+		$("#tablaLineasMetro").css("display", "block");
+		$("#verMetro").css("color", "white").css("background-color", colores.metro);
+		showEMT = true;
+	}
+	//$("#verEMT").on("click", ocultarPanelEmt);
+	//$("#verEMT").on("click", mostrarPanelEmt);
+}
+
+function togglePanelRenfe(){
+	if(showEMT){
+		$("#tablaLineasRenfe").css("display", "none");
+		$("#verRenfe").css("color", "black").css("background-color", "white");
+		showEMT = false;
+	}else{
+		$("#tablaLineasRenfe").css("display", "block");
+		$("#verRenfe").css("color", "white").css("background-color", colores.renfeA);
+		showEMT = true;
+	}
+	//$("#verEMT").on("click", ocultarPanelEmt);
+	//$("#verEMT").on("click", mostrarPanelEmt);
+}
+
 /**
  * Recoge un elemento del DOM y lo devuelve rellenado con el HTML adecuado de la barra de control
  * @param {DOM Element} mapDiv
@@ -917,6 +955,18 @@ function ControlRUTPAM(mapDiv){
 		"class": "boton",
 		"text": "Red CTMAM"
 	}).on("click", togglePanelCtan);
+	var botonRenfe = $("<button>", {
+		"id": "verRenfe",
+		"type": "button",
+		"class": "boton",
+		"text": "RENFE"
+	}).on("click", togglePanelRenfe);
+	var botonMetro = $("<button>", {
+		"id": "verMetro",
+		"type": "button",
+		"class": "boton",
+		"text": "Red Metro"
+	}).on("click", togglePanelMetro);
 	var play = $("<button>", {
 		"id": "play",
 		"type": "button",
@@ -935,7 +985,7 @@ function ControlRUTPAM(mapDiv){
 		"class": "boton",
 		"text": "Pausa"
 	}).on("click", stop).css("display", "none");
-	var controles = $("<p>", {id: "controles"}).append(botonEMT).append(botonCTAN).append($("<br>")).append(play).append(refresh).append(pause);
+	var controles = $("<p>", {id: "controles"}).append(botonEMT).append(botonCTAN).append(botonMetro).append(botonRenfe).append($("<br>")).append(play).append(refresh).append(pause);
 	$(mapDiv).append(controles);
 	/*var tiempoDatos = $("<p>", {id: "tiempoDatos", text: "Datos actualizados: "});
 	$(mapDiv).append(tiempoDatos);*/
@@ -944,14 +994,21 @@ function ControlRUTPAM(mapDiv){
 	$(encabezadoEmt).html('<th>Ida</th><th>Vta</th><th>Bus</th><th colspan="2">Línea</th><th>NºB.</th>');
 	$(tablaEmt).append(encabezadoEmt);
 	$(mapDiv).append(tablaEmt);
-	var tablaCtan = $("<table>", {
-		"id": "tablaLineasCTAN"
-	}).css("display", "none");
+	var tablaCtan = $("<table>", {"id": "tablaLineasCTAN"}).css("display", "none");
 	var encabezadoCtan = $("<tr>");
 	$(encabezadoCtan).html('<th>Ida</th><th>Vta</th><th colspan="2">Línea</th>');
-	//$(encabezadoCtan).html('<th colspan="2">Línea</th>');
 	$(tablaCtan).append(encabezadoCtan);
 	$(mapDiv).append(tablaCtan);
+	var tablaMetro = $("<table>", {"id": "tablaLineasMetro"}).css("display", "none");
+	var encabezadoMetro = $("<tr>");
+	$(encabezadoMetro).html('<th></th><th colspan="2">Línea</th>');
+	$(tablaMetro).append(encabezadoMetro);
+	$(mapDiv).append(tablaMetro);
+	var tablaRenfe = $("<table>", {"id": "tablaLineasRenfe"}).css("display", "none");
+	var encabezadoRenfe = $("<tr>");
+	$(encabezadoRenfe).html('<th></th><th colspan="2">Línea</th>');
+	$(tablaRenfe).append(encabezadoRenfe);
+	$(mapDiv).append(tablaRenfe);
 	$(mapDiv).append('<br><small><a href="#!" onclick="verCopyright()">Acerca de RUTPAM</a></small>');
 	$(mapDiv).append('<br><small><a href="#!" onclick="verAyuda()">Ayuda</a></small>');
 	return mapDiv;
@@ -995,6 +1052,8 @@ function verAyuda(){
 				<tr><th colspan="2">Redes</th></tr>\n\
 				<tr><td>1</td><td>Muestra/oculta Red EMT</td></tr>\n\
 				<tr><td>2</td><td>Muestra/oculta Red CTMAM</td></tr>\n\
+				<tr><td>3</td><td>Muestra/oculta Red Metro</td></tr>\n\
+				<tr><td>4</td><td>Muestra/oculta RENFE</td></tr>\n\
 			</tbody>\n\
 		</table>\n\
 	</p>\n\
@@ -1018,10 +1077,9 @@ function verAyuda(){
 	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.express+'"></i></span> Líneas express<br>\n\
 	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.lanzaderas+'"></i></span> Líneas lanzadera<br>\n\
 	</p>\n\
-	<h5>Próximamente...</h5>\n\
+	<h5>Líneas de Metro/Ferrocarril</h5>\n\
 	<p>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.renfeA+'"></i></span> Renfe Regional/Media Distancia<br>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.renfeB+'"></i></span> Renfe Cercanías<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.renfeA+'"></i></span> Renfe  Cercanías/Regional/Media Distancia<br>\n\
 	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.metro+'"></i></span> Metro Málaga<br>\n\
 	</p>\n\
 	<h4>Información de líneas</h4>\n\
