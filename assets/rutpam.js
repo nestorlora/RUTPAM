@@ -253,10 +253,10 @@ function initKeys(){
 				togglePanelCtan();
 				break;
 			case "3":
-				togglePanelMetro()();
+				togglePanelMetro();
 				break;
 			case "4":
-				togglePanelRenfe()();
+				togglePanelRenfe();
 				break;
 			default:
 				break;
