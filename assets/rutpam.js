@@ -550,17 +550,9 @@ function hideTrazado(idLinea, sentido){
 	if(sentido === 1){
 		lineas[findLinea(idLinea)].trazadoIda.remove();
 		$("#botonIda"+idLinea).prop("checked", false);
-		$("#botonIda"+idLinea).unbind("click");
-		/*$("#botonIda"+idLinea).click(function(){
-			showTrazado(idLinea, sentido);
-		});*/
 	}else if(sentido === 2){
 		lineas[findLinea(idLinea)].trazadoVta.remove();
 		$("#botonVta"+idLinea).prop("checked", false);
-		$("#botonVta"+idLinea).unbind("click");
-		/*$("#botonVta"+idLinea).click(function(){
-			showTrazado(idLinea, sentido);
-		});*/
 	}
 }
 
