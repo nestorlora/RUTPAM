@@ -360,6 +360,7 @@ function verInfoLinea(id){
 		botones.append(generarBotonToggleParadas(id)); // Botón para activar/desactivar las paradas sobre el mapa
 	}
 	$("#infoContent").append(botones); // Añadimos la botonera
+	var datos = $("<div>");
 	//
 	// Datos de línea
 	//
@@ -369,7 +370,7 @@ function verInfoLinea(id){
 	if(linea.numBuses !== null){
 		datosLinea.append($("<tr>").append($("<th>", {text: "Num. Coches"})).append($("<td>", {text: linea.numBuses})));
 	}
-	$("#infoContent").append($("<p>").append(datosLinea));
+	datos.append($("<p>", {class: "inline-block"}).append(datosLinea));
 	//
 	// Datos longitud
 	//
@@ -386,7 +387,7 @@ function verInfoLinea(id){
 		tiempoVuelta = Math.floor(distanciaVuelta/1000/13.5*60); // Estimar el tiempo de viaje
 		datosTrazado.append($("<tr>").append($("<th>", {text: "Vuelta"})).append($("<td>", {text: distanciaVuelta+" m"})).append($("<td>", {text: tiempoVuelta+" min"}))); // Añadimos los datos de la vuelta
 	}
-	$("#infoContent").append($("<p>").append(datosTrazado)); // Añadimos la tabla a la ventana
+	datos.append($("<p>", {class: "inline-block"}).append(datosTrazado)); // Añadimos la tabla a la ventana
 	//
 	// Datos frecuencia y espaciado de coches
 	//
@@ -397,8 +398,9 @@ function verInfoLinea(id){
 		var datosPaso = $("<table>"); // Creamos la tabla para estos datos
 		datosPaso.append($("<tr>").append($("<th>", {text: "Frecuencia media teórica estimada"})).append($("<td>", {text: Math.floor(frecuenciaTeorica*100)/100+" min"}))); // Incluimos la frecuencia media teórica
 		datosPaso.append($("<tr>").append($("<th>", {text: "Distancia media entre coches"})).append($("<td>", {text: Math.floor(distanciaEntreBuses*100)/100+" m"}))); // Incluimos la distancia entre buses
-		$("#infoContent").append($("<p>").append(datosPaso)); // Añadimos lz tabla a la ventana
+		datos.append($("<p>", {class: "inline-block"}).append(datosPaso)); // Añadimos lz tabla a la ventana
 	}
+	$("#infoContent").append(datos);
 	//
 	// Paradas
 	//

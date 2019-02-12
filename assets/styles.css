@@ -39,6 +39,9 @@ table{
 	font-size: 12px;
 	border-collapse: collapse;
 }
+.inline-block{
+	display: inline-block;
+}
 p{
 	font-size: 14px;
 }
@@ -82,8 +85,11 @@ span .fa-layers-text{
 	z-index: 2200;
 	display:none;
 }
-.panelInfo table, .panelInfo th, .panelInfo td{
+.panelInfo th, .panelInfo td{
 	border: 1px solid #bbb;
+}
+.panelInfo table{
+	display: inline;
 }
 .boton{
 	background-color: white;
