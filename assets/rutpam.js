@@ -355,9 +355,11 @@ function verInfoLinea(id){
 	//
 	// Botones
 	//
+	var botones = $("<p>");
 	if(linea.paradasIda.length > 0){ // SI tenemos almacenadas paradas de la línea
-		$("#infoContent").append($("<p>").append(generarBotonToggleParadas(id))); // Insertar en la ventana botón para activar/desactivar las paradas sobre el mapa
+		botones.append(generarBotonToggleParadas(id)); // Botón para activar/desactivar las paradas sobre el mapa
 	}
+	$("#infoContent").append(botones); // Añadimos la botonera
 	//
 	// Datos de línea
 	//
