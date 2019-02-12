@@ -374,7 +374,7 @@ function verInfoLinea(id){
 	//
 	// Datos longitud
 	//
-	var distanciaIda = distanciaVuelta = tiempoIda = tiempoVuelta = 0; // Creamos variables para los datos numéricos
+	var distanciaIda =0, distanciaVuelta = 0, tiempoIda = 0,tiempoVuelta = 0; // Creamos variables para los datos numéricos
 	var datosTrazado = $("<table>"); // Tabla para los datos numéricos del trazado
 	if(linea.getIda){ // SI se ha cargado el trazado de ida
 		distanciaIda = Math.floor(distanciaTrazado(linea.trazadoIda)); // Calcular la distancia de la ruta
