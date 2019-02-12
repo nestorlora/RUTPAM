@@ -347,11 +347,20 @@ function verInfoLinea(id){
 	var linea = lineas[findLinea(id)];
 	$("#ventana").hide(); // Escondemos la ventana
 	$("#infoContent").empty(); // Eliminamos contenido anterior
+	//
+	// Header
+	//
 	$("#infoContent").append($("<h3>", {text: "Línea "+linea.userCodLinea}).css("text-align", "center")); // Título de la ventana
 	$("#infoContent").append($("<h4>", {text: linea.nombreLinea}).css("text-align", "center")); // Subtítulo (nombre línea)
+	//
+	// Botones
+	//
 	if(linea.paradasIda.length > 0){ // SI tenemos almacenadas paradas de la línea
 		$("#infoContent").append($("<p>").append(generarBotonToggleParadas(id))); // Insertar en la ventana botón para activar/desactivar las paradas sobre el mapa
 	}
+	//
+	// Datos de línea
+	//
 	var datosLinea = $("<table>");
 	datosLinea.append($("<tr>").append($("<th>", {text: "Id. interno"})).append($("<td>", {text: linea.idLinea})));
 	datosLinea.append($("<tr>").append($("<th>", {text: "Operador"})).append($("<td>", {text: linea.operadores})));
@@ -359,6 +368,9 @@ function verInfoLinea(id){
 		datosLinea.append($("<tr>").append($("<th>", {text: "Num. Coches"})).append($("<td>", {text: linea.numBuses})));
 	}
 	$("#infoContent").append($("<p>").append(datosLinea));
+	//
+	// Datos longitud
+	//
 	var distanciaIda = distanciaVuelta = tiempoIda = tiempoVuelta = 0; // Creamos variables para los datos numéricos
 	var datosTrazado = $("<table>"); // Tabla para los datos numéricos del trazado
 	if(linea.getIda){ // SI se ha cargado el trazado de ida
@@ -373,6 +385,9 @@ function verInfoLinea(id){
 		datosTrazado.append($("<tr>").append($("<th>", {text: "Vuelta"})).append($("<td>", {text: distanciaVuelta+" m"})).append($("<td>", {text: tiempoVuelta+" min"}))); // Añadimos los datos de la vuelta
 	}
 	$("#infoContent").append($("<p>").append(datosTrazado)); // Añadimos la tabla a la ventana
+	//
+	// Datos frecuencia y espaciado de coches
+	//
 	if(linea.numBuses > 0 && linea.getIda){ // SI hay buses en la línea Y se ha cargado su trazado
 		var distanciaTotal = distanciaIda + distanciaVuelta; // Calculamos la distancia ida+vuelta
 		var distanciaEntreBuses = distanciaTotal/linea.numBuses; // Calculamos la media de distancia entre buses en servicio
@@ -382,6 +397,9 @@ function verInfoLinea(id){
 		datosPaso.append($("<tr>").append($("<th>", {text: "Distancia media entre coches"})).append($("<td>", {text: Math.floor(distanciaEntreBuses*100)/100+" m"}))); // Incluimos la distancia entre buses
 		$("#infoContent").append($("<p>").append(datosPaso)); // Añadimos lz tabla a la ventana
 	}
+	//
+	// Paradas
+	//
 	if(linea.paradasIda.length > 0){
 		$("#infoContent").append($("<p>").append(generarTablaParadas(linea)));
 	}
