@@ -419,7 +419,6 @@ function generarBotonToggleParadas(idLinea){
 	}else{
 		$(botonParadas).prop("disabled", true);
 	}
-	
 	return botonParadas;
 }
 
@@ -892,8 +891,6 @@ function togglePanelEmt(){
 		$("#verEMT").css("color", "white").css("background-color", colores.emtA);
 		showEMT = true;
 	}
-	//$("#verEMT").on("click", ocultarPanelEmt);
-	//$("#verEMT").on("click", mostrarPanelEmt);
 }
 
 function togglePanelCtan(){
@@ -906,8 +903,6 @@ function togglePanelCtan(){
 		$("#verCTAN").css("color", "white").css("background-color", colores.ctmamA);
 		showCTAN = true;
 	}
-	//$("#verCTAN").on("click", ocultarPanelCtan);
-	//$("#verCTAN").on("click", mostrarPanelCtan);
 }
 
 function togglePanelMetro(){
@@ -920,8 +915,6 @@ function togglePanelMetro(){
 		$("#verMetro").css("color", "white").css("background-color", colores.metro);
 		showEMT = true;
 	}
-	//$("#verEMT").on("click", ocultarPanelEmt);
-	//$("#verEMT").on("click", mostrarPanelEmt);
 }
 
 function togglePanelRenfe(){
@@ -934,8 +927,6 @@ function togglePanelRenfe(){
 		$("#verRenfe").css("color", "white").css("background-color", colores.renfeA);
 		showEMT = true;
 	}
-	//$("#verEMT").on("click", ocultarPanelEmt);
-	//$("#verEMT").on("click", mostrarPanelEmt);
 }
 
 /**
