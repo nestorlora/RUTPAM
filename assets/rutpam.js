@@ -30,7 +30,7 @@
  * @description Variable global para la versión del programa
  * @type String
  */
-var rutpam_version = "4.13.4";
+const rutpam_version = "4.13.4";
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -48,7 +48,7 @@ var map;
  * @description Variable global para almacenar los colores utilizados por la app
  * @type Objeto
  */
-var colores = {
+const colores = {
 	// EMT SAM + Urbanos Consorcio
 	emtA: "#1E3180", // Primario, lineas regulares, sentido ida
 	emtB: "#4876FE", // Secundario, sentido vuelta
@@ -76,19 +76,19 @@ var colores = {
  * @description Tiempo de vida para buses nuevos (verde)(al alcanzar default_ttl se vuelven blancos)
  * @type int
  */
-var ttl_new = ttl_rate_new/refresh_rate;
+const ttl_new = ttl_rate_new/refresh_rate;
 
 /**
  * @description Número de actualizaciones fallidas sin aparecer para darlo por muerto
  * @type Int
  */
-var default_ttl = ttl_rate_default/refresh_rate;
+const default_ttl = ttl_rate_default/refresh_rate;
 
 /**
  * @description Número de actualizaciones fallidas sin aparecer para indicar que el bus probablemente haya desaparecido (color rojo)
  * @type Int
  */
-var ttl_old = ttl_rate_old/refresh_rate;
+const ttl_old = ttl_rate_old/refresh_rate;
 
 /**
  * @description Indicador de estado de si se están mostrando las líneas de la EMT
