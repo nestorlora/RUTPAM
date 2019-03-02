@@ -30,7 +30,7 @@
  * @description Variable global para la versión del programa
  * @type String
  */
-var rutpam_version = "4.13.3";
+var rutpam_version = "4.13.4";
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -102,6 +102,17 @@ var showEMT = false;
  */
 var showCTAN = false;
 
+/**
+ * @description Indicador de estado de si se están mostrando las líneas de metro
+ * @type Boolean
+ */
+var showMetro = false;
+
+/**
+ * @description Indicador de estado de si se están mostrando las líneas de renfe
+ * @type Boolean
+ */
+var showRenfe = false;
 /**
  * @description Contador de las líneas que han sido cargadas en detalle
  * @type Number
@@ -937,11 +948,11 @@ function togglePanelMetro(){
 	if(showEMT){
 		$("#tablaLineasMetro").css("display", "none");
 		$("#verMetro").css("color", "black").css("background-color", "white");
-		showEMT = false;
+		showMetro = false;
 	}else{
 		$("#tablaLineasMetro").css("display", "block");
 		$("#verMetro").css("color", "white").css("background-color", colores.metro);
-		showEMT = true;
+		showMetro = true;
 	}
 }
 
@@ -949,11 +960,11 @@ function togglePanelRenfe(){
 	if(showEMT){
 		$("#tablaLineasRenfe").css("display", "none");
 		$("#verRenfe").css("color", "black").css("background-color", "white");
-		showEMT = false;
+		showRenfe = false;
 	}else{
 		$("#tablaLineasRenfe").css("display", "block");
 		$("#verRenfe").css("color", "white").css("background-color", colores.renfeA);
-		showEMT = true;
+		showRenfe = true;
 	}
 }
 
