@@ -30,7 +30,7 @@
  * @description Variable global para la versión del programa
  * @type String
  */
-var rutpam_version = "4.13.2";
+var rutpam_version = "4.13.3";
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -427,8 +427,11 @@ function generarBotonToggleParadas(idLinea){
 	});
 	$(botonParadas).text("Mostrar/Ocultar paradas");
 	if(paradasInicializadas){// SI las paradas estan inicializadas
+		if(lineas[findLinea(idLinea)].verParadas === true){ // SI estamos mostrando las paradas de esta línea
+			$(botonParadas).css("background-color", colores.especial); // Poner el botón en on
+		}
 		$(botonParadas).on("click", function(){
-			linea = lineas[findLinea(idLinea)]; // Sacamos la línea para trabajar con ella
+			let linea = lineas[findLinea(idLinea)]; // Sacamos la línea para trabajar con ella
 			if(linea.verParadas === true){ // SI estamos mostrando las paradas de esta línea
 				for(var a = 0; a < linea.paradasIda.length; a++){ // Ocultar todas las paradas a la ida
 					hideParada(linea.paradasIda[a].codPar);
@@ -436,6 +439,7 @@ function generarBotonToggleParadas(idLinea){
 				for(var a = 0; a < linea.paradasVta.length; a++){ // Ocultar todas las paradas a al vuelta
 					hideParada(linea.paradasVta[a].codPar);
 				}
+				$(this).css("background-color", "white"); // Ponemos el botón en off
 				linea.verParadas = false; // Setear que NO se están mostrando las paradas
 			}else if(linea.verParadas === false){ // SI NO estamos mostrando las paradas de esta línea
 				for(var a = 0; a < linea.paradasIda.length; a++){ // Mostrar todas las paradas a la ida
@@ -444,6 +448,7 @@ function generarBotonToggleParadas(idLinea){
 				for(var a = 0; a < linea.paradasVta.length; a++){ // Mostrar todas las paradas a la vuelta
 					showParada(linea.paradasVta[a].codPar);
 				}
+				$(this).css("background-color", colores.especial); // Ponemos el botón en on
 				linea.verParadas = true; // Setear que se están mostrando las paradas
 			}
 		});
