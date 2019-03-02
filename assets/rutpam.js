@@ -1,4 +1,4 @@
-/* 
+/**
  * The MIT License
  *
  * Copyright 2018 Nestor Manuel Lora Romero <nestorlora@geeklab.es>.
@@ -20,6 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ * @copyright
  */
 
 /* Este script necesia los archivos ctan.js y emt.js para poder funcionar correctamente */
@@ -28,25 +29,33 @@
 
 /**
  * @description Variable global para la versión del programa
+ * @global
+ * @constant
  * @type String
  */
 const rutpam_version = "4.13.4";
 
 /**
  * @description Variable global para almacenar el timer maestro
+ * @global
+ * @var
  * @type JS_Timer
  */
 var timer;
 
 /**
  * @description Variable global para almacenar el mapa
+ * @global
+ * @var
  * @type L.map
  */
 var map;
 
 /**
  * @description Variable global para almacenar los colores utilizados por la app
- * @type Objeto
+ * @global
+ * @constant
+ * @enum
  */
 const colores = {
 	// EMT SAM + Urbanos Consorcio
@@ -75,12 +84,14 @@ const colores = {
 /**
  * @description Tiempo de vida para buses nuevos (verde)(al alcanzar default_ttl se vuelven blancos)
  * @type int
+ * @constant
  */
 const ttl_new = ttl_rate_new/refresh_rate;
 
 /**
  * @description Número de actualizaciones fallidas sin aparecer para darlo por muerto
  * @type Int
+ * @constant
  */
 const default_ttl = ttl_rate_default/refresh_rate;
 
