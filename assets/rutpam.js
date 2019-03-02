@@ -426,28 +426,28 @@ function generarBotonToggleParadas(idLinea){
 		"class": "boton"
 	});
 	$(botonParadas).text("Mostrar/Ocultar paradas");
-	if(paradasInicializadas){
+	if(paradasInicializadas){// SI las paradas estan inicializadas
 		$(botonParadas).on("click", function(){
-			linea = lineas[findLinea(idLinea)];
-			if(linea.verParadas === true){
-				for(var a = 0; a < linea.paradasIda.length; a++){
+			linea = lineas[findLinea(idLinea)]; // Sacamos la línea para trabajar con ella
+			if(linea.verParadas === true){ // SI estamos mostrando las paradas de esta línea
+				for(var a = 0; a < linea.paradasIda.length; a++){ // Ocultar todas las paradas a la ida
 					hideParada(linea.paradasIda[a].codPar);
 				}
-				for(var a = 0; a < linea.paradasVta.length; a++){
+				for(var a = 0; a < linea.paradasVta.length; a++){ // Ocultar todas las paradas a al vuelta
 					hideParada(linea.paradasVta[a].codPar);
 				}
-				linea.verParadas = false;
-			}else if(linea.verParadas === false){
-				for(var a = 0; a < linea.paradasIda.length; a++){
+				linea.verParadas = false; // Setear que NO se están mostrando las paradas
+			}else if(linea.verParadas === false){ // SI NO estamos mostrando las paradas de esta línea
+				for(var a = 0; a < linea.paradasIda.length; a++){ // Mostrar todas las paradas a la ida
 					showParada(linea.paradasIda[a].codPar);
 				}
-				for(var a = 0; a < linea.paradasVta.length; a++){
+				for(var a = 0; a < linea.paradasVta.length; a++){ // Mostrar todas las paradas a la vuelta
 					showParada(linea.paradasVta[a].codPar);
 				}
-				linea.verParadas = true;
+				linea.verParadas = true; // Setear que se están mostrando las paradas
 			}
 		});
-	}else{
+	}else{ // SI NO están inicializadas las paradas
 		$(botonParadas).prop("disabled", true);
 	}
 	return botonParadas;
