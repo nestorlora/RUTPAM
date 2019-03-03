@@ -33,7 +33,7 @@
  * @constant
  * @type String
  */
-const rutpam_version = "4.13.4";
+const rutpam_version = "4.13.5";
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -976,7 +976,7 @@ function togglePanelCtan(){
 }
 
 function togglePanelMetro(){
-	if(showEMT){
+	if(showMetro){
 		$("#tablaLineasMetro").css("display", "none");
 		$("#verMetro").css("color", "black").css("background-color", "white");
 		showMetro = false;
@@ -988,7 +988,7 @@ function togglePanelMetro(){
 }
 
 function togglePanelRenfe(){
-	if(showEMT){
+	if(showRenfe){
 		$("#tablaLineasRenfe").css("display", "none");
 		$("#verRenfe").css("color", "black").css("background-color", "white");
 		showRenfe = false;
