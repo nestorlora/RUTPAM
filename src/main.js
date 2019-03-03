@@ -1,4 +1,5 @@
 /**
+ * @copyright
  * The MIT License
  *
  * Copyright 2018 Nestor Manuel Lora Romero <nestorlora@geeklab.es>.
@@ -20,7 +21,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- * @copyright
  */
 
 /* Este script necesia los archivos ctan.js y emt.js para poder funcionar correctamente */
@@ -183,8 +183,8 @@ var zonas = [];
  * @param {String} cabeceraVta Nombre de la cabecera donde empieza la vuelta
  * @param {Array} paradasIda Array de paradas a la ida {codPar,orden}
  * @param {Array} paradasVta Array de paradas a la vuelta {codPar, orden}
- * @param {...} trazadoIda
- * @param {...} trazadoVta
+ * @param {Object} trazadoIda
+ * @param {Object} trazadoVta
  * @param {Bool} getBuses
  * @param {Bool} getIda
  * @param {Bool} getVta
@@ -1000,9 +1000,9 @@ function togglePanelRenfe(){
 }
 
 /**
- * Recoge un elemento del DOM y lo devuelve rellenado con el HTML adecuado de la barra de control
- * @param {DOM Element} mapDiv
- * @returns {DOM Element}
+ * @description Recoge un elemento del DOM y lo devuelve rellenado con el HTML adecuado de la barra de control
+ * @param {DOM_Element} mapDiv
+ * @returns {DOM_Element}
  */
 function ControlRUTPAM(mapDiv){
 	var titulo = $("<h2>", {"text":"RUTPAM"});
