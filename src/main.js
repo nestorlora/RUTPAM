@@ -24,7 +24,7 @@
  */
 
 /* Este script necesia los archivos ctan.js y emt.js para poder funcionar correctamente */
-
+'use strict';
 /* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url, showEMT, showCTAN */
 
 /**
@@ -1165,4 +1165,649 @@ function verAyuda(){
 
 function closeInfo(){
 	$("#ventana").hide();
+}
+
+
+
+
+
+
+
+
+
+
+// EMT.JS
+
+
+
+
+
+
+
+
+
+
+/**
+ * @description Función que llama a la API para cargar las líneas. Cambia algunos elementos para preparar la interfaz.
+ * @returns {null}
+ */
+function getLineasEmt(){
+	//$("#getLineas").remove(); // Eliminamos el botón para pedir las líneas
+	// Petición AJAX
+	$.getJSON({
+		url: emt_proxy_url+'/services/lineas/'
+	}).done(function (response, status){
+		if(status === "success"){
+			for(var i = 0; i<response.length; i++){
+				addLineaEmt(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
+				lineasCargadas++;
+			}
+			motor(); // Llamamos la primera vez al motor
+			start(); // Programamos que se ejecute periódicamente
+			// Mostramos la botoner de control del motor
+			$("#play").css("display", "inline-block");
+			$("#refresh").css("display", "inline-block");
+			$("#pause").css("display", "inline-block");
+		}
+	});
+	return null;
+};
+
+/**
+ * @description Función que llama a la API para cargar los trazados de una linea dada. A continuación los muestra sobre el mapa según el usuario lo haya indicado
+ * @param {Int} idLinea
+ * @returns {null}
+ */
+function getTrazadosEmt(idLinea){
+	// Cambiamos el estado a deshabilitado a la espera de recibir los datos
+	$("#botonIda"+idLinea).prop("indeterminate", false).prop("disabled", true).off('click');
+	$("#botonVta"+idLinea).prop("indeterminate", false).prop("disabled", true).off('click');
+	// Llamada AJAX Ida
+	$.getJSON({
+		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea(idLinea)+'&sentido=1'
+	}).done(function (response, status){
+		if(status === "success" && response.length > 0){
+			var posLinea = findLinea(idLinea); // Almacenamos la posición en lineas[] para uso más cómodo
+			var trazado = []; // Creamos un array con los puntos de latitud y longitud del polígono
+			for(var a = 0; a < response.length; a++){
+				trazado.push({lat: response[a].latitud, lng: response[a].longitud});  // Rellenamos con los datos de la respuesta
+			}
+			lineas[posLinea].trazadoIda = L.polyline(trazado, {
+				color: colores.emtA, // Fijamos el color de la ida
+				opacity: 1.0, // Opacidad
+				weight: 3 // Grosor
+			});
+			lineas[posLinea].getIda = true;
+			$("#botonIda"+idLinea).prop("disabled", false); 
+			$("#botonIda"+idLinea).change(function(){
+				var isChecked = $(this).is(':checked');
+				if(isChecked){
+					showTrazado(idLinea, 1); // Mostramos el trazado
+				}else{
+					hideTrazado(idLinea, 1); // Ocultamos el trazado
+				}
+			});
+			$("#botonIda"+idLinea).trigger("change");
+		}
+	});
+	// Llamada AJAX Vuelta
+	$.getJSON({
+		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea(idLinea)+'&sentido=2'
+	}).done(function (response, status){
+		if(status === "success" && response.length > 0){
+			var posLinea = findLinea(idLinea); // Almacenamos la posición en lineas[] para uso más cómodo
+			var trazado = []; // Creamos un array con los puntos de latitud y longitud del polígono
+			for(var a = 0; a < response.length; a++){
+				trazado.push({lat: response[a].latitud, lng: response[a].longitud}); // Rellenamos con los datos de la respuesta
+			}
+			lineas[posLinea].trazadoVta = L.polyline(trazado, {
+				color: colores.emtB, // Fijamos el color de la vuelta
+				opacity: 1.0, // Opacidad
+				weight: 3 // Grosor
+			});
+			lineas[posLinea].getVta = true;
+			$("#botonVta"+idLinea).prop("disabled", false);
+			$("#botonVta"+idLinea).change(function(){
+				var isChecked = $(this).is(':checked');
+				if(isChecked){
+					showTrazado(idLinea, 2); // Mostramos el trazado
+				}else{
+					hideTrazado(idLinea, 2); // Ocultamos el trazado
+				}
+			});
+			$("#botonVta"+idLinea).trigger("change");
+		}		
+	});
+	return null;
+}
+
+/**
+ * @deprecated
+ * @param {String} idLinea 
+ */
+function getUbicacionesEmt(idLinea){
+	$.getJSON({
+		//url: emt_proxy_url+'/services/buses/?codLinea='+codLinea
+		url: betteremt_api_url+'/buses/linea/'+codLinea(idLinea)
+	}).done(function (response, status){
+		if(status === "success"){
+			for(var x = 0; x < response.length; x++){
+                pos = findBus(response[x].codBus);
+                response[x].idLinea = "EMT-"+response[x].codLinea;
+				if(pos !== null){
+					updateBusEmt(response[x], pos);
+				}else{
+					addBusEmt(response[x]);
+				}
+			}
+			lineas[findLinea(idLinea)].numBuses = response.length;
+			$("#cont"+idLinea).text(response.length);
+		}		
+	});
+};
+
+function getBusesEmt(){
+	$.getJSON({
+		//url: betteremt_api_url+'/buses/all'
+		url: odm_api_url+'datastore_search_sql?sql=SELECT * from "9bc05288-1c11-4eec-8792-d74b679c8fcf" WHERE last_update=(SELECT MAX(last_update) from "9bc05288-1c11-4eec-8792-d74b679c8fcf")'
+	}).done(function (response, status){
+		if(status === "success"){
+			/* Limpieza Open Data Málaga */
+			response = response.result.records;
+			for(var x = 0; x < response.length; x++){
+				response[x].codBus = Number(response[x].codBus);
+				response[x].codLinea = Number(response[x].codLinea);
+				response[x].codParIni = Number(response[x].codParIni);
+				response[x].latitud = Number(response[x].lat);
+				response[x].longitud = Number(response[x].lon);
+				response[x].sentido = Number(response[x].sentido);
+			}
+			/* Procesado de ubicaciones con normalidad */
+			for(var x = 0; x < response.length; x++){
+                let pos = findBus(response[x].codBus);
+                response[x].idLinea = "EMT-"+response[x].codLinea;
+				 response[x].codParIni = "EMT-"+response[x].codParIni;
+				if(pos !== null){
+					updateBusEmt(response[x], pos);
+				}else{
+					addBusEmt(response[x]);
+				}
+			}
+		}		
+	});
+}
+
+function addBusEmt(Bus){
+	console.log("ADDED "+Bus.codBus);
+    var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
+	var data = {
+		marker: L.marker(coordenadas, {
+			icon: busIconContent(Bus, 1)
+		}),
+		popup: L.popup({autoPan: false, autoClose: false}).setContent(busPopupContent(Bus)),
+		codBus: Bus.codBus,
+		idLinea: Bus.idLinea,
+		sentido: Bus.sentido,
+		codParIni: Bus.codParIni,
+		latitud: Bus.latitud,
+		longitud: Bus.longitud,
+		ttl: ttl_new
+	};
+	var pos = autobuses.push(data)-1;
+	autobuses[pos].marker.bindPopup(autobuses[pos].popup);
+	var poslinea = findLinea(Bus.idLinea);
+	if(lineas[poslinea].getBuses){
+		autobuses[pos].marker.addTo(map);
+	}
+	lineas[poslinea].numBuses++;
+}
+
+function updateBusEmt(Bus, pos){
+	var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
+	if(!autobuses[pos].marker.getLatLng().equals(coordenadas)){
+		autobuses[pos].marker.setLatLng(coordenadas);
+	}
+	autobuses[pos].idLinea = Bus.idLinea;
+	autobuses[pos].sentido = Bus.sentido;
+	autobuses[pos].codParIni = Bus.codParIni;
+	autobuses[pos].latitud = Bus.latitud;
+	autobuses[pos].longitud = Bus.longitud;
+	autobuses[pos].popup.setContent(busPopupContent(Bus));
+	if(lineas[findLinea(Bus.idLinea)].getBuses){
+		autobuses[pos].marker.addTo(map);
+	}
+	if(autobuses[pos].ttl < default_ttl){
+		autobuses[pos].ttl = default_ttl;
+		autobuses[pos].marker.setIcon(busIconContent(autobuses[pos], 0));
+	}
+}
+
+function addLineaEmt(lin){
+	var linea = {
+        idLinea: "EMT-"+lin.codLinea,
+		userCodLinea: lin.userCodLinea.replace(/^F-/, "F"),
+		nombreLinea: lin.nombreLinea.replace(/(\(F\))|(\(?F-[0-9A-Z]{1,2}\)$)/, ""),
+		cabeceraIda: lin.cabeceraIda, 
+		cabeceraVta: lin.cabeceraVuelta,
+		paradasIda: [],
+        paradasVta: [],
+        trazadoIda: null,
+        trazadoVta: null,
+        getBuses: false,
+		getIda: false,
+		getVta: false,
+		verParadas: false,
+        numBuses: 0,
+        modo: "Autobús",
+        hayNoticia: null,
+        operadores: "Empresa Malagueña de Transportes S.A.M.",
+		tieneIda: null,
+		tieneVuelta: null
+	};
+	for(var a = 0; a < lin.paradas.length; a++){
+		addParadaEmt(lin.paradas[a].parada, linea.idLinea, lin.paradas[a].sentido);
+		if(lin.paradas[a].sentido === 1){
+			linea.paradasIda.push({
+				codPar: "EMT-"+lin.paradas[a].parada.codParada,
+				orden: lin.paradas[a].orden
+			});
+		}
+		if(lin.paradas[a].sentido === 2){
+			linea.paradasVta.push({
+				codPar: "EMT-"+lin.paradas[a].parada.codParada,
+				orden: lin.paradas[a].orden
+			});
+		}
+	}
+	if(linea.paradasIda.length > 1){
+		linea.tieneIda = true;
+	}
+	if(linea.paradasVta.length > 1){
+		linea.tieneVuelta = true;
+	}else{
+		linea.cabeceraIda = "Circular";
+		linea.cabeceraVta = "Circular";
+	}
+	// Corrección en paradas
+	if(linea.tieneIda){
+		var maxIda = linea.paradasIda.length;
+		for(var x = 0; x < linea.paradasVta.length; x++){
+			linea.paradasVta[x].orden -= maxIda;
+		}
+		if(linea.tieneVuelta){
+			linea.paradasIda.push({
+				codPar: linea.paradasVta[0].codPar,
+				orden: -1
+			});
+			linea.paradasVta.push({
+				codPar: linea.paradasIda[0].codPar,
+				orden: -1
+			});
+		}
+	}
+	lineas.push(linea);
+	//getTrazados(linea.idLinea);
+	
+	var fila = $("<tr>");
+	var botonIda = $("<input>", {
+		"type": "checkbox",
+		"id": "botonIda"+linea.idLinea
+	}).prop('checked', false).prop("indeterminate", true).click(function(){
+		getTrazadosEmt(linea.idLinea);
+	});
+	var botonVta = $("<input>", {
+		"type": "checkbox",
+		"id": "botonVta"+linea.idLinea,
+		"checked": true
+	}).prop('checked', false).prop("indeterminate", true).click(function(){
+		getTrazadosEmt(linea.idLinea);
+	});
+	var botonBus = $("<input>", {
+		"type": "checkbox",
+		"id": "botonBus"+linea.idLinea
+	}).prop('checked', false).click(function(){
+		enableBusUpdate(linea.idLinea);
+	});
+	$(fila).append($("<td>").append(botonIda));
+	$(fila).append($("<td>").append(botonVta));
+	$(fila).append($("<td>").append(botonBus));
+	$(fila).append($("<td>").append(lineaIcon(linea.userCodLinea, "3x")));
+	$(fila).append($("<td>").append($("<a>", {text: linea.nombreLinea, href: "#!"}).click(function(){verInfoLinea(linea.idLinea);})));
+	$(fila).append($("<td>").append($("<p>").attr('id', "cont"+linea.idLinea)));
+
+	$("#tablaLineasEMT").append(fila);
+}
+
+function addParadaEmt(parada, idLinea, sentido){
+	var pos = findParada("EMT-"+parada.codParada);
+	if(pos !== null){
+		paradas[pos].servicios.push({
+			idLinea: idLinea,
+			sentido: sentido,
+			espera: null
+		});
+	}else{
+		pos = paradas.push({
+			codPar: "EMT-"+parada.codParada,
+			nombreParada: parada.nombreParada,
+			direccion: parada.direccion,
+			idNucleo: 0,
+			idZona: "A",
+			servicios: [],
+			latitud: parada.latitud,
+			longitud: parada.longitud,
+			modos: "Autobús",
+			marker: null,
+			popup: null,
+			viewCont: 0
+		})-1;
+		paradas[pos].servicios.push({
+			idLinea: idLinea,
+			sentido: sentido,
+			espera: null
+		});
+	}
+}
+
+function codLinea(idLinea){
+    return idLinea.replace(/^EMT-/, "");
+}
+
+
+
+
+
+
+
+
+
+
+// CTAN.JS
+
+
+
+
+
+
+
+
+
+
+
+function getModos(){
+	// Petición AJAX
+	$.getJSON({
+		url: ctan_api_url+'/modostransporte?lang=ES'
+	}).done(function (response, status){
+		if(status === "success"){
+            response = response.modosTransporte;
+            for(var i = 0; i<response.length; i++){
+				var modo = {
+                    idModo: parseInt(response[i].idModo),
+                    descripcion: response[i].descripcion
+                };
+                modos.push(modo);
+			}
+		}
+	});
+    return null;
+}
+
+function getZonas(){
+    // Petición AJAX
+	$.getJSON({
+		url: ctan_api_url+'/zonas?lang=ES'
+	}).done(function (response, status){
+		if(status === "success"){
+            response = response.zonas;
+            for(var i = 0; i<response.length; i++){
+				var zona = {
+                    idZona: response[i].idZona,
+                    nombre: response[i].nombre,
+                    color: response[i].color
+                };
+                zonas.push(zona);
+			}
+		}
+	});
+}
+
+function getLineasCtan(){
+    // Petición AJAX
+	$.getJSON({
+		url: ctan_api_url+'/lineas?lang=ES'
+	}).done(function (response, status){
+		if(status === "success"){
+			response = response.lineas;
+            for(var i = 0; i<response.length; i++){
+				addLineaCtan(response[i]);
+				setTimeout(getLineaCompletaCtan, 1000+(90*i), response[i].idLinea);
+			}
+		}
+	});
+	return null;
+}
+
+function getLineaCompletaCtan(ctanId){
+	// Petición AJAX
+	$.getJSON({
+		url: ctan_api_url+'/lineas/'+ctanId+'?lang=ES'
+	}).done(function (response, status){
+		if(status === "success"){
+			updateLineaCtan(response); // Pasamos la línea por addLinea()
+			lineasCargadas++;
+		}
+	}).fail(function (response, status, error){
+		if(error === "Bad Request"){ //Si el servidor no ha atendido la petición, se vuelve a hacer con recursividad
+			getLineaCompletaCtan(ctanId);
+		}
+	});
+	return null;
+}
+
+function addLineaCtan(lin){
+    var linea = {
+        idLinea: "CTAN-"+lin.idLinea,
+        userCodLinea: lin.codigo,
+        nombreLinea: lin.nombre,
+        cabeceraIda: null,
+        cabeceraVta: null,
+        paradasIda: [],
+        paradasVta: [],
+        trazadoIda: null,
+        trazadoVta: null,
+        getBuses: false,
+        getIda: false,
+        getVta: false,
+        verParadas: false,
+        numBuses: null,
+        modo: lin.modo,
+        hayNoticia: lin.hayNoticia,
+		operadores: (lin.operadores).replace(/, $/, ""),
+		tieneIda: null,
+		tieneVuelta: null
+    };
+    lineas.push(linea);
+
+	getParadasLineaCtan(linea.idLinea);
+
+    var fila = $("<tr>");
+    var botonIda = $("<input>", {
+		"type": "checkbox",
+		"id": "botonIda"+linea.idLinea
+	}).prop('checked', false).prop("indeterminate", true).prop("disabled", true);
+	var botonVta = $("<input>", {
+		"type": "checkbox",
+		"id": "botonVta"+linea.idLinea,
+		"checked": true
+    }).prop('checked', false).prop("indeterminate", true).prop("disabled", true);
+   	$(fila).append($("<td>").append(botonIda));
+	if(linea.modo !== "Tren" && linea.modo !== "Metro"){
+		$(fila).append($("<td>").append(botonVta));
+	}
+	$(fila).append($("<td>").append(lineaIcon(linea.userCodLinea, "3x")));
+	$(fila).append($("<td>").append($("<a>", {text: linea.nombreLinea, href: "#!"}).click(function(){verInfoLinea(linea.idLinea);})));
+
+    switch(linea.modo){
+        case "Autobús":
+			$("#tablaLineasCTAN").append(fila);
+			break;
+		case "Metro":
+			$("#tablaLineasMetro").append(fila);
+			break;
+		case "Tren":
+			$("#tablaLineasRenfe").append(fila);
+			break;
+    }
+}
+
+function updateLineaCtan(lin){
+	let posLinea = findLinea("CTAN-"+lin.idLinea);
+	var idLinea = lineas[posLinea].idLinea;
+	lineas[posLinea].tieneIda = lin.tieneIda===1?true:false;
+	lineas[posLinea].tieneVuelta = lin.tieneVuelta===1?true:false;
+	if(lin.tieneVuelta){
+		lineas[posLinea].cabeceraIda = /*paradas[findParada(lineas[posLinea].paradasIda[0].codPar)].nombreParada*/"Vuelta";
+		lineas[posLinea].cabeceraVta = /*paradas[findParada(lineas[posLinea].paradasVta[0].codPar)].nombreParada*/"Ida";
+	}else{
+		lineas[posLinea].cabeceraIda = /*paradas[findParada(lineas[posLinea].paradasIda[0].codPar)].nombreParada*/"Ida";
+		lineas[posLinea].cabeceraVta = "Ida";
+	}
+	// Polilíneas de trazado
+	var trazadoIda = []; // Creamos un array con los puntos de latitud y longitud del polígono
+	var trazadoVta = []; // Creamos un array con los puntos de latitud y longitud del polígono
+	for(var a = 0; a < lin.polilinea.length; a++){
+		var lat, lon, sentido;
+		var punto = lin.polilinea[a][0].split(","); // Parseamos el string con la información del punto
+		lat = punto[0];
+		lon = punto[1];
+		sentido = punto[2];
+		if(sentido === "1" || sentido === undefined){
+			trazadoIda.push({lat: lat, lng: lon});  // Rellenamos con los datos de la respuesta
+		}else if(sentido === "2"){
+			trazadoVta.push({lat: lat, lng: lon});  // Rellenamos con los datos de la respuesta
+		}
+	}
+	var color;
+	switch(lin.modo){
+		case "Autobús":
+			color = colores.ctmamA;
+			break;
+		case "Metro":
+			color = colores.metro;
+			break;
+		case "Tren":
+			color = colores.renfeA;
+			break;
+	}
+	lineas[posLinea].trazadoIda = L.polyline(trazadoIda, {
+		color: color, // Fijamos el color de la ida
+		opacity: 1.0, // Opacidad
+		weight: 3 // Grosor
+	});
+	$("#botonIda"+idLinea).prop("indeterminate", false).prop("disabled", false); // Cambiamos el estado del botón a habilitado
+	$("#botonIda"+idLinea).change(function(){
+		var isChecked = $(this).is(':checked');
+		if(isChecked){
+			showTrazado(idLinea, 1); // Mostramos el trazado
+		}else{
+			hideTrazado(idLinea, 1); // Ocultamos el trazado
+		}
+	});
+	if(trazadoVta.length !== 0){
+		lineas[posLinea].trazadoVta = L.polyline(trazadoVta, {
+			color: colores.ctmamB, // Fijamos el color de la vuelta (solo los buses tienen vuelta)
+			opacity: 1.0, // Opacidad
+			weight: 3 // Grosor
+		});
+		$("#botonVta"+idLinea).prop("indeterminate", false).prop("disabled", false); // Cambiamos el estado del botón a habilitado
+		$("#botonVta"+idLinea).change(function(){
+			var isChecked = $(this).is(':checked');
+			if(isChecked){
+				showTrazado(idLinea, 2); // Mostramos el trazado
+			}else{
+				hideTrazado(idLinea, 2); // Ocultamos el trazado
+			}
+		});
+	}
+}
+
+function getParadasLineaCtan(id){
+    // Petición AJAX
+	$.getJSON({
+		url: ctan_api_url+'/lineas/'+idLinea(id)+'/paradas?lang=ES'
+	}).done(function (response, status){
+		if(status === "success"){
+			let linea = lineas[findLinea(id)];
+			response = response.paradas;
+			var cabeceraIda, cabeceraVta;
+            for(var i = 0; i<response.length; i++){
+				if(Number(response[i].sentido) === 1 && response[i].orden === 1){
+					cabeceraIda = response[i].idParada;
+					addParadaCtan(response[i], id); // Pasamos por addLinea() la cabecera
+				}else if(Number(response[i].sentido) === 2 && response[i].orden === 1){
+					cabeceraVta = response[i].idParada;
+					addParadaCtan(response[i], id); // Pasamos por addLinea() la cabecera
+				}else if(response[i].idParada !== cabeceraIda && response[i].idParada !== cabeceraVta){
+					addParadaCtan(response[i], id); // Pasamos por addLinea() el resto de líneas menos la ultima parada si coincide con la cabecera
+				}
+                if(Number(response[i].sentido) === 1){
+                    linea.paradasIda.push({
+                        codPar: "CTAN-"+response[i].idParada,
+                        orden: response[i].orden
+					});
+                }else if(Number(response[i].sentido) === 2){
+                    linea.paradasVta.push({
+                        codPar: "CTAN-"+response[i].idParada,
+                        orden: response[i].orden
+					});
+                }
+			}
+			if(linea.paradasIda.length !== 0){
+				linea.getIda = true;
+			}
+			if(linea.paradasVta.length !== 0){
+				linea.getVta = true;
+			}
+		}
+	}).fail(function (response, status, error){
+		if(error === "Bad Request"){ //Si el servidor no ha atendido la petición, se vuelve a hacer con recursividad
+			getParadasLineaCtan(id);
+		}
+	});
+}
+
+function addParadaCtan(parada, idLinea){
+	var pos = findParada("CTAN-"+parada.idParada);
+	if(pos !== null){
+		paradas[pos].servicios.push({
+			idLinea: idLinea,
+			sentido: Number(parada.sentido),
+			espera: null
+		});
+	}else{
+		pos = paradas.push({
+			codPar: "CTAN-"+parada.idParada,
+			nombreParada: parada.nombre,
+			direccion: null,
+			idNucleo: parada.idNucleo,
+			idZona: parada.idZona,
+			servicios: [],
+			latitud: parada.latitud,
+			longitud: parada.longitud,
+			modos: parada.modos,
+			marker: null,
+			popup: null,
+			viewCont: 0
+		})-1;
+		paradas[pos].servicios.push({
+			idLinea: idLinea,
+			sentido: Number(parada.sentido),
+			espera: null
+		});
+	}
+}
+
+function idLinea(id){
+    return id.replace(/^CTAN-/, "");
 }
