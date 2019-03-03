@@ -83,61 +83,79 @@ const colores = {
 
 /**
  * @description Tiempo de vida para buses nuevos (verde)(al alcanzar default_ttl se vuelven blancos)
- * @type int
+ * @global
  * @constant
+ * @type int
  */
 const ttl_new = ttl_rate_new/refresh_rate;
 
 /**
  * @description Número de actualizaciones fallidas sin aparecer para darlo por muerto
- * @type Int
+ * @global
  * @constant
+ * @type Int
  */
 const default_ttl = ttl_rate_default/refresh_rate;
 
 /**
  * @description Número de actualizaciones fallidas sin aparecer para indicar que el bus probablemente haya desaparecido (color rojo)
+ * @global
+ * @var
  * @type Int
  */
 const ttl_old = ttl_rate_old/refresh_rate;
 
 /**
  * @description Indicador de estado de si se están mostrando las líneas de la EMT
+ * @global
+ * @var
  * @type Boolean
  */
 var showEMT = false;
 
 /**
  * @description Indicador de estado de si se están mostrando las líneas del consorcio
+ * @global
+ * @var
  * @type Boolean
  */
 var showCTAN = false;
 
 /**
  * @description Indicador de estado de si se están mostrando las líneas de metro
+ * @global
+ * @var
  * @type Boolean
  */
 var showMetro = false;
 
 /**
  * @description Indicador de estado de si se están mostrando las líneas de renfe
+ * @global
+ * @var
  * @type Boolean
  */
 var showRenfe = false;
 /**
  * @description Contador de las líneas que han sido cargadas en detalle
+ * @global
+ * @var
  * @type Number
  */
 var lineasCargadas = 0;
 
 /**
  * @description Indica si la función de inicializar los marcadores se ha ejecutado ya y habilita los botones de marcar paradas en el mapa
+ * @global
+ * @var
  * @type Boolean
  */
 var paradasInicializadas = false;
 
 /**
  * @description Tabla de modos de transporte (medios de transporte)
+ * @global
+ * @var
  * @type Array
  * @param {Int} idModo Identificador del modo
  * @param {String} descripcion Descripción del modo
@@ -146,6 +164,8 @@ var modos = [];
 
 /**
  * @description Tabla de zonas del CTAN
+ * @global
+ * @var
  * @type Array
  * @param {String} idZona Identificador de la zona
  * @param {String} nombre Nombre de la zona
