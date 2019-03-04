@@ -361,14 +361,6 @@ function start(){
 	return null;
 }
 
-/**
- * @description Función para limpiar los buses que no estamos siguiendo, llevan mucho sin refrescarse, o han desaparecido
- * @returns {null}
- */
-function reducirTTL(){
-	return null;
-}
-
 function inicializarParadas(){
 	if(lineasCargadas < lineas.length || lineasCargadas < 80){
 		setTimeout(inicializarParadas, 1500);
