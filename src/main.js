@@ -1190,7 +1190,7 @@ function getLineasEmt(){
 		url: emt_proxy_url+'/services/lineas/'
 	}).done(function (response, status){
 		if(status === "success"){
-			for(var i = 0; i<response.length; i++){
+			for(let i = 0; i<response.length; i++){
 				addLineaEmt(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
 				lineasCargadas++;
 			}
@@ -1219,9 +1219,9 @@ function getTrazadosEmt(idLinea){
 		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea(idLinea)+'&sentido=1'
 	}).done(function (response, status){
 		if(status === "success" && response.length > 0){
-			var posLinea = findLinea(idLinea); // Almacenamos la posición en lineas[] para uso más cómodo
-			var trazado = []; // Creamos un array con los puntos de latitud y longitud del polígono
-			for(var a = 0; a < response.length; a++){
+			let posLinea = findLinea(idLinea); // Almacenamos la posición en lineas[] para uso más cómodo
+			let trazado = []; // Creamos un array con los puntos de latitud y longitud del polígono
+			for(let a = 0; a < response.length; a++){
 				trazado.push({lat: response[a].latitud, lng: response[a].longitud});  // Rellenamos con los datos de la respuesta
 			}
 			lineas[posLinea].trazadoIda = L.polyline(trazado, {
@@ -1232,7 +1232,7 @@ function getTrazadosEmt(idLinea){
 			lineas[posLinea].getIda = true;
 			$("#botonIda"+idLinea).prop("disabled", false); 
 			$("#botonIda"+idLinea).change(function(){
-				var isChecked = $(this).is(':checked');
+				let isChecked = $(this).is(':checked');
 				if(isChecked){
 					showTrazado(idLinea, 1); // Mostramos el trazado
 				}else{
@@ -1247,9 +1247,9 @@ function getTrazadosEmt(idLinea){
 		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea(idLinea)+'&sentido=2'
 	}).done(function (response, status){
 		if(status === "success" && response.length > 0){
-			var posLinea = findLinea(idLinea); // Almacenamos la posición en lineas[] para uso más cómodo
-			var trazado = []; // Creamos un array con los puntos de latitud y longitud del polígono
-			for(var a = 0; a < response.length; a++){
+			let posLinea = findLinea(idLinea); // Almacenamos la posición en lineas[] para uso más cómodo
+			let trazado = []; // Creamos un array con los puntos de latitud y longitud del polígono
+			for(let a = 0; a < response.length; a++){
 				trazado.push({lat: response[a].latitud, lng: response[a].longitud}); // Rellenamos con los datos de la respuesta
 			}
 			lineas[posLinea].trazadoVta = L.polyline(trazado, {
@@ -1260,7 +1260,7 @@ function getTrazadosEmt(idLinea){
 			lineas[posLinea].getVta = true;
 			$("#botonVta"+idLinea).prop("disabled", false);
 			$("#botonVta"+idLinea).change(function(){
-				var isChecked = $(this).is(':checked');
+				let isChecked = $(this).is(':checked');
 				if(isChecked){
 					showTrazado(idLinea, 2); // Mostramos el trazado
 				}else{
@@ -1283,7 +1283,7 @@ function getUbicacionesEmt(idLinea){
 		url: betteremt_api_url+'/buses/linea/'+codLinea(idLinea)
 	}).done(function (response, status){
 		if(status === "success"){
-			for(var x = 0; x < response.length; x++){
+			for(let x = 0; x < response.length; x++){
                 pos = findBus(response[x].codBus);
                 response[x].idLinea = "EMT-"+response[x].codLinea;
 				if(pos !== null){
@@ -1306,7 +1306,7 @@ function getBusesEmt(){
 		if(status === "success"){
 			/* Limpieza Open Data Málaga */
 			response = response.result.records;
-			for(var x = 0; x < response.length; x++){
+			for(let x = 0; x < response.length; x++){
 				response[x].codBus = Number(response[x].codBus);
 				response[x].codLinea = Number(response[x].codLinea);
 				response[x].codParIni = Number(response[x].codParIni);
@@ -1315,7 +1315,7 @@ function getBusesEmt(){
 				response[x].sentido = Number(response[x].sentido);
 			}
 			/* Procesado de ubicaciones con normalidad */
-			for(var x = 0; x < response.length; x++){
+			for(let x = 0; x < response.length; x++){
                 let pos = findBus(response[x].codBus);
                 response[x].idLinea = "EMT-"+response[x].codLinea;
 				 response[x].codParIni = "EMT-"+response[x].codParIni;
@@ -1331,8 +1331,8 @@ function getBusesEmt(){
 
 function addBusEmt(Bus){
 	console.log("ADDED "+Bus.codBus);
-    var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
-	var data = {
+    let coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
+	let data = {
 		marker: L.marker(coordenadas, {
 			icon: busIconContent(Bus, 1)
 		}),
@@ -1345,9 +1345,9 @@ function addBusEmt(Bus){
 		longitud: Bus.longitud,
 		ttl: ttl_new
 	};
-	var pos = autobuses.push(data)-1;
+	let pos = autobuses.push(data)-1;
 	autobuses[pos].marker.bindPopup(autobuses[pos].popup);
-	var poslinea = findLinea(Bus.idLinea);
+	let poslinea = findLinea(Bus.idLinea);
 	if(lineas[poslinea].getBuses){
 		autobuses[pos].marker.addTo(map);
 	}
@@ -1355,7 +1355,7 @@ function addBusEmt(Bus){
 }
 
 function updateBusEmt(Bus, pos){
-	var coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
+	let coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
 	if(!autobuses[pos].marker.getLatLng().equals(coordenadas)){
 		autobuses[pos].marker.setLatLng(coordenadas);
 	}
@@ -1375,7 +1375,7 @@ function updateBusEmt(Bus, pos){
 }
 
 function addLineaEmt(lin){
-	var linea = {
+	let linea = {
         idLinea: "EMT-"+lin.codLinea,
 		userCodLinea: lin.userCodLinea.replace(/^F-/, "F"),
 		nombreLinea: lin.nombreLinea.replace(/(\(F\))|(\(?F-[0-9A-Z]{1,2}\)$)/, ""),
@@ -1396,7 +1396,7 @@ function addLineaEmt(lin){
 		tieneIda: null,
 		tieneVuelta: null
 	};
-	for(var a = 0; a < lin.paradas.length; a++){
+	for(let a = 0; a < lin.paradas.length; a++){
 		addParadaEmt(lin.paradas[a].parada, linea.idLinea, lin.paradas[a].sentido);
 		if(lin.paradas[a].sentido === 1){
 			linea.paradasIda.push({
@@ -1422,8 +1422,8 @@ function addLineaEmt(lin){
 	}
 	// Corrección en paradas
 	if(linea.tieneIda){
-		var maxIda = linea.paradasIda.length;
-		for(var x = 0; x < linea.paradasVta.length; x++){
+		let maxIda = linea.paradasIda.length;
+		for(let x = 0; x < linea.paradasVta.length; x++){
 			linea.paradasVta[x].orden -= maxIda;
 		}
 		if(linea.tieneVuelta){
@@ -1440,21 +1440,21 @@ function addLineaEmt(lin){
 	lineas.push(linea);
 	//getTrazados(linea.idLinea);
 	
-	var fila = $("<tr>");
-	var botonIda = $("<input>", {
+	let fila = $("<tr>");
+	let botonIda = $("<input>", {
 		"type": "checkbox",
 		"id": "botonIda"+linea.idLinea
 	}).prop('checked', false).prop("indeterminate", true).click(function(){
 		getTrazadosEmt(linea.idLinea);
 	});
-	var botonVta = $("<input>", {
+	let botonVta = $("<input>", {
 		"type": "checkbox",
 		"id": "botonVta"+linea.idLinea,
 		"checked": true
 	}).prop('checked', false).prop("indeterminate", true).click(function(){
 		getTrazadosEmt(linea.idLinea);
 	});
-	var botonBus = $("<input>", {
+	let botonBus = $("<input>", {
 		"type": "checkbox",
 		"id": "botonBus"+linea.idLinea
 	}).prop('checked', false).click(function(){
@@ -1471,7 +1471,7 @@ function addLineaEmt(lin){
 }
 
 function addParadaEmt(parada, idLinea, sentido){
-	var pos = findParada("EMT-"+parada.codParada);
+	let pos = findParada("EMT-"+parada.codParada);
 	if(pos !== null){
 		paradas[pos].servicios.push({
 			idLinea: idLinea,
