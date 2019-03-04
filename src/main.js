@@ -1097,7 +1097,7 @@ function verCopyright(){
 }
 
 function verAyuda(){
-	var ayuda = '<h4>Controles</h4>\n\
+	let ayuda = '<h4>Controles</h4>\n\
 	<p>\n\
 		<table>\n\
 			<tbody>\n\
@@ -1533,8 +1533,8 @@ function getModos(){
 	}).done(function (response, status){
 		if(status === "success"){
             response = response.modosTransporte;
-            for(var i = 0; i<response.length; i++){
-				var modo = {
+            for(let i = 0; i<response.length; i++){
+				let modo = {
                     idModo: parseInt(response[i].idModo),
                     descripcion: response[i].descripcion
                 };
@@ -1552,8 +1552,8 @@ function getZonas(){
 	}).done(function (response, status){
 		if(status === "success"){
             response = response.zonas;
-            for(var i = 0; i<response.length; i++){
-				var zona = {
+            for(let i = 0; i<response.length; i++){
+				let zona = {
                     idZona: response[i].idZona,
                     nombre: response[i].nombre,
                     color: response[i].color
@@ -1571,7 +1571,7 @@ function getLineasCtan(){
 	}).done(function (response, status){
 		if(status === "success"){
 			response = response.lineas;
-            for(var i = 0; i<response.length; i++){
+            for(let i = 0; i<response.length; i++){
 				addLineaCtan(response[i]);
 				setTimeout(getLineaCompletaCtan, 1000+(90*i), response[i].idLinea);
 			}
@@ -1598,7 +1598,7 @@ function getLineaCompletaCtan(ctanId){
 }
 
 function addLineaCtan(lin){
-    var linea = {
+    let linea = {
         idLinea: "CTAN-"+lin.idLinea,
         userCodLinea: lin.codigo,
         nombreLinea: lin.nombre,
@@ -1623,12 +1623,12 @@ function addLineaCtan(lin){
 
 	getParadasLineaCtan(linea.idLinea);
 
-    var fila = $("<tr>");
-    var botonIda = $("<input>", {
+    let fila = $("<tr>");
+    let botonIda = $("<input>", {
 		"type": "checkbox",
 		"id": "botonIda"+linea.idLinea
 	}).prop('checked', false).prop("indeterminate", true).prop("disabled", true);
-	var botonVta = $("<input>", {
+	let botonVta = $("<input>", {
 		"type": "checkbox",
 		"id": "botonVta"+linea.idLinea,
 		"checked": true
@@ -1655,7 +1655,7 @@ function addLineaCtan(lin){
 
 function updateLineaCtan(lin){
 	let posLinea = findLinea("CTAN-"+lin.idLinea);
-	var idLinea = lineas[posLinea].idLinea;
+	let idLinea = lineas[posLinea].idLinea;
 	lineas[posLinea].tieneIda = lin.tieneIda===1?true:false;
 	lineas[posLinea].tieneVuelta = lin.tieneVuelta===1?true:false;
 	if(lin.tieneVuelta){
@@ -1666,11 +1666,11 @@ function updateLineaCtan(lin){
 		lineas[posLinea].cabeceraVta = "Ida";
 	}
 	// Polilíneas de trazado
-	var trazadoIda = []; // Creamos un array con los puntos de latitud y longitud del polígono
-	var trazadoVta = []; // Creamos un array con los puntos de latitud y longitud del polígono
-	for(var a = 0; a < lin.polilinea.length; a++){
-		var lat, lon, sentido;
-		var punto = lin.polilinea[a][0].split(","); // Parseamos el string con la información del punto
+	let trazadoIda = []; // Creamos un array con los puntos de latitud y longitud del polígono
+	let trazadoVta = []; // Creamos un array con los puntos de latitud y longitud del polígono
+	for(let a = 0; a < lin.polilinea.length; a++){
+		let lat, lon, sentido;
+		let punto = lin.polilinea[a][0].split(","); // Parseamos el string con la información del punto
 		lat = punto[0];
 		lon = punto[1];
 		sentido = punto[2];
@@ -1680,7 +1680,7 @@ function updateLineaCtan(lin){
 			trazadoVta.push({lat: lat, lng: lon});  // Rellenamos con los datos de la respuesta
 		}
 	}
-	var color;
+	let color;
 	switch(lin.modo){
 		case "Autobús":
 			color = colores.ctmamA;
@@ -1699,7 +1699,7 @@ function updateLineaCtan(lin){
 	});
 	$("#botonIda"+idLinea).prop("indeterminate", false).prop("disabled", false); // Cambiamos el estado del botón a habilitado
 	$("#botonIda"+idLinea).change(function(){
-		var isChecked = $(this).is(':checked');
+		let isChecked = $(this).is(':checked');
 		if(isChecked){
 			showTrazado(idLinea, 1); // Mostramos el trazado
 		}else{
@@ -1714,7 +1714,7 @@ function updateLineaCtan(lin){
 		});
 		$("#botonVta"+idLinea).prop("indeterminate", false).prop("disabled", false); // Cambiamos el estado del botón a habilitado
 		$("#botonVta"+idLinea).change(function(){
-			var isChecked = $(this).is(':checked');
+			let isChecked = $(this).is(':checked');
 			if(isChecked){
 				showTrazado(idLinea, 2); // Mostramos el trazado
 			}else{
@@ -1732,8 +1732,8 @@ function getParadasLineaCtan(id){
 		if(status === "success"){
 			let linea = lineas[findLinea(id)];
 			response = response.paradas;
-			var cabeceraIda, cabeceraVta;
-            for(var i = 0; i<response.length; i++){
+			let cabeceraIda, cabeceraVta;
+            for(let i = 0; i<response.length; i++){
 				if(Number(response[i].sentido) === 1 && response[i].orden === 1){
 					cabeceraIda = response[i].idParada;
 					addParadaCtan(response[i], id); // Pasamos por addLinea() la cabecera
@@ -1770,7 +1770,7 @@ function getParadasLineaCtan(id){
 }
 
 function addParadaCtan(parada, idLinea){
-	var pos = findParada("CTAN-"+parada.idParada);
+	let pos = findParada("CTAN-"+parada.idParada);
 	if(pos !== null){
 		paradas[pos].servicios.push({
 			idLinea: idLinea,
