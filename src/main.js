@@ -26,14 +26,17 @@
 /* Este script necesia los archivos ctan.js y emt.js para poder funcionar correctamente */
 'use strict';
 /* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url, showEMT, showCTAN */
+import {Rutpam} from './rutpam.js';
 
+var rutpam = new Rutpam();
 /**
  * @description Variable global para la versión del programa
  * @global
  * @constant
  * @type String
  */
-const rutpam_version = "4.13.5";
+//const rutpam_version = "4.13.5";
+//const rutpam_version = rutpam.version;
 
 /**
  * @description Variable global para almacenar el timer maestro
@@ -41,7 +44,7 @@ const rutpam_version = "4.13.5";
  * @var
  * @type JS_Timer
  */
-var timer;
+//var timer;
 
 /**
  * @description Variable global para almacenar el mapa
@@ -49,7 +52,7 @@ var timer;
  * @var
  * @type L.map
  */
-var map;
+//var map;
 
 /**
  * @description Variable global para almacenar los colores utilizados por la app
@@ -57,7 +60,7 @@ var map;
  * @constant
  * @enum
  */
-const colores = {
+/*const colores = {
 	// EMT SAM + Urbanos Consorcio
 	emtA: "#1E3180", // Primario, lineas regulares, sentido ida
 	emtB: "#4876FE", // Secundario, sentido vuelta
@@ -68,8 +71,8 @@ const colores = {
 	ctmamB: "#11B237", // sentido vuelta
 	ctmamN: "#006983", // lineas buho
 	ctmamT: "#E4D77E", // Oficial Secundario, líneas estacionales
-	/*ctmamU: "#E4D77E", // líneas universitarias
-	ctmamV: "#71A9F7", // líneas de verano*/
+	ctmamU: "#E4D77E", // líneas universitarias
+	ctmamV: "#71A9F7", // líneas de verano
 	// Renfe Operadora
 	renfeA: "#8A0072", // Oficial general
 	renfeB: "#EF3340", // Oficial cercanías
@@ -79,7 +82,7 @@ const colores = {
 	especial: "#FCCC0A", // Líneas y servicios especiales
 	express: "#996633", // Servicios exprés
 	lanzaderas: "#808183" // Lanzadera
-};
+};*/
 
 /**
  * @description Tiempo de vida para buses nuevos (verde)(al alcanzar default_ttl se vuelven blancos)
@@ -87,7 +90,7 @@ const colores = {
  * @constant
  * @type int
  */
-const ttl_new = ttl_rate_new/refresh_rate;
+//const ttl_new = ttl_rate_new/refresh_rate;
 
 /**
  * @description Número de actualizaciones fallidas sin aparecer para darlo por muerto
@@ -95,7 +98,7 @@ const ttl_new = ttl_rate_new/refresh_rate;
  * @constant
  * @type Int
  */
-const default_ttl = ttl_rate_default/refresh_rate;
+//const default_ttl = ttl_rate_default/refresh_rate;
 
 /**
  * @description Número de actualizaciones fallidas sin aparecer para indicar que el bus probablemente haya desaparecido (color rojo)
@@ -103,7 +106,7 @@ const default_ttl = ttl_rate_default/refresh_rate;
  * @var
  * @type Int
  */
-const ttl_old = ttl_rate_old/refresh_rate;
+//const ttl_old = ttl_rate_old/refresh_rate;
 
 /**
  * @description Indicador de estado de si se están mostrando las líneas de la EMT
@@ -111,7 +114,7 @@ const ttl_old = ttl_rate_old/refresh_rate;
  * @var
  * @type Boolean
  */
-var showEMT = false;
+//var showEMT = false;
 
 /**
  * @description Indicador de estado de si se están mostrando las líneas del consorcio
@@ -119,7 +122,7 @@ var showEMT = false;
  * @var
  * @type Boolean
  */
-var showCTAN = false;
+//var showCTAN = false;
 
 /**
  * @description Indicador de estado de si se están mostrando las líneas de metro
@@ -127,7 +130,7 @@ var showCTAN = false;
  * @var
  * @type Boolean
  */
-var showMetro = false;
+//var showMetro = false;
 
 /**
  * @description Indicador de estado de si se están mostrando las líneas de renfe
@@ -135,14 +138,14 @@ var showMetro = false;
  * @var
  * @type Boolean
  */
-var showRenfe = false;
+//var showRenfe = false;
 /**
  * @description Contador de las líneas que han sido cargadas en detalle
  * @global
  * @var
  * @type Number
  */
-var lineasCargadas = 0;
+//var lineasCargadas = 0;
 
 /**
  * @description Indica si la función de inicializar los marcadores se ha ejecutado ya y habilita los botones de marcar paradas en el mapa
@@ -150,7 +153,7 @@ var lineasCargadas = 0;
  * @var
  * @type Boolean
  */
-var paradasInicializadas = false;
+//var paradasInicializadas = false;
 
 /**
  * @description Tabla de modos de transporte (medios de transporte)
@@ -238,7 +241,7 @@ $(document).ready(function(){
 	$("#control").html(ControlRUTPAM($("<div>"))); // Rellenamos el div del panel de control con lo que devuelve ControlRUTPAM()
 	verCopyright(); // Mostramos el "Acerca de RUTPAM"
 	initMap(); // Inicializamos el mapa y todo el layout
-	document.title = "RUTPAM "+rutpam_version; // Seteamos el título del documento
+	document.title = "RUTPAM "+rutpam.version; // Seteamos el título del documento
 	initKeys(); // Inicializamos las teclas de control
 	getModos(); // Cargamos los modos de transporte
 	getZonas(); // Cargamos las zonas
@@ -254,7 +257,7 @@ $(document).ready(function(){
 function initMap() {
 	let osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'; // URL del servidor cartográfico
 	let osm = new L.TileLayer(osmUrl); // Creamos la capa de cartografía
-	map = L.map('map', {
+	rutpam.map = L.map('map', {
 		center: [36.7121977, -4.4370495], // Centro del mapa sobre málaga
 		zoom: 13, // Nivel de zoom para ver todo el área metropolitana
 		closePopupOnClick: false, // Deshabilitamos que los popups se cierren al hacer click en cualquier otro sitio fuera
@@ -324,7 +327,7 @@ function motor(){
 		}else if(lineas[poslinea].getBuses === false){ // O SI no estamos haciendo un seguimiento de esa línea
 			autobuses[pos].marker.remove(); // Quitamos el marcador del mapa
 			pos++; // Avanzamos de posición
-		}else if(autobuses[pos].ttl <= ttl_old){ // O SI el TTL es bajo y el bus lleva rato sin refrescarse
+		}else if(autobuses[pos].ttl <= rutpam.ttl.old){ // O SI el TTL es bajo y el bus lleva rato sin refrescarse
 			autobuses[pos].marker.setIcon(busIconContent(autobuses[pos], 2)); // Cambiamos el icono para que aparezca como no-actualizado
 			pos++; // Avanzamos de posición
 		}else{ // O Todo está bien
@@ -342,7 +345,7 @@ function motor(){
  * @returns {null}
  */
 function stop(){
-	clearInterval(timer);
+	clearInterval(rutpam.timer);
 	$("#pause").prop("disabled", true);
 	$("#play").prop("disabled", false);
 	$("#refresh").prop("disabled", false);
@@ -354,7 +357,7 @@ function stop(){
  * @returns {null}
  */
 function start(){
-	timer = setInterval(motor, refresh_rate*1000);
+	rutpam.timer = setInterval(motor, refresh_rate*1000);
 	$("#pause").prop("disabled", false);
 	$("#play").prop("disabled", true);
 	$("#refresh").prop("disabled", true);
@@ -362,7 +365,7 @@ function start(){
 }
 
 function inicializarParadas(){
-	if(lineasCargadas < lineas.length || lineasCargadas < 80){
+	if(rutpam.lineasCargadas < lineas.length || rutpam.lineasCargadas < 80){
 		setTimeout(inicializarParadas, 1500);
 	}else{
 		$("#loader").remove();
@@ -373,7 +376,7 @@ function inicializarParadas(){
 			paradas[a].popup = L.popup({autoPan: false, autoClose: false}).setContent(paradaPopupContent(paradas[a].codPar));
 			paradas[a].marker.bindPopup(paradas[a].popup);
 		}
-		paradasInicializadas = true;
+		rutpam.paradasInicializadas = true;
 	}
 }
 
@@ -460,9 +463,9 @@ function generarBotonToggleParadas(idLinea){
 		"class": "boton"
 	});
 	$(botonParadas).text("Mostrar/Ocultar paradas");
-	if(paradasInicializadas){// SI las paradas estan inicializadas
+	if(rutpam.paradasInicializadas){// SI las paradas estan inicializadas
 		if(lineas[findLinea(idLinea)].verParadas === true){ // SI estamos mostrando las paradas de esta línea
-			$(botonParadas).css("background-color", colores.especial); // Poner el botón en on
+			$(botonParadas).css("background-color", rutpam.colores.especial); // Poner el botón en on
 		}
 		$(botonParadas).on("click", function(){
 			let linea = lineas[findLinea(idLinea)]; // Sacamos la línea para trabajar con ella
@@ -482,7 +485,7 @@ function generarBotonToggleParadas(idLinea){
 				for(let a = 0; a < linea.paradasVta.length; a++){ // Mostrar todas las paradas a la vuelta
 					showParada(linea.paradasVta[a].codPar);
 				}
-				$(this).css("background-color", colores.especial); // Ponemos el botón en on
+				$(this).css("background-color", rutpam.colores.especial); // Ponemos el botón en on
 				linea.verParadas = true; // Setear que se están mostrando las paradas
 			}
 		});
@@ -605,9 +608,9 @@ function disableBusUpdate(idLinea){
  */
 function showTrazado(idLinea, sentido){
 	if(sentido === 1){
-		lineas[findLinea(idLinea)].trazadoIda.addTo(map);
+		lineas[findLinea(idLinea)].trazadoIda.addTo(rutpam.map);
 	}else if(sentido === 2){
-		lineas[findLinea(idLinea)].trazadoVta.addTo(map);
+		lineas[findLinea(idLinea)].trazadoVta.addTo(rutpam.map);
 	}
 }
 
@@ -629,7 +632,7 @@ function hideTrazado(idLinea, sentido){
 function showParada(codParada){
 	let parada = paradas[findParada(codParada)];
 	if(parada.viewCont++ === 0){ // SI nadie ha puesto antes el marcador (y lo incrementamos)
-		parada.marker.addTo(map); // Añadimos el marcador al mapa
+		parada.marker.addTo(rutpam.map); // Añadimos el marcador al mapa
 	}
 }
 
@@ -732,7 +735,7 @@ function distanciaTrazado(trazado){
 	let total = 0;
 	if(trazado !== null){
 		for(let pos = 1; pos < trazado.getLatLngs().length; pos++){
-			total = total + map.distance(trazado.getLatLngs()[pos-1], trazado.getLatLngs()[pos]);
+			total = total + rutpam.map.distance(trazado.getLatLngs()[pos-1], trazado.getLatLngs()[pos]);
 		}
 	}
 	return total;
@@ -766,36 +769,36 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 	let id = $('<span>').addClass('fa-layers fa-'+zoom);
 	let esNegro = false;
 	if(/^C[1-9]$|^29$/.test(userCodLinea)){ // Circulares EMT
-		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtC));
+		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.emtC));
 	}else if(/^N[1-9]/.test(userCodLinea)){ // Nocturno EMT
-		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtN));
+		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.emtN));
 	}else if(/^A$|^E$/.test(userCodLinea)){ // Lineas exprés
-		id.append($('<i>').addClass('fas fa-circle').css("color", colores.express));
+		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.express));
 	}else if(/^L$|^P$/.test(userCodLinea)){ // Lineas Lanzaderas
-		id.append($('<i>').addClass('fas fa-circle').css("color", colores.lanzaderas));
+		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.lanzaderas));
 	}else if(/N[1-9]$|^M-168$|^M-155$|^M-168$/.test(userCodLinea)){ // Líneas Buho CTAN
-		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamN));
+		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.ctmamN));
 	}else if(/^M-5[0-9]{2}$/.test(userCodLinea)){ // Líneas Verano CTAN
-		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamT));
+		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.ctmamT));
 	}else if(/^M-114$|^M-116$|^M-143$|^M-166$/.test(userCodLinea)){ // Líneas Universitarias CTAN
-		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamT));
+		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.ctmamT));
 		esNegro = true;
 	}else if(/^R-|^T-|^M-10[1-4]$/.test(userCodLinea)){ // Líneas Urbanas CTAN
-		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtA));
+		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.emtA));
 	}else if(/^M-/.test(userCodLinea)){ // Líneas Interurbanas CTAN
-		id.append($('<i>').addClass('fas fa-circle').css("color", colores.ctmamA));
+		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.ctmamA));
 	}else if(/^91$|^92$/.test(userCodLinea)){ // Servicios Turísticos
-		id.append($('<i>').addClass('fas fa-circle').css("color", colores.especial));
+		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.especial));
 		esNegro = true;
 	}else if(/^METRO-[1-2]$/.test(userCodLinea)){ // Metro
-		id.append($('<i>').addClass('fas fa-circle').css("color", colores.metro));
+		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.metro));
 	}else if(/^C-[1-2]$/.test(userCodLinea)){ // Cercanías
-		id.append($('<i>').addClass('fas fa-circle').css("color", colores.renfeA));
+		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.renfeA));
 	}else if(/^12$|^16$|^26$|^64$|^[A-Z]/.test(userCodLinea)){ // Servicios Especiales
-		id.append($('<i>').addClass('fas fa-circle').css("color", colores.especial));
+		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.especial));
 		esNegro = true;
 	}else{ // Líneas Urbanas EMT
-		id.append($('<i>').addClass('fas fa-circle').css("color", colores.emtA));
+		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.emtA));
 	}
 
 	let texto = userCodLinea.replace(/^M-/, "M\n").replace(/^R-/, "R").replace(/^T-/, "T").replace(/^METRO-/, "").replace(/^C-/, "C");
@@ -944,50 +947,50 @@ function paradaIconContent(codPar){
 }
 
 function togglePanelEmt(){
-	if(showEMT){
+	if(rutpam.ui.show.emt){
 		$("#tablaLineasEMT").css("display", "none");
 		$("#verEMT").css("color", "black").css("background-color", "white");
-		showEMT = false;
+		rutpam.ui.show.emt = false;
 	}else{
 		$("#tablaLineasEMT").css("display", "block");
-		$("#verEMT").css("color", "white").css("background-color", colores.emtA);
-		showEMT = true;
+		$("#verEMT").css("color", "white").css("background-color", rutpam.colores.emtA);
+		rutpam.ui.show.emt = true;
 	}
 }
 
 function togglePanelCtan(){
-	if(showCTAN){
+	if(rutpam.ui.show.ctan){
 		$("#tablaLineasCTAN").css("display", "none");
 		$("#verCTAN").css("color", "black").css("background-color", "white");
-		showCTAN = false;
+		rutpam.ui.show.ctan = false;
 	}else{
 		$("#tablaLineasCTAN").css("display", "block");
-		$("#verCTAN").css("color", "white").css("background-color", colores.ctmamA);
-		showCTAN = true;
+		$("#verCTAN").css("color", "white").css("background-color", rutpam.colores.ctmamA);
+		rutpam.ui.show.ctan = true;
 	}
 }
 
 function togglePanelMetro(){
-	if(showMetro){
+	if(rutpam.ui.show.metro){
 		$("#tablaLineasMetro").css("display", "none");
 		$("#verMetro").css("color", "black").css("background-color", "white");
-		showMetro = false;
+		rutpam.ui.show.metro = false;
 	}else{
 		$("#tablaLineasMetro").css("display", "block");
-		$("#verMetro").css("color", "white").css("background-color", colores.metro);
-		showMetro = true;
+		$("#verMetro").css("color", "white").css("background-color", rutpam.colores.metro);
+		rutpam.ui.show.metro = true;
 	}
 }
 
 function togglePanelRenfe(){
-	if(showRenfe){
+	if(rutpam.ui.show.renfe){
 		$("#tablaLineasRenfe").css("display", "none");
 		$("#verRenfe").css("color", "black").css("background-color", "white");
-		showRenfe = false;
+		rutpam.ui.show.renfe = false;
 	}else{
 		$("#tablaLineasRenfe").css("display", "block");
-		$("#verRenfe").css("color", "white").css("background-color", colores.renfeA);
-		showRenfe = true;
+		$("#verRenfe").css("color", "white").css("background-color", rutpam.colores.renfeA);
+		rutpam.ui.show.renfe = true;
 	}
 }
 
@@ -1073,7 +1076,7 @@ function ControlRUTPAM(mapDiv){
 }
 
 function verCopyright(){
-	var rutpam_credits = 'R.U.T.P.A.M. v'+rutpam_version+'<br>\n\
+	let rutpam_credits = 'R.U.T.P.A.M. v'+rutpam.version+'<br>\n\
 	Licencia MIT © Néstor M. Lora - 2018/2019<br>\n\
 	<a href="mailto:nestorlora@geeklab.es">nestorlora@geeklab.es</a><br><br>\n\
 	Datos cartográficos: <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i><i class="fab fa-creative-commons-sa"></i> Colaboradores de <a href="https://openstreetmap.org">OpenStreetMap</a><br>\n\
@@ -1119,26 +1122,26 @@ function verAyuda(){
 	<p>Cada línea de autobús muestra un color en el disco con su código</p>\n\
 	<h5>Líneas Urbanas</h5>\n\
 	<p>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.emtA+'"></i></span> Líneas convencionales<br>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.emtC+'"></i></span> Líneas circulares EMT<br>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.emtN+'"></i></span> Líneas nocturnas<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.emtA+'"></i></span> Líneas convencionales<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.emtC+'"></i></span> Líneas circulares EMT<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.emtN+'"></i></span> Líneas nocturnas<br>\n\
 	</p>\n\
 	<h5>Líneas Interurbanas</h5>\n\
 	<p>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.ctmamA+'"></i></span> Líneas convencionales<br>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.ctmamN+'"></i></span> Líneas búho<br>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.ctmamT+'"></i></span> Líneas estacionales<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.ctmamA+'"></i></span> Líneas convencionales<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.ctmamN+'"></i></span> Líneas búho<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.ctmamT+'"></i></span> Líneas estacionales<br>\n\
 	</p>\n\
 	<h5>Líneas Especiales</h5>\n\
 	<p>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.especial+'"></i></span> Líneas especiales/Servicios especiales<br>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.express+'"></i></span> Líneas express<br>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.lanzaderas+'"></i></span> Líneas lanzadera<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.especial+'"></i></span> Líneas especiales/Servicios especiales<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.express+'"></i></span> Líneas express<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.lanzaderas+'"></i></span> Líneas lanzadera<br>\n\
 	</p>\n\
 	<h5>Líneas de Metro/Ferrocarril</h5>\n\
 	<p>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.renfeA+'"></i></span> Renfe  Cercanías/Regional/Media Distancia<br>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+colores.metro+'"></i></span> Metro Málaga<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.renfeA+'"></i></span> Renfe  Cercanías/Regional/Media Distancia<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.metro+'"></i></span> Metro Málaga<br>\n\
 	</p>\n\
 	<h4>Información de líneas</h4>\n\
 	<p>Las paradas pertenecen o bien a la EMT o bien al consorcio por lo que aparecen como EMT-XXXX o CTAN-XXXX y EXXXX o CXXXX en las versiones cortas</p>\n\
@@ -1192,7 +1195,7 @@ function getLineasEmt(){
 		if(status === "success"){
 			for(let i = 0; i<response.length; i++){
 				addLineaEmt(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
-				lineasCargadas++;
+				rutpam.lineasCargadas++;
 			}
 			motor(); // Llamamos la primera vez al motor
 			start(); // Programamos que se ejecute periódicamente
@@ -1225,7 +1228,7 @@ function getTrazadosEmt(idLinea){
 				trazado.push({lat: response[a].latitud, lng: response[a].longitud});  // Rellenamos con los datos de la respuesta
 			}
 			lineas[posLinea].trazadoIda = L.polyline(trazado, {
-				color: colores.emtA, // Fijamos el color de la ida
+				color: rutpam.colores.emtA, // Fijamos el color de la ida
 				opacity: 1.0, // Opacidad
 				weight: 3 // Grosor
 			});
@@ -1253,7 +1256,7 @@ function getTrazadosEmt(idLinea){
 				trazado.push({lat: response[a].latitud, lng: response[a].longitud}); // Rellenamos con los datos de la respuesta
 			}
 			lineas[posLinea].trazadoVta = L.polyline(trazado, {
-				color: colores.emtB, // Fijamos el color de la vuelta
+				color: rutpam.colores.emtB, // Fijamos el color de la vuelta
 				opacity: 1.0, // Opacidad
 				weight: 3 // Grosor
 			});
@@ -1343,13 +1346,13 @@ function addBusEmt(Bus){
 		codParIni: Bus.codParIni,
 		latitud: Bus.latitud,
 		longitud: Bus.longitud,
-		ttl: ttl_new
+		ttl: rutpam.ttl.new
 	};
 	let pos = autobuses.push(data)-1;
 	autobuses[pos].marker.bindPopup(autobuses[pos].popup);
 	let poslinea = findLinea(Bus.idLinea);
 	if(lineas[poslinea].getBuses){
-		autobuses[pos].marker.addTo(map);
+		autobuses[pos].marker.addTo(rutpam.map);
 	}
 	lineas[poslinea].numBuses++;
 }
@@ -1366,10 +1369,10 @@ function updateBusEmt(Bus, pos){
 	autobuses[pos].longitud = Bus.longitud;
 	autobuses[pos].popup.setContent(busPopupContent(Bus));
 	if(lineas[findLinea(Bus.idLinea)].getBuses){
-		autobuses[pos].marker.addTo(map);
+		autobuses[pos].marker.addTo(rutpam.map);
 	}
-	if(autobuses[pos].ttl < default_ttl){
-		autobuses[pos].ttl = default_ttl;
+	if(autobuses[pos].ttl < rutpam.ttl.default){
+		autobuses[pos].ttl = rutpam.ttl.default;
 		autobuses[pos].marker.setIcon(busIconContent(autobuses[pos], 0));
 	}
 }
@@ -1587,7 +1590,7 @@ function getLineaCompletaCtan(ctanId){
 	}).done(function (response, status){
 		if(status === "success"){
 			updateLineaCtan(response); // Pasamos la línea por addLinea()
-			lineasCargadas++;
+			rutpam.lineasCargadas++;
 		}
 	}).fail(function (response, status, error){
 		if(error === "Bad Request"){ //Si el servidor no ha atendido la petición, se vuelve a hacer con recursividad
@@ -1683,13 +1686,13 @@ function updateLineaCtan(lin){
 	let color;
 	switch(lin.modo){
 		case "Autobús":
-			color = colores.ctmamA;
+			color = rutpam.colores.ctmamA;
 			break;
 		case "Metro":
-			color = colores.metro;
+			color = rutpam.colores.metro;
 			break;
 		case "Tren":
-			color = colores.renfeA;
+			color = rutpam.colores.renfeA;
 			break;
 	}
 	lineas[posLinea].trazadoIda = L.polyline(trazadoIda, {
@@ -1708,7 +1711,7 @@ function updateLineaCtan(lin){
 	});
 	if(trazadoVta.length !== 0){
 		lineas[posLinea].trazadoVta = L.polyline(trazadoVta, {
-			color: colores.ctmamB, // Fijamos el color de la vuelta (solo los buses tienen vuelta)
+			color: rutpam.colores.ctmamB, // Fijamos el color de la vuelta (solo los buses tienen vuelta)
 			opacity: 1.0, // Opacidad
 			weight: 3 // Grosor
 		});
