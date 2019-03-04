@@ -827,8 +827,8 @@ function lineaIcon(userCodLinea, zoom, idLinea){
  * @returns {String}
  */
 function busPopupContent(Bus){
-	var linea = lineas[findLinea(Bus.idLinea)];
-	var sentido;
+	let linea = lineas[findLinea(Bus.idLinea)];
+	let sentido;
 	switch(Bus.sentido){
 		case 1: // Ida
 			sentido = linea.cabeceraVta;
@@ -839,7 +839,7 @@ function busPopupContent(Bus){
 		default:
 			sentido = "¿? Desconocido ("+Bus.sentido+") ¿?";
 	}
-	var parada = paradas[findParada(Bus.codParIni)];
+	let parada = paradas[findParada(Bus.codParIni)];
 	if(parada !== undefined){
 		parada = "Ult. Par. Realizada: <b>"+Bus.codParIni+"<br>"+parada.nombreParada+"</b>";
 	}else{
@@ -852,17 +852,17 @@ function busPopupContent(Bus){
 }
 
 function paradaPopupContent(id){
-	var div = $("<div>");
-	var parada = paradas[findParada(id)];
+	let div = $("<div>");
+	let parada = paradas[findParada(id)];
 	$(div).append($("<h3>", {text: "Parada "+parada.codPar}).css("text-align", "center"));
 	$(div).append($("<h4>", {text: parada.nombreParada}).css("text-align", "center"));
-	var tabla = $("<table>");
+	let tabla = $("<table>");
 	/*var cabecera = $("<tr>");
 	$(cabecera).append($("<th>", {text: "Servicios"}).prop("colspan", /*3 2));
 	$(tabla).append(cabecera);*/
-	for(var a = 0; a < parada.servicios.length; a++){
-		var linea = lineas[findLinea(parada.servicios[a].idLinea)];
-		var sentido;
+	for(let a = 0; a < parada.servicios.length; a++){
+		let linea = lineas[findLinea(parada.servicios[a].idLinea)];
+		let sentido;
 		switch (parada.servicios[a].sentido){
 			case 1:
 				sentido = linea.cabeceraVta;
@@ -874,7 +874,7 @@ function paradaPopupContent(id){
 				sentido = "-";
 				break;
 		}
-		var fila = $("<tr>");
+		let fila = $("<tr>");
 		$(fila).append($("<td>", {html: lineaIcon(linea.userCodLinea, "2x", linea.idLinea)}));
 		$(fila).append($("<td>", {text: sentido}));
 		//fila.append($("<td>", {text: "??? min."}).css("text-align", "right"));
@@ -885,9 +885,9 @@ function paradaPopupContent(id){
 }
 
 function busIconContent(Bus, estado){
-	var linea = lineas[findLinea(Bus.idLinea)];
-	var html = linea.userCodLinea+"<br>"+Bus.codBus;
-	var clase;
+	let linea = lineas[findLinea(Bus.idLinea)];
+	let html = linea.userCodLinea+"<br>"+Bus.codBus;
+	let clase;
 	switch (Bus.sentido){
 		case 1:
 			clase = 'marker ida';
@@ -997,73 +997,73 @@ function togglePanelRenfe(){
  * @returns {DOM_Element}
  */
 function ControlRUTPAM(mapDiv){
-	var titulo = $("<h2>", {"text":"RUTPAM"});
-	var descripcion = $("<p>", {"text":"Información de transportes metropolitanos del área de Málaga"});
-	var loader = $("<p>", {"id": "loader", "text": "Todavía cargando datos..."}).css("color", "white").css("background-color", "red");
+	let titulo = $("<h2>", {"text":"RUTPAM"});
+	let descripcion = $("<p>", {"text":"Información de transportes metropolitanos del área de Málaga"});
+	let loader = $("<p>", {"id": "loader", "text": "Todavía cargando datos..."}).css("color", "white").css("background-color", "red");
 	$(mapDiv).append(titulo).append(descripcion).append(loader);
-	var botonEMT = $("<button>", {
+	let botonEMT = $("<button>", {
 		"id": "verEMT",
 		"type": "button",
 		"class": "boton",
 		"text": "Red EMT"
 	}).on("click", togglePanelEmt);
-	var botonCTAN = $("<button>", {
+	let botonCTAN = $("<button>", {
 		"id": "verCTAN",
 		"type": "button",
 		"class": "boton",
 		"text": "Red CTMAM"
 	}).on("click", togglePanelCtan);
-	var botonRenfe = $("<button>", {
+	let botonRenfe = $("<button>", {
 		"id": "verRenfe",
 		"type": "button",
 		"class": "boton",
 		"text": "RENFE"
 	}).on("click", togglePanelRenfe);
-	var botonMetro = $("<button>", {
+	let botonMetro = $("<button>", {
 		"id": "verMetro",
 		"type": "button",
 		"class": "boton",
 		"text": "Red Metro"
 	}).on("click", togglePanelMetro);
-	var play = $("<button>", {
+	let play = $("<button>", {
 		"id": "play",
 		"type": "button",
 		"class": "boton",
 		"text": "Play"
 	}).on("click", start).css("display", "none");
-	var refresh = $("<button>", {
+	let refresh = $("<button>", {
 		"id": "refresh",
 		"type": "button",
 		"class": "boton",
 		"text": "Refrescar"
 	}).on("click", motor).css("display", "none");
-	var pause = $("<button>", {
+	let pause = $("<button>", {
 		"id": "pause",
 		"type": "button",
 		"class": "boton",
 		"text": "Pausa"
 	}).on("click", stop).css("display", "none");
-	var controles = $("<p>", {id: "controles"}).append(botonEMT).append(botonCTAN).append(botonMetro).append(botonRenfe).append($("<br>")).append(play).append(refresh).append(pause);
+	let controles = $("<p>", {id: "controles"}).append(botonEMT).append(botonCTAN).append(botonMetro).append(botonRenfe).append($("<br>")).append(play).append(refresh).append(pause);
 	$(mapDiv).append(controles);
 	/*var tiempoDatos = $("<p>", {id: "tiempoDatos", text: "Datos actualizados: "});
 	$(mapDiv).append(tiempoDatos);*/
-	var tablaEmt = $("<table>", {"id": "tablaLineasEMT"}).css("display", "none");
-	var encabezadoEmt = $("<tr>");
+	let tablaEmt = $("<table>", {"id": "tablaLineasEMT"}).css("display", "none");
+	let encabezadoEmt = $("<tr>");
 	$(encabezadoEmt).html('<th>Ida</th><th>Vta</th><th>Bus</th><th colspan="2">Línea</th><th>NºB.</th>');
 	$(tablaEmt).append(encabezadoEmt);
 	$(mapDiv).append(tablaEmt);
-	var tablaCtan = $("<table>", {"id": "tablaLineasCTAN"}).css("display", "none");
-	var encabezadoCtan = $("<tr>");
+	let tablaCtan = $("<table>", {"id": "tablaLineasCTAN"}).css("display", "none");
+	let encabezadoCtan = $("<tr>");
 	$(encabezadoCtan).html('<th>Ida</th><th>Vta</th><th colspan="2">Línea</th>');
 	$(tablaCtan).append(encabezadoCtan);
 	$(mapDiv).append(tablaCtan);
-	var tablaMetro = $("<table>", {"id": "tablaLineasMetro"}).css("display", "none");
-	var encabezadoMetro = $("<tr>");
+	let tablaMetro = $("<table>", {"id": "tablaLineasMetro"}).css("display", "none");
+	let encabezadoMetro = $("<tr>");
 	$(encabezadoMetro).html('<th></th><th colspan="2">Línea</th>');
 	$(tablaMetro).append(encabezadoMetro);
 	$(mapDiv).append(tablaMetro);
-	var tablaRenfe = $("<table>", {"id": "tablaLineasRenfe"}).css("display", "none");
-	var encabezadoRenfe = $("<tr>");
+	let tablaRenfe = $("<table>", {"id": "tablaLineasRenfe"}).css("display", "none");
+	let encabezadoRenfe = $("<tr>");
 	$(encabezadoRenfe).html('<th></th><th colspan="2">Línea</th>');
 	$(tablaRenfe).append(encabezadoRenfe);
 	$(mapDiv).append(tablaRenfe);
