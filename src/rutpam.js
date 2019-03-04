@@ -49,8 +49,8 @@ class Rutpam {
             ctmamB: "#11B237", // sentido vuelta
             ctmamN: "#006983", // lineas buho
             ctmamT: "#E4D77E", // Oficial Secundario, líneas estacionales
-            /*ctmamU: "#E4D77E", // líneas universitarias
-            ctmamV: "#71A9F7", // líneas de verano*/
+            //ctmamU: "#E4D77E", // líneas universitarias
+            //ctmamV: "#71A9F7", // líneas de verano
             // Renfe Operadora
             renfeA: "#8A0072", // Oficial general
             renfeB: "#EF3340", // Oficial cercanías
