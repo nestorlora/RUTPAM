@@ -627,14 +627,14 @@ function hideTrazado(idLinea, sentido){
 }
 
 function showParada(codParada){
-	parada = paradas[findParada(codParada)];
+	let parada = paradas[findParada(codParada)];
 	if(parada.viewCont++ === 0){ // SI nadie ha puesto antes el marcador (y lo incrementamos)
 		parada.marker.addTo(map); // Añadimos el marcador al mapa
 	}
 }
 
 function hideParada(codParada){
-	parada = paradas[findParada(codParada)];
+	let parada = paradas[findParada(codParada)];
 	if(--parada.viewCont === 0){ // (Reducimos contador) | SI nadie ha puesto antes el marcador... lo quitamos
 		parada.marker.remove(); // Quitamos el marcador del mapa
 	}
