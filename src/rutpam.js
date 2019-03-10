@@ -102,7 +102,6 @@ class Zona {
 }
 
 class Linea {
-    
     constructor (){
         this.id = undefined;
         this.userCod = undefined;
@@ -169,6 +168,11 @@ class Servicios {
     }
 }
 
+/**
+ * @name Listado
+ * @classdesc Listado de elementos con ID
+ * @class
+ */
 class Listado extends Array {
     /**
      * @description Devuelve el primer elemento del listado cuyo campo id sea igual al proporcionado
