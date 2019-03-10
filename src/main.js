@@ -1061,7 +1061,7 @@ function getLineasEmt(){
 	//$("#getLineas").remove(); // Eliminamos el botón para pedir las líneas
 	// Petición AJAX
 	$.getJSON({
-		url: emt_proxy_url+'/services/lineas/'
+		url: rutpam.url.emt+'/services/lineas/'
 	}).done(function (response, status){
 		if(status === "success"){
 			for(let i = 0; i<response.length; i++){
@@ -1090,7 +1090,7 @@ function getTrazadosEmt(idLinea){
 	$("#botonVta"+idLinea).prop("indeterminate", false).prop("disabled", true).off('click');
 	// Llamada AJAX Ida
 	$.getJSON({
-		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea(idLinea)+'&sentido=1'
+		url: rutpam.url.emt+'/services/trazados/?codLinea='+codLinea(idLinea)+'&sentido=1'
 	}).done(function (response, status){
 		if(status === "success" && response.length > 0){
 			let posLinea = findLinea(idLinea); // Almacenamos la posición en lineas[] para uso más cómodo
@@ -1118,7 +1118,7 @@ function getTrazadosEmt(idLinea){
 	});
 	// Llamada AJAX Vuelta
 	$.getJSON({
-		url: emt_proxy_url+'/services/trazados/?codLinea='+codLinea(idLinea)+'&sentido=2'
+		url: rutpam.url.emt+'/services/trazados/?codLinea='+codLinea(idLinea)+'&sentido=2'
 	}).done(function (response, status){
 		if(status === "success" && response.length > 0){
 			let posLinea = findLinea(idLinea); // Almacenamos la posición en lineas[] para uso más cómodo
@@ -1175,7 +1175,7 @@ function getUbicacionesEmt(idLinea){
 function getBusesEmt(){
 	$.getJSON({
 		//url: betteremt_api_url+'/buses/all'
-		url: odm_api_url+'datastore_search_sql?sql=SELECT * from "9bc05288-1c11-4eec-8792-d74b679c8fcf" WHERE last_update=(SELECT MAX(last_update) from "9bc05288-1c11-4eec-8792-d74b679c8fcf")'
+		url: rutpam.url.odm+'datastore_search_sql?sql=SELECT * from "9bc05288-1c11-4eec-8792-d74b679c8fcf" WHERE last_update=(SELECT MAX(last_update) from "9bc05288-1c11-4eec-8792-d74b679c8fcf")'
 	}).done(function (response, status){
 		if(status === "success"){
 			/* Limpieza Open Data Málaga */
@@ -1403,7 +1403,7 @@ function codLinea(idLinea){
 function getModos(){
 	// Petición AJAX
 	$.getJSON({
-		url: ctan_api_url+'/modostransporte?lang=ES'
+		url: rutpam.url.ctan+'/modostransporte?lang=ES'
 	}).done(function (response, status){
 		if(status === "success"){
             response = response.modosTransporte;
@@ -1422,7 +1422,7 @@ function getModos(){
 function getZonas(){
     // Petición AJAX
 	$.getJSON({
-		url: ctan_api_url+'/zonas?lang=ES'
+		url: rutpam.url.ctan+'/zonas?lang=ES'
 	}).done(function (response, status){
 		if(status === "success"){
             response = response.zonas;
@@ -1441,7 +1441,7 @@ function getZonas(){
 function getLineasCtan(){
     // Petición AJAX
 	$.getJSON({
-		url: ctan_api_url+'/lineas?lang=ES'
+		url: rutpam.url.ctan+'/lineas?lang=ES'
 	}).done(function (response, status){
 		if(status === "success"){
 			response = response.lineas;
@@ -1457,7 +1457,7 @@ function getLineasCtan(){
 function getLineaCompletaCtan(ctanId){
 	// Petición AJAX
 	$.getJSON({
-		url: ctan_api_url+'/lineas/'+ctanId+'?lang=ES'
+		url: rutpam.url.ctan+'/lineas/'+ctanId+'?lang=ES'
 	}).done(function (response, status){
 		if(status === "success"){
 			updateLineaCtan(response); // Pasamos la línea por addLinea()
@@ -1601,7 +1601,7 @@ function updateLineaCtan(lin){
 function getParadasLineaCtan(id){
     // Petición AJAX
 	$.getJSON({
-		url: ctan_api_url+'/lineas/'+idLinea(id)+'/paradas?lang=ES'
+		url: rutpam.url.ctan+'/lineas/'+idLinea(id)+'/paradas?lang=ES'
 	}).done(function (response, status){
 		if(status === "success"){
 			let linea = lineas[findLinea(id)];
