@@ -1415,7 +1415,6 @@ function getModos(){
 			}
 		}
 	});
-    return null;
 }
 
 function getZonas(){
