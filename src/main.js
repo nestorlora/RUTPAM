@@ -25,8 +25,6 @@
 
 /* Este script necesia los archivos ctan.js y emt.js para poder funcionar correctamente */
 'use strict';
-/* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url, showEMT, showCTAN */
-import {Rutpam} from './rutpam.js';
 
 var rutpam = new Rutpam();
 
@@ -38,7 +36,7 @@ var rutpam = new Rutpam();
  * @param {Int} idModo Identificador del modo
  * @param {String} descripcion Descripción del modo
  */
-var modos = [];
+var modos = new Listado();
 
 /**
  * @description Tabla de zonas del CTAN
@@ -192,14 +190,14 @@ function motor(){
 	getBusesEmt(); // Pedimos toda la información actualizada de los buses
 	let pos = 0; // Empezamos por el principio
 	while(pos < autobuses.length){ // Para todos los autobuses
-		let poslinea = findLinea(autobuses[pos].idLinea); // Extraemos la dirección de la línea en el array
+		let poslinea = findLinea(autobuses[pos].linea); // Extraemos la dirección de la línea en el array
 		autobuses[pos].ttl--; // Decrementar TTL
 		if(autobuses[pos].ttl <= 0){ // SI su vida útil ha expirado
-			console.log("DROP "+autobuses[pos].codBus); // Registramos que se pierde
+			console.log("DROP "+autobuses[pos].id); // Registramos que se pierde
 			autobuses[pos].marker.remove(); // Quitamos el marcador del mapa
-			lineas[poslinea].numBuses--; // Decrementamos el número de buses en la línea
+			lineas[poslinea].numVehiculos--; // Decrementamos el número de buses en la línea
 			autobuses.splice(pos, 1); // Borramos el objeto del array
-		}else if(lineas[poslinea].getBuses === false){ // O SI no estamos haciendo un seguimiento de esa línea
+		}else if(lineas[poslinea].estado.getBuses === false){ // O SI no estamos haciendo un seguimiento de esa línea
 			autobuses[pos].marker.remove(); // Quitamos el marcador del mapa
 			pos++; // Avanzamos de posición
 		}else if(autobuses[pos].ttl <= rutpam.ttl.old){ // O SI el TTL es bajo y el bus lleva rato sin refrescarse
@@ -210,7 +208,7 @@ function motor(){
 		}
 	}
 	for(let a = 0; a < lineas.length; a++){ // Para todas las líneas
-		$("#cont"+lineas[a].idLinea).text(lineas[a].numBuses); // Actualizamos el indicador de buses en servicio
+		$("#cont"+lineas[a].id).text(lineas[a].numVehiculos); // Actualizamos el indicador de buses en servicio
 	}
 	return null;
 }
@@ -245,10 +243,8 @@ function inicializarParadas(){
 	}else{
 		$("#loader").remove();
 		for(let a = 0; a < paradas.length; a++){
-			paradas[a].marker = L.marker({lat: paradas[a].latitud, lng: paradas[a].longitud}, {
-				icon: paradaIconContent(paradas[a].codPar)
-			});
-			paradas[a].popup = L.popup({autoPan: false, autoClose: false}).setContent(paradaPopupContent(paradas[a].codPar));
+			paradas[a].marker = L.marker(paradas[a].posicion, {icon: paradaIconContent(paradas[a].codPar)});
+			paradas[a].popup = L.popup({autoPan: false, autoClose: false}).setContent(paradaPopupContent(paradas[a].id));
 			paradas[a].marker.bindPopup(paradas[a].popup);
 		}
 		rutpam.paradasInicializadas = true;
@@ -262,8 +258,8 @@ function verInfoLinea(id){
 	//
 	// Header
 	//
-	$("#infoContent").append($("<h3>", {text: "Línea "+linea.userCodLinea}).css("text-align", "center")); // Título de la ventana
-	$("#infoContent").append($("<h4>", {text: linea.nombreLinea}).css("text-align", "center")); // Subtítulo (nombre línea)
+	$("#infoContent").append($("<h3>", {text: "Línea "+linea.userCod}).css("text-align", "center")); // Título de la ventana
+	$("#infoContent").append($("<h4>", {text: linea.nombre}).css("text-align", "center")); // Subtítulo (nombre línea)
 	//
 	// Botones
 	//
@@ -277,10 +273,10 @@ function verInfoLinea(id){
 	// Datos de línea
 	//
 	let datosLinea = $("<table>");
-	datosLinea.append($("<tr>").append($("<th>", {text: "Id. interno"})).append($("<td>", {text: linea.idLinea})));
+	datosLinea.append($("<tr>").append($("<th>", {text: "Id. interno"})).append($("<td>", {text: linea.id})));
 	datosLinea.append($("<tr>").append($("<th>", {text: "Operador"})).append($("<td>", {text: linea.operadores})));
-	if(linea.numBuses !== null){
-		datosLinea.append($("<tr>").append($("<th>", {text: "Num. Coches"})).append($("<td>", {text: linea.numBuses})));
+	if(linea.numVehiculos !== null){
+		datosLinea.append($("<tr>").append($("<th>", {text: "Num. Coches"})).append($("<td>", {text: linea.numVehiculos})));
 	}
 	datos.append($("<p>", {class: "inline-block"}).append(datosLinea));
 	//
@@ -288,7 +284,7 @@ function verInfoLinea(id){
 	//
 	let distanciaIda =0, distanciaVuelta = 0, tiempoIda = 0,tiempoVuelta = 0; // Creamos variables para los datos numéricos
 	let datosTrazado = $("<table>"); // Tabla para los datos numéricos del trazado
-	if(linea.getIda){ // SI se ha cargado el trazado de ida
+	if(linea.estado.getIda){ // SI se ha cargado el trazado de ida
 		distanciaIda = Math.floor(distanciaTrazado(linea.trazadoIda)); // Calcular la distancia de la ruta
 		tiempoIda = Math.floor(distanciaIda/1000/13.5*60); // Estimar el tiempo de viaje
 		if(/^EMT-/.test(id)){
@@ -312,7 +308,7 @@ function verInfoLinea(id){
 	//
 	// Datos frecuencia y espaciado de coches
 	//
-	if(linea.numBuses > 0 && linea.getIda){ // SI hay buses en la línea Y se ha cargado su trazado
+	if(linea.numVehiculos > 0 && linea.estado.getIda){ // SI hay buses en la línea Y se ha cargado su trazado
 		let distanciaTotal = distanciaIda + distanciaVuelta; // Calculamos la distancia ida+vuelta
 		let distanciaEntreBuses = distanciaTotal/linea.numBuses; // Calculamos la media de distancia entre buses en servicio
 		let frecuenciaTeorica = distanciaEntreBuses/1000/13.5*60; // Estimamos la frecuencia media teórica
@@ -339,26 +335,26 @@ function generarBotonToggleParadas(idLinea){
 	});
 	$(botonParadas).text("Mostrar/Ocultar paradas");
 	if(rutpam.paradasInicializadas){// SI las paradas estan inicializadas
-		if(lineas[findLinea(idLinea)].verParadas === true){ // SI estamos mostrando las paradas de esta línea
+		if(lineas[findLinea(idLinea)].estado.verParadas === true){ // SI estamos mostrando las paradas de esta línea
 			$(botonParadas).css("background-color", rutpam.colores.especial); // Poner el botón en on
 		}
 		$(botonParadas).on("click", function(){
 			let linea = lineas[findLinea(idLinea)]; // Sacamos la línea para trabajar con ella
-			if(linea.verParadas === true){ // SI estamos mostrando las paradas de esta línea
+			if(linea.estado.verParadas === true){ // SI estamos mostrando las paradas de esta línea
 				for(let a = 0; a < linea.paradasIda.length; a++){ // Ocultar todas las paradas a la ida
-					hideParada(linea.paradasIda[a].codPar);
+					hideParada(linea.paradasIda[a].id);
 				}
 				for(let a = 0; a < linea.paradasVta.length; a++){ // Ocultar todas las paradas a al vuelta
-					hideParada(linea.paradasVta[a].codPar);
+					hideParada(linea.paradasVta[a].id);
 				}
 				$(this).css("background-color", "white"); // Ponemos el botón en off
-				linea.verParadas = false; // Setear que NO se están mostrando las paradas
-			}else if(linea.verParadas === false){ // SI NO estamos mostrando las paradas de esta línea
+				linea.estado.verParadas = false; // Setear que NO se están mostrando las paradas
+			}else if(linea.estado.verParadas === false){ // SI NO estamos mostrando las paradas de esta línea
 				for(let a = 0; a < linea.paradasIda.length; a++){ // Mostrar todas las paradas a la ida
-					showParada(linea.paradasIda[a].codPar);
+					showParada(linea.paradasIda[a].id);
 				}
 				for(let a = 0; a < linea.paradasVta.length; a++){ // Mostrar todas las paradas a la vuelta
-					showParada(linea.paradasVta[a].codPar);
+					showParada(linea.paradasVta[a].id);
 				}
 				$(this).css("background-color", rutpam.colores.especial); // Ponemos el botón en on
 				linea.verParadas = true; // Setear que se están mostrando las paradas
