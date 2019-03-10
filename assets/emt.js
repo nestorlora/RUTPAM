@@ -24,7 +24,7 @@
 
 /* Este archivo forma parte de R.U.T.P.A.M. no funcionará por separado */
 
-/* global emt_proxy_url, betteremt_api_url, odm_api_url, ttl_new, default_ttl, refresh_rate, L, map, lineasCargadas, lineas, paradas, autobuses */
+/* global emt_proxy_url, betteremt_api_url, odm_api_url, ttl_new, default_ttl, refresh_rate, L, map, lineasCargadas, lineas, paradas, autobuses, colores */
 
 /**
  * @description Función que llama a la API para cargar las líneas. Cambia algunos elementos para preparar la interfaz.
@@ -72,7 +72,7 @@ function getTrazadosEmt(idLinea){
 				trazado.push({lat: response[a].latitud, lng: response[a].longitud});  // Rellenamos con los datos de la respuesta
 			}
 			lineas[posLinea].trazadoIda = L.polyline(trazado, {
-				color: '#1E3180', // Fijamos el color de la ida
+				color: colores.emtA, // Fijamos el color de la ida
 				opacity: 1.0, // Opacidad
 				weight: 3 // Grosor
 			});
@@ -100,7 +100,7 @@ function getTrazadosEmt(idLinea){
 				trazado.push({lat: response[a].latitud, lng: response[a].longitud}); // Rellenamos con los datos de la respuesta
 			}
 			lineas[posLinea].trazadoVta = L.polyline(trazado, {
-				color: '#4876FE', // Fijamos el color de la vuelta
+				color: colores.emtB, // Fijamos el color de la vuelta
 				opacity: 1.0, // Opacidad
 				weight: 3 // Grosor
 			});
@@ -165,6 +165,7 @@ function getBusesEmt(){
 			for(var x = 0; x < response.length; x++){
                 pos = findBus(response[x].codBus);
                 response[x].idLinea = "EMT-"+response[x].codLinea;
+				 response[x].codParIni = "EMT-"+response[x].codParIni;
 				if(pos !== null){
 					updateBusEmt(response[x], pos);
 				}else{

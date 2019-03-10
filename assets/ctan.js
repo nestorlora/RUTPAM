@@ -24,7 +24,7 @@
 
 /* Este archivo forma parte de R.U.T.P.A.M. no funcionará por separado */
 
-/* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url, lineas, modos, zonas, paradas, lineasCargadas  */
+/* global emt_proxy_url, ctan_api_url, ttl_rate_new, refresh_rate, ttl_rate_default, ttl_rate_old, L, betteremt_api_url, lineas, modos, zonas, paradas, lineasCargadas, colores  */
 
 function getModos(){
 	// Petición AJAX
@@ -133,20 +133,29 @@ function addLineaCtan(lin){
 		"id": "botonVta"+linea.idLinea,
 		"checked": true
     }).prop('checked', false).prop("indeterminate", true).prop("disabled", true);
-   	//$(fila).append($("<td>").append(botonIda));
-	//$(fila).append($("<td>").append(botonVta));
+   	$(fila).append($("<td>").append(botonIda));
+	if(linea.modo !== "Tren" && linea.modo !== "Metro"){
+		$(fila).append($("<td>").append(botonVta));
+	}
 	$(fila).append($("<td>").append(lineaIcon(linea.userCodLinea, "3x")));
 	$(fila).append($("<td>").append($("<a>", {text: linea.nombreLinea, href: "#!"}).click(function(){verInfoLinea(linea.idLinea);})));
 
     switch(linea.modo){
         case "Autobús":
-        $("#tablaLineasCTAN").append(fila);
-        break;
+			$("#tablaLineasCTAN").append(fila);
+			break;
+		case "Metro":
+			$("#tablaLineasMetro").append(fila);
+			break;
+		case "Tren":
+			$("#tablaLineasRenfe").append(fila);
+			break;
     }
 }
 
 function updateLineaCtan(lin){
 	posLinea = findLinea("CTAN-"+lin.idLinea);
+	var idLinea = lineas[posLinea].idLinea;
 	lineas[posLinea].tieneIda = lin.tieneIda===1?true:false;
 	lineas[posLinea].tieneVuelta = lin.tieneVuelta===1?true:false;
 	if(lin.tieneVuelta){
@@ -155,6 +164,63 @@ function updateLineaCtan(lin){
 	}else{
 		lineas[posLinea].cabeceraIda = /*paradas[findParada(lineas[posLinea].paradasIda[0].codPar)].nombreParada*/"Ida";
 		lineas[posLinea].cabeceraVta = "Ida";
+	}
+	// Polilíneas de trazado
+	var trazadoIda = []; // Creamos un array con los puntos de latitud y longitud del polígono
+	var trazadoVta = []; // Creamos un array con los puntos de latitud y longitud del polígono
+	for(var a = 0; a < lin.polilinea.length; a++){
+		var lat, lon, sentido;
+		var punto = lin.polilinea[a][0].split(","); // Parseamos el string con la información del punto
+		lat = punto[0];
+		lon = punto[1];
+		sentido = punto[2];
+		if(sentido === "1" || sentido === undefined){
+			trazadoIda.push({lat: lat, lng: lon});  // Rellenamos con los datos de la respuesta
+		}else if(sentido === "2"){
+			trazadoVta.push({lat: lat, lng: lon});  // Rellenamos con los datos de la respuesta
+		}
+	}
+	var color;
+	switch(lin.modo){
+		case "Autobús":
+			color = colores.ctmamA;
+			break;
+		case "Metro":
+			color = colores.metro;
+			break;
+		case "Tren":
+			color = colores.renfeA;
+			break;
+	}
+	lineas[posLinea].trazadoIda = L.polyline(trazadoIda, {
+		color: color, // Fijamos el color de la ida
+		opacity: 1.0, // Opacidad
+		weight: 3 // Grosor
+	});
+	$("#botonIda"+idLinea).prop("indeterminate", false).prop("disabled", false); // Cambiamos el estado del botón a habilitado
+	$("#botonIda"+idLinea).change(function(){
+		var isChecked = $(this).is(':checked');
+		if(isChecked){
+			showTrazado(idLinea, 1); // Mostramos el trazado
+		}else{
+			hideTrazado(idLinea, 1); // Ocultamos el trazado
+		}
+	});
+	if(trazadoVta.length !== 0){
+		lineas[posLinea].trazadoVta = L.polyline(trazadoVta, {
+			color: colores.ctmamB, // Fijamos el color de la vuelta (solo los buses tienen vuelta)
+			opacity: 1.0, // Opacidad
+			weight: 3 // Grosor
+		});
+		$("#botonVta"+idLinea).prop("indeterminate", false).prop("disabled", false); // Cambiamos el estado del botón a habilitado
+		$("#botonVta"+idLinea).change(function(){
+			var isChecked = $(this).is(':checked');
+			if(isChecked){
+				showTrazado(idLinea, 2); // Mostramos el trazado
+			}else{
+				hideTrazado(idLinea, 2); // Ocultamos el trazado
+			}
+		});
 	}
 }
 
@@ -177,17 +243,23 @@ function getParadasLineaCtan(id){
 				}else if(response[i].idParada !== cabeceraIda && response[i].idParada !== cabeceraVta){
 					addParadaCtan(response[i], id); // Pasamos por addLinea() el resto de líneas menos la ultima parada si coincide con la cabecera
 				}
-                if(response[i].sentido == 1){
+                if(Number(response[i].sentido) === 1){
                     linea.paradasIda.push({
                         codPar: "CTAN-"+response[i].idParada,
                         orden: response[i].orden
 					});
-                }else if(response[i].sentido == 2){
+                }else if(Number(response[i].sentido) === 2){
                     linea.paradasVta.push({
                         codPar: "CTAN-"+response[i].idParada,
                         orden: response[i].orden
 					});
                 }
+			}
+			if(linea.paradasIda.length !== 0){
+				linea.getIda = true;
+			}
+			if(linea.paradasVta.length !== 0){
+				linea.getVta = true;
 			}
 		}
 	}).fail(function (response, status, error){

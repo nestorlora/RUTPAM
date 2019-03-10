@@ -26,15 +26,21 @@ THE SOFTWARE.
     Author     : Nestor Manuel Lora Romero <nestorlora@geeklab.es>
 */
 
-html, body {
+html, body{
 	height: 100%;
 	margin: 0;
 	padding: 0;
 	font-family: 'Rubik', 'Roboto', sans-serif;
 }
+button{
+	font-family: 'Rubik', 'Roboto', sans-serif;
+}
 table{
 	font-size: 12px;
 	border-collapse: collapse;
+}
+.inline-block{
+	display: inline-block;
 }
 p{
 	font-size: 14px;
@@ -75,11 +81,15 @@ span .fa-layers-text{
 .panelInfo {
 	position: absolute;
 	left: 1%;
+	max-width: 50%;
 	z-index: 2200;
 	display:none;
 }
-.panelInfo table, .panelInfo th, .panelInfo td{
+.panelInfo th, .panelInfo td{
 	border: 1px solid #bbb;
+}
+.panelInfo table{
+	display: inline;
 }
 .boton{
 	background-color: white;
@@ -97,10 +107,11 @@ input[type=checkbox]{
 	transform: scale(1.5);
 }
 .marker{
+	font-size: 12px;
 	text-align: center;
 	border-width: 5px;
 	border-color: black;
-	border-radius: 15%;
+	border-radius: 20%;
 }
 .paradaE{
 	background-color: #00A1DE;
