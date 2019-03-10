@@ -29,23 +29,16 @@
 var rutpam = new Rutpam();
 
 /**
- * @description Tabla de modos de transporte (medios de transporte)
+ * @description Lista de modos de transporte (medios de transporte)
  * @global
  * @var
- * @type Array
- * @param {Int} idModo Identificador del modo
- * @param {String} descripcion Descripción del modo
  */
 var modos = new Listado();
 
 /**
- * @description Tabla de zonas del CTAN
+ * @description Lista de zonas del CTAN
  * @global
  * @var
- * @type Array
- * @param {String} idZona Identificador de la zona
- * @param {String} nombre Nombre de la zona
- * @param {String} color Color de la zona
  */
 var zonas = new Listado();
 
