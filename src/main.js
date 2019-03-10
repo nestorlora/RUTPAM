@@ -47,7 +47,7 @@ var modos = new Listado();
  * @param {String} nombre Nombre de la zona
  * @param {String} color Color de la zona
  */
-var zonas = [];
+var zonas = new Listado();
 
 /**
  * @description Tabla de líneas cargadas
@@ -1425,11 +1425,10 @@ function getZonas(){
 		if(status === "success"){
             response = response.zonas;
             for(let i = 0; i<response.length; i++){
-				let zona = {
-                    idZona: response[i].idZona,
-                    nombre: response[i].nombre,
-                    color: response[i].color
-                };
+				let zona = new Zona();
+				zona.id = response[i].idZona;
+				zona.nombre = response[i].nombre;
+				zona.color = response[i].color;
                 zonas.push(zona);
 			}
 		}
