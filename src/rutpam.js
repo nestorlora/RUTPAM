@@ -169,8 +169,14 @@ class Servicios {
     }
 }
 
-class LatLong {
-    // objeto latitud/longitud
+class Listado extends Array {
+    /**
+     * @description Devuelve el primer elemento del listado cuyo campo id sea igual al proporcionado
+     * @param {String} id 
+     */
+    buscar(id){
+        return this.find(obj => obj.id === id);
+    }
 }
 
 export {
