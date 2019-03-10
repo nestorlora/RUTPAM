@@ -1408,10 +1408,9 @@ function getModos(){
 		if(status === "success"){
             response = response.modosTransporte;
             for(let i = 0; i<response.length; i++){
-				let modo = {
-                    idModo: parseInt(response[i].idModo),
-                    descripcion: response[i].descripcion
-                };
+				let modo = new Modo();
+				modo.id = parseInt(response[i].idModo);
+				modo.descripcion = response[i].descripcion;
                 modos.push(modo);
 			}
 		}
