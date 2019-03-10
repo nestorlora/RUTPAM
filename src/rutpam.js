@@ -179,14 +179,9 @@ class Listado extends Array {
     }
 }
 
-export {
-    Rutpam, 
-    Modo, 
-    Zona, 
-    Linea, 
-    Parada, 
-    Vehiculo, 
-    RelacionParadas,
-    Servicios, 
-    LatLong
-};
+class LatLong {
+    constructor(lat, lon){
+        this.lat = lat;
+        this.lng = lon;
+    }
+}
