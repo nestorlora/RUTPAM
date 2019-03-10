@@ -181,6 +181,13 @@ class Listado extends Array {
     buscar(id){
         return this.find(obj => obj.id === id);
     }
+    push(obj){
+        if(obj instanceof Modo||obj instanceof Zona||obj instanceof Linea||obj instanceof Parada||obj instanceof Vehiculo){
+            return super.push(obj);
+        }else{
+            throw obj;
+        }
+    }
 }
 
 class LatLong {
