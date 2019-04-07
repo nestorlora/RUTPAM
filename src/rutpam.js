@@ -115,15 +115,16 @@ class Linea {
         this.trazadoIda = undefined;
         this.trazadoVuelta = undefined;
         this.estado = {
-            getBuses: undefined,
-            getIda: undefined,
-            getVuelta: undefined,
-            verParadas: undefined,
+            getBuses: undefined, // Mostrar los buses en el mapa
+            getIda: undefined, // Trazado de ida obtenido
+            getVuelta: undefined, // Trazado de vuelta obtenido
+            verParadas: undefined, // Mostrar las paradas en el mapa
         };
         this.numVehiculos = undefined;
         this.modo = undefined;
         this.operadores = undefined;
         this.hayNoticia = undefined;
+        //TO DO this.red = undefined; // 0 EMT 1 CTMAM
     }
 };
 
@@ -175,8 +176,11 @@ class Servicios {
  */
 class Listado extends Array {
     /**
+     * @method
+     * @name buscar
      * @description Devuelve el primer elemento del listado cuyo campo id sea igual al proporcionado
-     * @param {String} id 
+     * @param {String} id
+     * @returns {Object} Objeto con el id, si lo hay
      */
     buscar(id){
         return this.find(obj => obj.id === id);
