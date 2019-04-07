@@ -197,6 +197,17 @@ class Listado extends Array {
     }
 }
 
+class ListadoOrdenado extends Array {
+    push(obj){
+        if(obj instanceof RelacionParadas){
+            return super.push(obj);
+        }else{
+            throw obj;
+        }
+    }
+    // TO DO: Sort function
+}
+
 class LatLong {
     constructor(lat, lon){
         this.lat = lat;
