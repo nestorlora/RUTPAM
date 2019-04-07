@@ -158,7 +158,10 @@ class Vehiculo {
 }
 
 class RelacionParadas {
-    // array de {codPar, orden}
+    constructor(id, orden){
+        this.id = id;
+        this.orden = orden;
+    }
 }
 
 class Servicios {
