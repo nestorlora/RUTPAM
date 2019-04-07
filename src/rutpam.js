@@ -104,14 +104,15 @@ class Zona {
 class Linea {
     constructor (){
         this.id = undefined;
-        this.userCod = undefined;
+        this.codigo = undefined;
         this.nombre = undefined;
         this.tieneIda = undefined;
         this.tieneVuelta = undefined;
+        this.esCircular = undefined;
         this.cabeceraIda = undefined;
         this.cabeceraVuelta = undefined;
-        this.paradasIda = new RelacionParadas();
-        this.paradasVuelta = new RelacionParadas();
+        this.paradasIda = new ListadoOrdenado();
+        this.paradasVuelta = new ListadoOrdenado();
         this.trazadoIda = undefined;
         this.trazadoVuelta = undefined;
         this.estado = {
