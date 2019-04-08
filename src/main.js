@@ -617,7 +617,7 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 	}else if(/^91$|^92$/.test(userCodLinea)){ // Servicios Turísticos
 		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.especial));
 		esNegro = true;
-	}else if(/^METRO-[1-2]$/.test(userCodLinea)){ // Metro
+	}else if(/^METRO [1-2]$/.test(userCodLinea)){ // Metro
 		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.metro));
 	}else if(/^C-[1-2]$/.test(userCodLinea)){ // Cercanías
 		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.renfeA));
@@ -628,7 +628,7 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.emtA));
 	}
 
-	let texto = userCodLinea.replace(/^M-/, "M\n").replace(/^R-/, "R").replace(/^T-/, "T").replace(/^METRO-/, "").replace(/^C-/, "C");
+	let texto = userCodLinea.replace(/^M-/, "M\n").replace(/^R-/, "R").replace(/^T-/, "T").replace(/^METRO /, "").replace(/^C-/, "C");
 	let textdiv;
 	if(texto.length < 3){
 		textdiv = $('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-6");
