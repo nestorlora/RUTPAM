@@ -1243,27 +1243,6 @@ function updateBusEmt(Bus, pos){
 }
 
 function addLineaEmt(lin){
-	/*let linea = {
-        idLinea: "EMT-"+lin.codLinea,
-		userCodLinea: lin.userCodLinea.replace(/^F-/, "F"),
-		nombreLinea: lin.nombreLinea.replace(/(\(F\))|(\(?F-[0-9A-Z]{1,2}\)$)/, ""),
-		cabeceraIda: lin.cabeceraIda, 
-		cabeceraVta: lin.cabeceraVuelta,
-		paradasIda: [],
-        paradasVta: [],
-        trazadoIda: null,
-        trazadoVta: null,
-        getBuses: false,
-		getIda: false,
-		getVta: false,
-		verParadas: false,
-        numBuses: 0,
-        modo: "Autobús",
-        hayNoticia: null,
-        operadores: "Empresa Malagueña de Transportes S.A.M.",
-		tieneIda: null,
-		tieneVuelta: null
-	};*/
 	let linea = new Linea();
 	linea.id = "EMT-"+lin.codLinea;
 	linea.codigo = lin.userCodLinea.replace(/^F-/, "F");
@@ -1479,27 +1458,6 @@ function getLineaCompletaCtan(ctanId){
 }
 
 function addLineaCtan(lin){
-    /*let linea = {
-        //idLinea: "CTAN-"+lin.idLinea,
-        //userCodLinea: lin.codigo,
-        //nombreLinea: lin.nombre,
-        cabeceraIda: null,
-        cabeceraVta: null,
-        paradasIda: [],
-        paradasVta: [],
-        trazadoIda: null,
-        trazadoVta: null,
-        getBuses: false,
-        //getIda: false,
-        //getVta: false,
-        //verParadas: false,
-        //numBuses: null,
-        //modo: lin.modo,
-        //hayNoticia: lin.hayNoticia,
-		//operadores: (lin.operadores).replace(/, $/, ""),
-		tieneIda: null,
-		tieneVuelta: null
-	};*/
 	let linea = new Linea();
 	linea.id = "CTAN-"+lin.idLinea;
 	linea.codigo = lin.codigo;
