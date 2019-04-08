@@ -30,6 +30,7 @@ var rutpam = new Rutpam();
 var modos = new Listado();
 var zonas = new Listado();
 var lineas = new Listado();
+var paradas = new Listado();
 
 /**
  * @description Tabla de autobuses en servicio
@@ -46,7 +47,7 @@ var lineas = new Listado();
  */
 var autobuses = [];
 
-/**
+/*
  * @description Tabla de paradas cargadas
  * @type Array
  * @param {Int} codPar Código de la parada
@@ -61,8 +62,8 @@ var autobuses = [];
  * @param {L.marker} marker Objeto del marcador asociado a la parada
  * @param {L.popup} popup Objeto del cuadro de información asociado a la parada
  * @param {Int} viewCont Contador del número de líneas o acciones del usuario están solicitando ver esta parada
- */
-var paradas = [];
+ *
+var paradas = [];*/
 
 /**
  * Función de puesta en marcha cuando finaliza la carga del DOM
@@ -200,8 +201,8 @@ function inicializarParadas(){
 	}else{
 		$("#loader").remove();
 		for(let a = 0; a < paradas.length; a++){
-			paradas[a].marker = L.marker(paradas[a].ubicacion, {icon: paradaIconContent(paradas[a].codPar)});
-			paradas[a].popup = L.popup({autoPan: false, autoClose: false}).setContent(paradaPopupContent(paradas[a].codPar));
+			paradas[a].marker = L.marker(paradas[a].ubicacion, {icon: paradaIconContent(paradas[a].id)});
+			paradas[a].popup = L.popup({autoPan: false, autoClose: false}).setContent(paradaPopupContent(paradas[a].id));
 			paradas[a].marker.bindPopup(paradas[a].popup);
 		}
 		rutpam.paradasInicializadas = true;
@@ -354,12 +355,12 @@ function generarTablaParadas(linea){
 	return tabla;
 }
 
-function generarFilaParada(div, idPar, idLinea){
-	if(idPar !== undefined && idPar !== null){
-		let nombre = paradas[findParada(idPar)].nombreParada;
-		div.append($("<td>").append($("<a>", {text: idPar, href: "#!"}).click(function(){verInfoParada(idPar);})));
+function generarFilaParada(div, idParada, idLinea){
+	if(idParada !== undefined && idParada !== null){
+		let nombre = paradas.buscar(idParada).nombre;
+		div.append($("<td>").append($("<a>", {text: idParada, href: "#!"}).click(function(){verInfoParada(idParada);})));
 		div.append($("<td>", {html: acortarParada(nombre)}));
-		div.append(extrarCorrespondencias($("<td>"),idPar, idLinea));
+		div.append(extrarCorrespondencias($("<td>"),idParada, idLinea));
 	}else{
 		div.append($("<td>")).append($("<td>")).append($("<td>"));
 	}
@@ -367,11 +368,11 @@ function generarFilaParada(div, idPar, idLinea){
 }
 
 function verInfoParada(id){
-	let parada = paradas[findParada(id)];
+	let parada = paradas.buscar(id);
 	$("#ventana").hide();
 	$("#infoContent").empty();
-	$("#infoContent").append($("<h3>", {text: "Parada "+parada.codPar}).css("text-align", "center"));
-	$("#infoContent").append($("<h4>", {text: parada.nombreParada}).css("text-align", "center"));
+	$("#infoContent").append($("<h3>", {text: "Parada "+parada.id}).css("text-align", "center"));
+	$("#infoContent").append($("<h4>", {text: parada.nombre}).css("text-align", "center"));
 	if(parada.direccion !== null){
 		$("#infoContent").append($("<p>", {text: "Dirección: "+parada.direccion}));
 	}
@@ -380,7 +381,7 @@ function verInfoParada(id){
 	cabecera.append($("<th>", {text: "Servicios"}).prop("colspan", /*3*/2));
 	tabla.append(cabecera);
 	for(let a = 0; a < parada.servicios.length; a++){
-		let linea = lineas.buscar(parada.servicios[a].idLinea);
+		let linea = lineas.buscar(parada.servicios[a].linea);
 		let sentido;
 		switch (parada.servicios[a].sentido){
 			case 1:
@@ -451,26 +452,26 @@ function hideTrazado(idLinea, sentido){
 	}
 }
 
-function showParada(codParada){
-	let parada = paradas[findParada(codParada)];
-	if(parada.viewCont++ === 0){ // SI nadie ha puesto antes el marcador (y lo incrementamos)
+function showParada(id){
+	let parada = paradas.buscar(id);
+	if(parada.vistas++ === 0){ // SI nadie ha puesto antes el marcador (y lo incrementamos)
 		parada.marker.addTo(rutpam.map); // Añadimos el marcador al mapa
 	}
 }
 
-function hideParada(codParada){
-	let parada = paradas[findParada(codParada)];
-	if(--parada.viewCont === 0){ // (Reducimos contador) | SI nadie ha puesto antes el marcador... lo quitamos
+function hideParada(id){
+	let parada = paradas.buscar(id);
+	if(--parada.vistas === 0){ // (Reducimos contador) | SI nadie ha puesto antes el marcador... lo quitamos
 		parada.marker.remove(); // Quitamos el marcador del mapa
 	}
 }
 
-/**
+/*
  * Busca la posición de una línea dentro de lineas[]
  * @param {Number} idLinea
  * @returns {Number} Posición en lineas[]
  * @deprecated
- */
+ *
 function findLinea(idLinea){
 	let pos = 0;
 	let found = false;
@@ -486,7 +487,7 @@ function findLinea(idLinea){
 	}else{
 		return pos;
 	}
-}
+}*/
 
 /**
  * Busca la posición de un coche dentro de autobuses[]
@@ -510,11 +511,11 @@ function findBus(codBus){
 	}
 }
 
-/**
+/*
  * Busca la posición de ua parada dentro de paradas[]
  * @param {Number} codPar
  * @returns {Number} Posición en paradas[]
- */
+ *
 function findParada(codPar){
 	let pos = 0;
 	let found = false;
@@ -531,11 +532,11 @@ function findParada(codPar){
 		return pos;
 	}
 }
-
-/**
+*/
+/*
  * @deprecated
  * @param {*} idModo 
- */
+ *
 function findModo(idModo){
 	let pos = 0;
 	let found = false;
@@ -551,7 +552,7 @@ function findModo(idModo){
 	}else{
 		return pos;
 	}
-}
+}*/
 
 /**
  * @description Calcula la distancia total de un trazado indicado
@@ -568,11 +569,11 @@ function distanciaTrazado(trazado){
 	return total;
 }
 
-function extrarCorrespondencias(div, codPar, idLinea){
+function extrarCorrespondencias(div, idParada, idLinea){
 	$(div).css("max-width", "73px");
-	let parada = paradas[findParada(codPar)];
+	let parada = paradas.buscar(idParada);
 	for(let a = 0; a < parada.servicios.length; a++){
-		let servicio = parada.servicios[a].idLinea;
+		let servicio = parada.servicios[a].linea;
 		if(servicio !== idLinea){
 			if(a === 0){
 				let linea = lineas.buscar(servicio);
@@ -653,13 +654,13 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 
 /**
  * Devuelve el contenido HTML de una ventana de información adicional de autobús
- * @param {Bus} Bus
+ * @param {Bus} bus
  * @returns {String}
  */
-function busPopupContent(Bus){
-	let linea = lineas.buscar(Bus.idLinea);
+function busPopupContent(bus){
+	let linea = lineas.buscar(bus.idLinea);
 	let sentido;
-	switch(Bus.sentido){
+	switch(bus.sentido){
 		case 1: // Ida
 			sentido = linea.cabeceraVuelta;
 			break;
@@ -667,31 +668,32 @@ function busPopupContent(Bus){
 			sentido = linea.cabeceraIda;
 			break;
 		default:
-			sentido = "¿? Desconocido ("+Bus.sentido+") ¿?";
+			sentido = "¿? Desconocido ("+bus.sentido+") ¿?";
 	}
-	let parada = paradas[findParada(Bus.codParIni)];
+	let parada = paradas.buscar(bus.codParIni);
+	let textoParada;
 	if(parada !== undefined){
-		parada = "Ult. Par. Realizada: <b>"+Bus.codParIni+"<br>"+parada.nombreParada+"</b>";
+		textoParada = "Ult. Par. Realizada: <b>"+bus.codParIni+"<br>"+parada.nombre+"</b>";
 	}else{
-		parada = "Ult. Par. Realizada: <b>"+Bus.codParIni+"</b>";
+		textoParada = "Ult. Par. Realizada: <b>"+bus.codParIni+"</b>";
 	}
-	return "Bus: <b>"+Bus.codBus+"</b>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspLínea: <b>"+linea.codigo+"</b><br>"+
-	parada+"<br>"+
+	return "Bus: <b>"+bus.codBus+"</b>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspLínea: <b>"+linea.codigo+"</b><br>"+
+	textoParada+"<br>"+
 	"Sentido: <b>"+sentido+"</b><br>"+
-	"<a href='http://buscabus.tk/bus/?bus="+Bus.codBus+"' target='_blank'>Ver en BuscaBus</a>";
+	"<a href='http://buscabus.tk/bus/?bus="+bus.codBus+"' target='_blank'>Ver en BuscaBus</a>";
 }
 
 function paradaPopupContent(id){
 	let div = $("<div>");
-	let parada = paradas[findParada(id)];
-	$(div).append($("<h3>", {text: "Parada "+parada.codPar}).css("text-align", "center"));
-	$(div).append($("<h4>", {text: parada.nombreParada}).css("text-align", "center"));
+	let parada = paradas.buscar(id);
+	$(div).append($("<h3>", {text: "Parada "+parada.id}).css("text-align", "center"));
+	$(div).append($("<h4>", {text: parada.nombre}).css("text-align", "center"));
 	let tabla = $("<table>");
 	/*var cabecera = $("<tr>");
 	$(cabecera).append($("<th>", {text: "Servicios"}).prop("colspan", /*3 2));
 	$(tabla).append(cabecera);*/
 	for(let a = 0; a < parada.servicios.length; a++){
-		let linea = lineas.buscar(parada.servicios[a].idLinea);
+		let linea = lineas.buscar(parada.servicios[a].linea);
 		let sentido;
 		switch (parada.servicios[a].sentido){
 			case 1:
@@ -714,11 +716,11 @@ function paradaPopupContent(id){
 	return $(div).html();
 }
 
-function busIconContent(Bus, estado){
-	let linea = lineas.buscar(Bus.idLinea);
-	let html = linea.codigo+"<br>"+Bus.codBus;
+function busIconContent(bus, estado){
+	let linea = lineas.buscar(bus.idLinea);
+	let html = linea.codigo+"<br>"+bus.codBus;
 	let clase;
-	switch (Bus.sentido){
+	switch (bus.sentido){
 		case 1:
 			clase = 'marker ida';
 			break;
@@ -753,14 +755,14 @@ function busIconContent(Bus, estado){
 	});
 }
 
-function paradaIconContent(codPar){
-	if(/^CTAN-/.test(codPar)){
+function paradaIconContent(id){
+	if(/^CTAN-/.test(id)){
 		return L.divIcon({
 			className: 'marker paradaC',
 			iconSize: [36, 15],
 			iconAnchor: [60, 10],
 			popupAnchor: [-42, -10],
-			html: codPar.replace(/^CTAN-/, "")
+			html: id.replace(/^CTAN-/, "")
 		});
 	}else{
 		return L.divIcon({
@@ -768,7 +770,7 @@ function paradaIconContent(codPar){
 			iconSize: [36, 15],
 			iconAnchor: [18, 7],
 			popupAnchor: [0, -7],
-			html: codPar.replace(/^EMT-/, "")
+			html: id.replace(/^EMT-/, "")
 		});
 	}
 }
@@ -1248,6 +1250,7 @@ function addLineaEmt(lin){
 	if(linea.paradasVuelta.length > 1){
 		linea.tieneVuelta = true;
 	}else{
+		linea.tieneVuelta = false;
 		linea.esCircular = true;
 		linea.cabeceraIda = "Circular";
 		linea.cabeceraVta = "Circular";
@@ -1259,8 +1262,8 @@ function addLineaEmt(lin){
 	}
 	// Corrección en cabeceras si tiene vuelta
 	if(linea.tieneVuelta){
-		linea.paradasIda.push(new RelacionParadas(linea.paradasVuelta[0].codPar,linea.paradasIda.length));
-		linea.paradasVuelta.push(new RelacionParadas(linea.paradasIda[0].codPar,linea.paradasVuelta.length));
+		linea.paradasIda.push(new RelacionParadas(linea.paradasVuelta[0].id,linea.paradasIda.length));
+		linea.paradasVuelta.push(new RelacionParadas(linea.paradasIda[0].id,linea.paradasVuelta.length));
 	}
 	lineas.push(linea);
 	//getTrazados(linea.idLinea);
@@ -1297,36 +1300,28 @@ function addLineaEmt(lin){
 	$("#tablaLineasEMT").append(fila);
 }
 
-function addParadaEmt(parada, idLinea, sentido){
-	let pos = findParada("EMT-"+parada.codParada);
-	if(pos !== null){
-		paradas[pos].servicios.push({
-			idLinea: idLinea,
-			sentido: sentido,
-			espera: null
-		});
-	}else{
-		pos = paradas.push({
-			codPar: "EMT-"+parada.codParada,
-			nombreParada: parada.nombreParada,
-			direccion: parada.direccion,
-			idNucleo: 0,
-			idZona: "A",
-			servicios: [],
-			latitud: parada.latitud,
-			longitud: parada.longitud,
-			ubicacion: new LatLong(parada.latitud, parada.longitud),
-			modos: "Autobús",
-			marker: null,
-			popup: null,
-			viewCont: 0
-		})-1;
-		paradas[pos].servicios.push({
-			idLinea: idLinea,
-			sentido: sentido,
-			espera: null
-		});
+function addParadaEmt(par, idLinea, sentido){
+	let parada = paradas.buscar("EMT-"+par.codParada);
+	if(parada === undefined){ // La parada no existe
+		// Creación de la parada
+		parada = new Parada();
+		parada.id = "EMT-"+par.codParada;
+		parada.nombre = par.nombreParada;
+		parada.direccion = par.direccion;
+		parada.nucleo = 0;
+		parada.zona = "A";
+		parada.ubicacion = new LatLong(par.latitud, par.longitud);
+		parada.modos.push(1); // Añadimos el elemento autobús
+		// Guardamos la parada
+		paradas.push(parada);
 	}
+	parada = paradas.buscar("EMT-"+par.codParada);
+	// Creamos el servicio
+	let servicio = new Servicio();
+	servicio.linea = idLinea;
+	servicio.sentido = sentido;
+	// Guardamos el servicio
+	parada.servicios.push(servicio);
 }
 
 function codLinea(idLinea){
@@ -1601,36 +1596,41 @@ function getParadasLineaCtan(id){
 	});
 }
 
-function addParadaCtan(parada, idLinea){
-	let pos = findParada("CTAN-"+parada.idParada);
-	if(pos !== null){
-		paradas[pos].servicios.push({
-			idLinea: idLinea,
-			sentido: Number(parada.sentido),
-			espera: null
-		});
-	}else{
-		pos = paradas.push({
-			codPar: "CTAN-"+parada.idParada,
-			nombreParada: parada.nombre,
-			direccion: null,
-			idNucleo: parada.idNucleo,
-			idZona: parada.idZona,
-			servicios: [],
-			latitud: Number(parada.latitud),
-			longitud: Number(parada.longitud),
-			ubicacion: new LatLong(Number(parada.latitud),Number(parada.longitud)),
-			modos: parada.modos,
-			marker: null,
-			popup: null,
-			viewCont: 0
-		})-1;
-		paradas[pos].servicios.push({
-			idLinea: idLinea,
-			sentido: Number(parada.sentido),
-			espera: null
-		});
+function addParadaCtan(par, idLinea){
+	let parada = paradas.buscar("CTAN-"+par.idParada);
+	if(parada === undefined){ // La parada no existe
+		// Creación de la parada
+		parada = new Parada();
+		parada.id = "CTAN-"+par.idParada;
+		parada.nombre = par.nombre;
+		parada.direccion = null;
+		parada.nucleo = par.idNucleo;
+		parada.zona = par.idZona;
+		parada.ubicacion = new LatLong(Number(par.latitud),Number(par.longitud));
+		switch(par.modos){
+			case "Autobús":
+				parada.modos.push(1);
+				break;
+			case "Bicicleta":
+				parada.modos.push(2);
+				break;
+			case "Metro":
+				parada.modos.push(3);
+				break;
+			case "Tren":
+				parada.modos.push(4);
+				break;
+		}
+		// Guardamos la parada
+		paradas.push(parada);
 	}
+	parada = paradas.buscar("CTAN-"+par.idParada);
+	// Creamos el servicio
+	let servicio = new Servicio();
+	servicio.linea = idLinea;
+	servicio.sentido = Number(par.sentido);
+	// Guardamos el servicio
+	parada.servicios.push(servicio);
 }
 
 function idLinea(id){
