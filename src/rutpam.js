@@ -165,7 +165,7 @@ class RelacionParadas {
     }
 }
 
-class Servicios {
+class Servicio {
     constructor(){
         this.linea = undefined;
         this.sentido = undefined;
@@ -206,6 +206,7 @@ class ListadoOrdenado extends Array {
             throw obj;
         }
     }
+    // TO DO: Verificación de que no contiene ya ese ID
     // TO DO: Sort function
 }
 
