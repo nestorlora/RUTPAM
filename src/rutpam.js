@@ -136,11 +136,11 @@ class Parada {
         this.direccion = undefined;
         this.nucleo = undefined;
         this.zona = undefined;
-        this.servicios;
+        this.servicios = new Array();
         this.ubicacion = new LatLong();
-        this.modos = undefined; // No utilizado
-        this.marker = undefined;
-        this.popup = undefined;
+        this.modos = new Array(); // No utilizado
+        this.marker = null;
+        this.popup = null;
         this.vistas = 0;
     }
 }
