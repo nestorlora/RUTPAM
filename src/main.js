@@ -236,7 +236,7 @@ function inicializarParadas(){
 	}else{
 		$("#loader").remove();
 		for(let a = 0; a < paradas.length; a++){
-			paradas[a].marker = L.marker(paradas[a].posicion, {icon: paradaIconContent(paradas[a].codPar)});
+			paradas[a].marker = L.marker(paradas[a].ubicacion, {icon: paradaIconContent(paradas[a].codPar)});
 			paradas[a].popup = L.popup({autoPan: false, autoClose: false}).setContent(paradaPopupContent(paradas[a].codPar));
 			paradas[a].marker.bindPopup(paradas[a].popup);
 		}
@@ -1351,6 +1351,7 @@ function addParadaEmt(parada, idLinea, sentido){
 			servicios: [],
 			latitud: parada.latitud,
 			longitud: parada.longitud,
+			ubicacion: new LatLong(parada.latitud, parada.longitud),
 			modos: "Autobús",
 			marker: null,
 			popup: null,
@@ -1652,8 +1653,9 @@ function addParadaCtan(parada, idLinea){
 			idNucleo: parada.idNucleo,
 			idZona: parada.idZona,
 			servicios: [],
-			latitud: parada.latitud,
-			longitud: parada.longitud,
+			latitud: Number(parada.latitud),
+			longitud: Number(parada.longitud),
+			ubicacion: new LatLong(Number(parada.latitud),Number(parada.longitud)),
 			modos: parada.modos,
 			marker: null,
 			popup: null,
