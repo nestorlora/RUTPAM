@@ -1089,7 +1089,7 @@ function getTrazadosEmt(idLinea){
 			let linea = lineas.buscar(idLinea); // Referenciamos la línea con la que trabajamos
 			let trazado = []; // Creamos un array con los puntos de latitud y longitud del polígono
 			for(let a = 0; a < response.length; a++){
-				trazado.push({lat: response[a].latitud, lng: response[a].longitud});  // Rellenamos con los datos de la respuesta
+				trazado.push(new LatLong(response[a].latitud, response[a].longitud));  // Rellenamos con los datos de la respuesta
 			}
 			linea.trazadoIda = L.polyline(trazado, {
 				color: rutpam.colores.emtA, // Fijamos el color de la ida
@@ -1118,7 +1118,7 @@ function getTrazadosEmt(idLinea){
 			let linea = lineas.buscar(idLinea); // Referenciamos la línea con la que trabajamos
 			let trazado = []; // Creamos un array con los puntos de latitud y longitud del polígono
 			for(let a = 0; a < response.length; a++){
-				trazado.push({lat: response[a].latitud, lng: response[a].longitud}); // Rellenamos con los datos de la respuesta
+				trazado.push(new LatLong(response[a].latitud, response[a].longitud)); // Rellenamos con los datos de la respuesta
 			}
 			linea.trazadoVuelta = L.polyline(trazado, {
 				color: rutpam.colores.emtB, // Fijamos el color de la vuelta
@@ -1199,7 +1199,7 @@ function getBusesEmt(){
 
 function addBusEmt(Bus){
 	console.log("ADDED "+Bus.codBus);
-    let coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
+    let coordenadas = new LatLong(Bus.latitud, Bus.longitud);
 	let data = {
 		marker: L.marker(coordenadas, {
 			icon: busIconContent(Bus, 1)
@@ -1223,7 +1223,7 @@ function addBusEmt(Bus){
 }
 
 function updateBusEmt(Bus, pos){
-	let coordenadas = {lat: Bus.latitud , lng: Bus.longitud};
+	let coordenadas = new LatLong(Bus.latitud, Bus.longitud);
 	if(!autobuses[pos].marker.getLatLng().equals(coordenadas)){
 		autobuses[pos].marker.setLatLng(coordenadas);
 	}
@@ -1529,9 +1529,9 @@ function updateLineaCtan(lin){
 		lon = punto[1];
 		sentido = punto[2];
 		if(sentido === "1" || sentido === undefined){
-			trazadoIda.push({lat: lat, lng: lon});  // Rellenamos con los datos de la respuesta
+			trazadoIda.push(new LatLong(lat, lon)); // Rellenamos con los datos de la respuesta
 		}else if(sentido === "2"){
-			trazadoVuelta.push({lat: lat, lng: lon});  // Rellenamos con los datos de la respuesta
+			trazadoVuelta.push(new LatLong(lat, lon));  // Rellenamos con los datos de la respuesta
 		}
 	}
 	let color;
