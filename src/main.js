@@ -27,44 +27,8 @@
 'use strict';
 
 var rutpam = new Rutpam();
-
-/**
- * @description Lista de modos de transporte (medios de transporte)
- * @global
- * @var
- */
 var modos = new Listado();
-
-/**
- * @description Lista de zonas del CTAN
- * @global
- * @var
- */
 var zonas = new Listado();
-
-/**
- * @description Tabla de líneas cargadas
- * @type Array
- * @param {String} idLinea Identificador único de la línea (EMT+CTAN)
- * @param {String} userCodLinea Nombre corto de la línea (1, C2, N3)
- * @param {String} nombreLinea Nombre largo de la línea (Alameda-Churriana)
- * @param {String} cabeceraIda Nombre de la cabecera donde empieza la ida
- * @param {String} cabeceraVta Nombre de la cabecera donde empieza la vuelta
- * @param {Array} paradasIda Array de paradas a la ida {codPar,orden}
- * @param {Array} paradasVta Array de paradas a la vuelta {codPar, orden}
- * @param {Object} trazadoIda
- * @param {Object} trazadoVta
- * @param {Bool} getBuses
- * @param {Bool} getIda
- * @param {Bool} getVta
- * @param {Bool} verParadas Indica si esta activa sobre el mapa la visualización de las paradas de la línea
- * @param {Int} numBuses Indica la cantidad de buses que ahora mismo están operando en la línea
- * @param {String} modo Modo de transporte de la línea
- * @param {Bool} hayNoticia Indica si hay o no noticias relacionadas con la línea
- * @param {String} operadores Lista de operadores de la línea
- * @param {Bool} tieneIda Indica si la línea tiene trayecto de ida
- * @param {Bool} tieneVuelta Indica si la línea tiene trayecto de vuelta
- */
 var lineas = new Listado();
 
 /**
@@ -275,7 +239,7 @@ function verInfoLinea(id){
 	//
 	// Datos longitud
 	//
-	let distanciaIda =0, distanciaVuelta = 0, tiempoIda = 0,tiempoVuelta = 0; // Creamos variables para los datos numéricos
+	let distanciaIda = 0, distanciaVuelta = 0, tiempoIda = 0,tiempoVuelta = 0; // Creamos variables para los datos numéricos
 	let datosTrazado = $("<table>"); // Tabla para los datos numéricos del trazado
 	if(linea.estado.getIda){ // SI se ha cargado el trazado de ida
 		distanciaIda = Math.floor(distanciaTrazado(linea.trazadoIda)); // Calcular la distancia de la ruta

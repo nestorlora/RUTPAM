@@ -102,7 +102,7 @@ class Zona {
 }
 
 class Linea {
-    constructor (){
+    constructor(){
         this.id = undefined;
         this.codigo = undefined;
         this.nombre = undefined;
