@@ -152,8 +152,8 @@ class Vehiculo {
         this.sentido = undefined;
         this.paradaInicio = undefined;
         this.posicion = new LatLong();
-        this.marker = undefined;
-        this.popup = undefined;
+        this.marker = null;
+        this.popup = null;
         this.ttl = new Rutpam().ttl.new;
     }
 }
