@@ -147,10 +147,10 @@ function initKeys(){
 			case "Backspace":
 				for(var a = 0; a < lineas.length; a++){ // Para todas las líneas
 					if(lineas[a].trazadoIda !== null){ // Si está cargado su trazado
-						hideTrazado(lineas[a].idLinea, 1);
+						hideTrazado(lineas[a].id, 1);
 					}
-					if(lineas[a].trazadoVta !== null){
-						hideTrazado(lineas[a].idLinea, 2);
+					if(lineas[a].trazadoVuelta !== null){
+						hideTrazado(lineas[a].id, 2);
 					}
 				}
 				break;
@@ -1271,6 +1271,8 @@ function addLineaEmt(lin){
 	linea.nombre = lin.nombreLinea.replace(/(\(F\))|(\(?F-[0-9A-Z]{1,2}\)$)/, "");
 	linea.cabeceraIda = lin.cabeceraIda;
 	linea.cabeceraVuelta = lin.cabeceraVuelta;
+	linea.trazadoIda = null;
+	linea.trazadoVuelta = null;
 	linea.estado = {
 		getBuses: false,
 		getIda: false,
@@ -1294,8 +1296,7 @@ function addLineaEmt(lin){
 				codPar: "EMT-"+lin.paradas[a].parada.codParada,
 				orden: lin.paradas[a].orden
 			});*/
-		}
-		if(lin.paradas[a].sentido === 2){
+		}else if(lin.paradas[a].sentido === 2){
 			linea.paradasVuelta.push(relacion);
 		}
 	}
