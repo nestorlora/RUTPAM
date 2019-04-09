@@ -1162,7 +1162,7 @@ function addLineaEmt(lin){
 		linea.tieneVuelta = false;
 		linea.esCircular = true;
 		linea.cabeceraIda = "Circular";
-		linea.cabeceraVta = "Circular";
+		linea.cabeceraVuelta = "Circular";
 	}
 	// Corrección en orden de paradas
 	let maxIda = linea.paradasIda.length;
