@@ -31,21 +31,7 @@ var modos = new Listado();
 var zonas = new Listado();
 var lineas = new Listado();
 var paradas = new Listado();
-
-/**
- * @description Tabla de autobuses en servicio
- * @type Array
- * @param {Int} codBus Nº de coche, identificador
- * @param {Int} idLinea Código interno de la línea que sirve
- * @param {Int} sentido Sentido de la línea que está recorriendo actualmente
- * @param {Int} codParIni Código de la última parada a la que ha llegado
- * @param {Float} latitud Ubicación
- * @param {Float} longitud Ubicación
- * @param {L.marker} marker Objeto del marcador asociado al coche
- * @param {L.popup} popup Objeto del cuadro de información adicional del coche
- * @param {Int} ttl Time-to-live del coche
- */
-var autobuses = [];
+var vehiculos = new Listado();
 
 /**
  * Función de puesta en marcha cuando finaliza la carga del DOM
@@ -128,20 +114,20 @@ function initKeys(){
 function motor(){
 	getBusesEmt(); // Pedimos toda la información actualizada de los buses
 	let pos = 0; // Empezamos por el principio
-	while(pos < autobuses.length){ // Para todos los autobuses
-		//let poslinea = findLinea(autobuses[pos].linea); // Extraemos la dirección de la línea en el array
-		let linea = lineas.buscar(autobuses[pos].idLinea);
-		autobuses[pos].ttl--; // Decrementar TTL
-		if(autobuses[pos].ttl <= 0){ // SI su vida útil ha expirado
-			console.log("DROP "+autobuses[pos].codBus); // Registramos que se pierde
-			autobuses[pos].marker.remove(); // Quitamos el marcador del mapa
+	while(pos < vehiculos.length){ // Para todos los autobuses
+		//let poslinea = findLinea(vehiculos[pos].linea); // Extraemos la dirección de la línea en el array
+		let linea = lineas.buscar(vehiculos[pos].linea);
+		vehiculos[pos].ttl--; // Decrementar TTL
+		if(vehiculos[pos].ttl <= 0){ // SI su vida útil ha expirado
+			console.log("DROP "+vehiculos[pos].id); // Registramos que se pierde
+			vehiculos[pos].marker.remove(); // Quitamos el marcador del mapa
 			linea.numVehiculos--; // Decrementamos el número de buses en la línea
-			autobuses.splice(pos, 1); // Borramos el objeto del array
+			vehiculos.splice(pos, 1); // Borramos el objeto del array
 		}else if(linea.estado.getBuses === false){ // O SI no estamos haciendo un seguimiento de esa línea
-			autobuses[pos].marker.remove(); // Quitamos el marcador del mapa
+			vehiculos[pos].marker.remove(); // Quitamos el marcador del mapa
 			pos++; // Avanzamos de posición
-		}else if(autobuses[pos].ttl <= rutpam.ttl.old){ // O SI el TTL es bajo y el bus lleva rato sin refrescarse
-			autobuses[pos].marker.setIcon(busIconContent(autobuses[pos], 2)); // Cambiamos el icono para que aparezca como no-actualizado
+		}else if(vehiculos[pos].ttl <= rutpam.ttl.old){ // O SI el TTL es bajo y el bus lleva rato sin refrescarse
+			vehiculos[pos].marker.setIcon(busIconContent(vehiculos[pos], 2)); // Cambiamos el icono para que aparezca como no-actualizado
 			pos++; // Avanzamos de posición
 		}else{ // O Todo está bien
 			pos++; // Avanzamos de posición
@@ -448,11 +434,12 @@ function hideParada(id){
 	}
 }
 
-/**
+/*
  * Busca la posición de un coche dentro de autobuses[]
  * @param {Number} codBus
  * @returns {Number} Posición en autobuses[]
- */
+ * @deprecated
+ *
 function findBus(codBus){
 	let pos = 0;
 	let found = false;
@@ -468,7 +455,7 @@ function findBus(codBus){
 	}else{
 		return pos;
 	}
-}
+}*/
 
 /**
  * @description Calcula la distancia total de un trazado indicado
@@ -570,13 +557,14 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 
 /**
  * Devuelve el contenido HTML de una ventana de información adicional de autobús
- * @param {Bus} bus
+ * @param {Bus} vehiculo
  * @returns {String}
  */
-function busPopupContent(bus){
-	let linea = lineas.buscar(bus.idLinea);
+function busPopupContent(vehiculo){
+	let linea = lineas.buscar(vehiculo.linea);
+	let codigo = vehiculo.id.replace(/^EMT-|^CTAN-/,"");
 	let sentido;
-	switch(bus.sentido){
+	switch(vehiculo.sentido){
 		case 1: // Ida
 			sentido = linea.cabeceraVuelta;
 			break;
@@ -584,19 +572,19 @@ function busPopupContent(bus){
 			sentido = linea.cabeceraIda;
 			break;
 		default:
-			sentido = "¿? Desconocido ("+bus.sentido+") ¿?";
+			sentido = "¿? Desconocido ("+vehiculo.sentido+") ¿?";
 	}
-	let parada = paradas.buscar(bus.codParIni);
+	let parada = paradas.buscar(vehiculo.paradaInicio);
 	let textoParada;
 	if(parada !== undefined){
-		textoParada = "Ult. Par. Realizada: <b>"+bus.codParIni+"<br>"+parada.nombre+"</b>";
+		textoParada = "Ult. Par. Realizada: <b>"+vehiculo.paradaInicio+"<br>"+parada.nombre+"</b>";
 	}else{
-		textoParada = "Ult. Par. Realizada: <b>"+bus.codParIni+"</b>";
+		textoParada = "Ult. Par. Realizada: <b>"+vehiculo.paradaInicio+"</b>";
 	}
-	return "Bus: <b>"+bus.codBus+"</b>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspLínea: <b>"+linea.codigo+"</b><br>"+
+	return "Bus: <b>"+vehiculo.id+"</b>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspLínea: <b>"+linea.codigo+"</b><br>"+
 	textoParada+"<br>"+
 	"Sentido: <b>"+sentido+"</b><br>"+
-	"<a href='http://buscabus.tk/bus/?bus="+bus.codBus+"' target='_blank'>Ver en BuscaBus</a>";
+	"<a href='http://buscabus.tk/bus/?bus="+codigo+"' target='_blank'>Ver en BuscaBus</a>";
 }
 
 function paradaPopupContent(id){
@@ -633,8 +621,9 @@ function paradaPopupContent(id){
 }
 
 function busIconContent(bus, estado){
-	let linea = lineas.buscar(bus.idLinea);
-	let html = linea.codigo+"<br>"+bus.codBus;
+	let linea = lineas.buscar(bus.linea);
+	let codigo = bus.id.replace(/^EMT-|^CTAN-/,"");
+	let html = linea.codigo+"<br>"+codigo;
 	let clase;
 	switch (bus.sentido){
 		case 1:
@@ -1041,11 +1030,11 @@ function getBusesEmt(){
 			}
 			/* Procesado de ubicaciones con normalidad */
 			for(let x = 0; x < response.length; x++){
-                let pos = findBus(response[x].codBus);
-                response[x].idLinea = "EMT-"+response[x].codLinea;
-				 response[x].codParIni = "EMT-"+response[x].codParIni;
-				if(pos !== null){
-					updateBusEmt(response[x], pos);
+				response[x].codBus = "EMT-"+response[x].codBus;
+				response[x].codLinea = "EMT-"+response[x].codLinea;
+				response[x].codParIni = "EMT-"+response[x].codParIni;
+				if(vehiculos.buscar(response[x].codBus) !== undefined){
+					updateBusEmt(response[x]);
 				}else{
 					addBusEmt(response[x]);
 				}
@@ -1054,48 +1043,50 @@ function getBusesEmt(){
 	});
 }
 
-function addBusEmt(Bus){
-	console.log("ADDED "+Bus.codBus);
-    let coordenadas = new LatLong(Bus.latitud, Bus.longitud);
-	let data = {
-		marker: L.marker(coordenadas, {
-			icon: busIconContent(Bus, 1)
-		}),
-		popup: L.popup({autoPan: false, autoClose: false}).setContent(busPopupContent(Bus)),
-		codBus: Bus.codBus,
-		idLinea: Bus.idLinea,
-		sentido: Bus.sentido,
-		codParIni: Bus.codParIni,
-		latitud: Bus.latitud,
-		longitud: Bus.longitud,
-		ttl: rutpam.ttl.new
-	};
-	let pos = autobuses.push(data)-1;
-	autobuses[pos].marker.bindPopup(autobuses[pos].popup);
-	let linea = lineas.buscar(Bus.idLinea);
+function addBusEmt(bus){
+	let vehiculo = new Vehiculo();
+	vehiculo.id = bus.codBus;
+	vehiculo.linea = bus.codLinea;
+	vehiculo.sentido = bus.sentido;
+	vehiculo.paradaInicio = bus.codParIni;
+	vehiculo.posicion = new LatLong(bus.latitud, bus.longitud);
+	vehiculo.marker = L.marker(vehiculo.posicion, {
+		icon: busIconContent(vehiculo, 1)
+	});
+	vehiculo.popup = L.popup({
+		autoPan: false,
+		autoClose: false
+	}).setContent(busPopupContent(vehiculo));
+	vehiculo.marker.bindPopup(vehiculo.popup); /* */
+	// Insertamos el vehículo
+	vehiculos.push(vehiculo);
+	console.log("ADDED "+vehiculo.id);
+	// Añadimos el vehículo si la línea está siendo visualizada
+	let linea = lineas.buscar(vehiculo.linea);
 	if(linea.estado.getBuses){
-		autobuses[pos].marker.addTo(rutpam.map);
+		vehiculo.marker.addTo(rutpam.map);
 	}
 	linea.numVehiculos++;
 }
 
-function updateBusEmt(Bus, pos){
-	let coordenadas = new LatLong(Bus.latitud, Bus.longitud);
-	if(!autobuses[pos].marker.getLatLng().equals(coordenadas)){
-		autobuses[pos].marker.setLatLng(coordenadas);
+function updateBusEmt(bus){
+	let vehiculo = vehiculos.buscar(bus.codBus);
+	let posicion = new LatLong(bus.latitud, bus.longitud);
+	if(!vehiculo.marker.getLatLng().equals(posicion)){
+		vehiculo.marker.setLatLng(posicion)
+		vehiculo.posicion = posicion;
 	}
-	autobuses[pos].idLinea = Bus.idLinea;
-	autobuses[pos].sentido = Bus.sentido;
-	autobuses[pos].codParIni = Bus.codParIni;
-	autobuses[pos].latitud = Bus.latitud;
-	autobuses[pos].longitud = Bus.longitud;
-	autobuses[pos].popup.setContent(busPopupContent(Bus));
-	if(lineas.buscar(Bus.idLinea).estado.getBuses){
-		autobuses[pos].marker.addTo(rutpam.map);
+	vehiculo.linea = bus.codLinea;
+	vehiculo.sentido = bus.sentido;
+	vehiculo.paradaInicio = bus.codParIni
+	vehiculo.popup.setContent(busPopupContent(vehiculo));
+
+	if(lineas.buscar(vehiculo.linea).estado.getBuses){
+		vehiculo.marker.addTo(rutpam.map);
 	}
-	if(autobuses[pos].ttl < rutpam.ttl.default){
-		autobuses[pos].ttl = rutpam.ttl.default;
-		autobuses[pos].marker.setIcon(busIconContent(autobuses[pos], 0));
+	if(vehiculo.ttl < rutpam.ttl.default){
+		vehiculo.ttl = rutpam.ttl.default;
+		vehiculo.marker.setIcon(busIconContent(vehiculo, 0));
 	}
 }
 
