@@ -47,24 +47,6 @@ var paradas = new Listado();
  */
 var autobuses = [];
 
-/*
- * @description Tabla de paradas cargadas
- * @type Array
- * @param {Int} codPar Código de la parada
- * @param {String} nombreParada Nombre de la parada
- * @param {String} direccion Dirección postal de la parada
- * @param {String} idNucleo Código del núcleo urbano de la parada
- * @param {Number} idZona Código de la zona
- * @param {Array} servicios Array de servicios {idLinea, sentido, espera} que hay en esa parada
- * @param {Float} latitud Ubicación
- * @param {Float} longitud Ubicación
- * @param {String} modos Modos de transporte de la parada
- * @param {L.marker} marker Objeto del marcador asociado a la parada
- * @param {L.popup} popup Objeto del cuadro de información asociado a la parada
- * @param {Int} viewCont Contador del número de líneas o acciones del usuario están solicitando ver esta parada
- *
-var paradas = [];*/
-
 /**
  * Función de puesta en marcha cuando finaliza la carga del DOM
  */
