@@ -65,14 +65,6 @@ class Rutpam {
             new: (ttl_rate_default+10)/refresh_rate,
             old: (ttl_rate_default-15)/refresh_rate
         }
-        this.ui = {
-            show: {
-                emt: false,
-                ctan: false,
-                metro: false,
-                renfe: false
-            }
-        }
         this.url = {
             site: site_url,
             emt: emt_url,
