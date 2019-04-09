@@ -33,7 +33,7 @@ const odm_url = 'https://datosabiertos.malaga.eu/api/3/action/';
 const refresh_rate = 3; // Periodo entre refrescos (s)
 const ttl_rate_default = 60; // TTL por defecto (en refrescos)
 
-class Rutpam {
+class Core {
     constructor(){
         // Parámetros
         this.version = rutpam_version;

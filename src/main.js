@@ -26,7 +26,7 @@
 /* Este script necesia los archivos ctan.js y emt.js para poder funcionar correctamente */
 'use strict';
 
-var rutpam = new Rutpam();
+var core = new Core();
 var modos = new Listado();
 var zonas = new Listado();
 var lineas = new Listado();
@@ -40,7 +40,7 @@ $(document).ready(function(){
 	$("#control").html(ControlRUTPAM($("<div>"))); // Rellenamos el div del panel de control con lo que devuelve ControlRUTPAM()
 	verCopyright(); // Mostramos el "Acerca de RUTPAM"
 	initMap(); // Inicializamos el mapa y todo el layout
-	document.title = "RUTPAM "+rutpam.version; // Seteamos el título del documento
+	document.title = "RUTPAM "+core.version; // Seteamos el título del documento
 	initKeys(); // Inicializamos las teclas de control
 	getModos(); // Cargamos los modos de transporte
 	getZonas(); // Cargamos las zonas
@@ -56,7 +56,7 @@ $(document).ready(function(){
 function initMap() {
 	let osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'; // URL del servidor cartográfico
 	let osm = new L.TileLayer(osmUrl); // Creamos la capa de cartografía
-	rutpam.map = L.map('map', {
+	core.map = L.map('map', {
 		center: [36.7121977, -4.4370495], // Centro del mapa sobre málaga
 		zoom: 13, // Nivel de zoom para ver todo el área metropolitana
 		closePopupOnClick: false, // Deshabilitamos que los popups se cierren al hacer click en cualquier otro sitio fuera
@@ -126,7 +126,7 @@ function motor(){
 		}else if(linea.estado.getBuses === false){ // O SI no estamos haciendo un seguimiento de esa línea
 			vehiculos[pos].marker.remove(); // Quitamos el marcador del mapa
 			pos++; // Avanzamos de posición
-		}else if(vehiculos[pos].ttl <= rutpam.ttl.old){ // O SI el TTL es bajo y el bus lleva rato sin refrescarse
+		}else if(vehiculos[pos].ttl <= core.ttl.old){ // O SI el TTL es bajo y el bus lleva rato sin refrescarse
 			vehiculos[pos].marker.setIcon(busIconContent(vehiculos[pos], 2)); // Cambiamos el icono para que aparezca como no-actualizado
 			pos++; // Avanzamos de posición
 		}else{ // O Todo está bien
@@ -144,7 +144,7 @@ function motor(){
  * @returns {null}
  */
 function stop(){
-	clearInterval(rutpam.timer);
+	clearInterval(core.timer);
 	$("#pause").prop("disabled", true);
 	$("#play").prop("disabled", false);
 	$("#refresh").prop("disabled", false);
@@ -156,7 +156,7 @@ function stop(){
  * @returns {null}
  */
 function start(){
-	rutpam.timer = setInterval(motor, refresh_rate*1000);
+	core.timer = setInterval(motor, refresh_rate*1000);
 	$("#pause").prop("disabled", false);
 	$("#play").prop("disabled", true);
 	$("#refresh").prop("disabled", true);
@@ -164,7 +164,7 @@ function start(){
 }
 
 function inicializarParadas(){
-	if(rutpam.lineasCargadas < lineas.length || rutpam.lineasCargadas < 80){
+	if(core.lineasCargadas < lineas.length || core.lineasCargadas < 80){
 		setTimeout(inicializarParadas, 1500);
 	}else{
 		$("#loader").remove();
@@ -173,7 +173,7 @@ function inicializarParadas(){
 			paradas[a].popup = L.popup({autoPan: false, autoClose: false}).setContent(paradaPopupContent(paradas[a].id));
 			paradas[a].marker.bindPopup(paradas[a].popup);
 		}
-		rutpam.paradasInicializadas = true;
+		core.paradasInicializadas = true;
 	}
 }
 
@@ -260,9 +260,9 @@ function generarBotonToggleParadas(idLinea){
 		"class": "boton"
 	});
 	$(botonParadas).text("Mostrar/Ocultar paradas");
-	if(rutpam.paradasInicializadas){// SI las paradas estan inicializadas
+	if(core.paradasInicializadas){// SI las paradas estan inicializadas
 		if(lineas.buscar(idLinea).estado.verParadas === true){ // SI estamos mostrando las paradas de esta línea
-			$(botonParadas).css("background-color", rutpam.colores.especial); // Poner el botón en on
+			$(botonParadas).css("background-color", core.colores.especial); // Poner el botón en on
 		}
 		$(botonParadas).on("click", function(){
 			let linea = lineas.buscar(idLinea); // Sacamos la línea para trabajar con ella
@@ -282,7 +282,7 @@ function generarBotonToggleParadas(idLinea){
 				for(let a = 0; a < linea.paradasVuelta.length; a++){ // Mostrar todas las paradas a la vuelta
 					showParada(linea.paradasVuelta[a].id);
 				}
-				$(this).css("background-color", rutpam.colores.especial); // Ponemos el botón en on
+				$(this).css("background-color", core.colores.especial); // Ponemos el botón en on
 				linea.estado.verParadas = true; // Setear que se están mostrando las paradas
 			}
 		});
@@ -399,9 +399,9 @@ function disableBusUpdate(idLinea){
  */
 function showTrazado(idLinea, sentido){
 	if(sentido === 1){
-		lineas.buscar(idLinea).trazadoIda.addTo(rutpam.map);
+		lineas.buscar(idLinea).trazadoIda.addTo(core.map);
 	}else if(sentido === 2){
-		lineas.buscar(idLinea).trazadoVuelta.addTo(rutpam.map);
+		lineas.buscar(idLinea).trazadoVuelta.addTo(core.map);
 	}
 }
 
@@ -423,7 +423,7 @@ function hideTrazado(idLinea, sentido){
 function showParada(id){
 	let parada = paradas.buscar(id);
 	if(parada.vistas++ === 0){ // SI nadie ha puesto antes el marcador (y lo incrementamos)
-		parada.marker.addTo(rutpam.map); // Añadimos el marcador al mapa
+		parada.marker.addTo(core.map); // Añadimos el marcador al mapa
 	}
 }
 
@@ -466,7 +466,7 @@ function distanciaTrazado(trazado){
 	let total = 0;
 	if(trazado !== null){
 		for(let pos = 1; pos < trazado.getLatLngs().length; pos++){
-			total = total + rutpam.map.distance(trazado.getLatLngs()[pos-1], trazado.getLatLngs()[pos]);
+			total = total + core.map.distance(trazado.getLatLngs()[pos-1], trazado.getLatLngs()[pos]);
 		}
 	}
 	return total;
@@ -500,36 +500,36 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 	let id = $('<span>').addClass('fa-layers fa-'+zoom);
 	let esNegro = false;
 	if(/^C[1-9]$|^29$/.test(userCodLinea)){ // Circulares EMT
-		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.emtC));
+		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.emtC));
 	}else if(/^N[1-9]/.test(userCodLinea)){ // Nocturno EMT
-		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.emtN));
+		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.emtN));
 	}else if(/^A$|^E$/.test(userCodLinea)){ // Lineas exprés
-		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.express));
+		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.express));
 	}else if(/^L$|^P$/.test(userCodLinea)){ // Lineas Lanzaderas
-		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.lanzaderas));
+		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.lanzaderas));
 	}else if(/N[1-9]$|^M-168$|^M-155$|^M-168$/.test(userCodLinea)){ // Líneas Buho CTAN
-		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.ctmamN));
+		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.ctmamN));
 	}else if(/^M-5[0-9]{2}$/.test(userCodLinea)){ // Líneas Verano CTAN
-		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.ctmamT));
+		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.ctmamT));
 	}else if(/^M-114$|^M-116$|^M-143$|^M-166$/.test(userCodLinea)){ // Líneas Universitarias CTAN
-		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.ctmamT));
+		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.ctmamT));
 		esNegro = true;
 	}else if(/^R-|^T-|^M-10[1-4]$/.test(userCodLinea)){ // Líneas Urbanas CTAN
-		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.emtA));
+		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.emtA));
 	}else if(/^M-/.test(userCodLinea)){ // Líneas Interurbanas CTAN
-		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.ctmamA));
+		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.ctmamA));
 	}else if(/^91$|^92$/.test(userCodLinea)){ // Servicios Turísticos
-		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.especial));
+		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.especial));
 		esNegro = true;
 	}else if(/^METRO [1-2]$/.test(userCodLinea)){ // Metro
-		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.metro));
+		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.metro));
 	}else if(/^C-[1-2]$/.test(userCodLinea)){ // Cercanías
-		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.renfeA));
+		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.renfeA));
 	}else if(/^12$|^16$|^26$|^64$|^M-6[0-9]{2}|^[A-Z]/.test(userCodLinea)){ // Servicios Especiales
-		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.especial));
+		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.especial));
 		esNegro = true;
 	}else{ // Líneas Urbanas EMT
-		id.append($('<i>').addClass('fas fa-circle').css("color", rutpam.colores.emtA));
+		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.emtA));
 	}
 
 	let texto = userCodLinea.replace(/^M-/, "M\n").replace(/^R-/, "R").replace(/^T-/, "T").replace(/^METRO /, "").replace(/^C-/, "C");
@@ -681,50 +681,50 @@ function paradaIconContent(id){
 }
 
 function togglePanelEmt(){
-	if(rutpam.ui.show.emt){
+	if(core.ui.show.emt){
 		$("#tablaLineasEMT").css("display", "none");
 		$("#verEMT").css("color", "black").css("background-color", "white");
-		rutpam.ui.show.emt = false;
+		core.ui.show.emt = false;
 	}else{
 		$("#tablaLineasEMT").css("display", "block");
-		$("#verEMT").css("color", "white").css("background-color", rutpam.colores.emtA);
-		rutpam.ui.show.emt = true;
+		$("#verEMT").css("color", "white").css("background-color", core.colores.emtA);
+		core.ui.show.emt = true;
 	}
 }
 
 function togglePanelCtan(){
-	if(rutpam.ui.show.ctan){
+	if(core.ui.show.ctan){
 		$("#tablaLineasCTAN").css("display", "none");
 		$("#verCTAN").css("color", "black").css("background-color", "white");
-		rutpam.ui.show.ctan = false;
+		core.ui.show.ctan = false;
 	}else{
 		$("#tablaLineasCTAN").css("display", "block");
-		$("#verCTAN").css("color", "white").css("background-color", rutpam.colores.ctmamA);
-		rutpam.ui.show.ctan = true;
+		$("#verCTAN").css("color", "white").css("background-color", core.colores.ctmamA);
+		core.ui.show.ctan = true;
 	}
 }
 
 function togglePanelMetro(){
-	if(rutpam.ui.show.metro){
+	if(core.ui.show.metro){
 		$("#tablaLineasMetro").css("display", "none");
 		$("#verMetro").css("color", "black").css("background-color", "white");
-		rutpam.ui.show.metro = false;
+		core.ui.show.metro = false;
 	}else{
 		$("#tablaLineasMetro").css("display", "block");
-		$("#verMetro").css("color", "white").css("background-color", rutpam.colores.metro);
-		rutpam.ui.show.metro = true;
+		$("#verMetro").css("color", "white").css("background-color", core.colores.metro);
+		core.ui.show.metro = true;
 	}
 }
 
 function togglePanelRenfe(){
-	if(rutpam.ui.show.renfe){
+	if(core.ui.show.renfe){
 		$("#tablaLineasRenfe").css("display", "none");
 		$("#verRenfe").css("color", "black").css("background-color", "white");
-		rutpam.ui.show.renfe = false;
+		core.ui.show.renfe = false;
 	}else{
 		$("#tablaLineasRenfe").css("display", "block");
-		$("#verRenfe").css("color", "white").css("background-color", rutpam.colores.renfeA);
-		rutpam.ui.show.renfe = true;
+		$("#verRenfe").css("color", "white").css("background-color", core.colores.renfeA);
+		core.ui.show.renfe = true;
 	}
 }
 
@@ -810,7 +810,7 @@ function ControlRUTPAM(mapDiv){
 }
 
 function verCopyright(){
-	let rutpam_credits = 'R.U.T.P.A.M. v'+rutpam.version+'<br>\n\
+	let rutpam_credits = 'R.U.T.P.A.M. v'+core.version+'<br>\n\
 	Licencia MIT © Néstor M. Lora - 2018/2019<br>\n\
 	<a href="mailto:nestorlora@geeklab.es">nestorlora@geeklab.es</a><br><br>\n\
 	Datos cartográficos: <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i><i class="fab fa-creative-commons-sa"></i> Colaboradores de <a href="https://openstreetmap.org">OpenStreetMap</a><br>\n\
@@ -856,26 +856,26 @@ function verAyuda(){
 	<p>Cada línea de autobús muestra un color en el disco con su código</p>\n\
 	<h5>Líneas Urbanas</h5>\n\
 	<p>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.emtA+'"></i></span> Líneas convencionales<br>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.emtC+'"></i></span> Líneas circulares EMT<br>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.emtN+'"></i></span> Líneas nocturnas<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+core.colores.emtA+'"></i></span> Líneas convencionales<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+core.colores.emtC+'"></i></span> Líneas circulares EMT<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+core.colores.emtN+'"></i></span> Líneas nocturnas<br>\n\
 	</p>\n\
 	<h5>Líneas Interurbanas</h5>\n\
 	<p>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.ctmamA+'"></i></span> Líneas convencionales<br>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.ctmamN+'"></i></span> Líneas búho<br>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.ctmamT+'"></i></span> Líneas estacionales<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+core.colores.ctmamA+'"></i></span> Líneas convencionales<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+core.colores.ctmamN+'"></i></span> Líneas búho<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+core.colores.ctmamT+'"></i></span> Líneas estacionales<br>\n\
 	</p>\n\
 	<h5>Líneas Especiales</h5>\n\
 	<p>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.especial+'"></i></span> Líneas especiales/Servicios especiales<br>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.express+'"></i></span> Líneas express<br>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.lanzaderas+'"></i></span> Líneas lanzadera<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+core.colores.especial+'"></i></span> Líneas especiales/Servicios especiales<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+core.colores.express+'"></i></span> Líneas express<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+core.colores.lanzaderas+'"></i></span> Líneas lanzadera<br>\n\
 	</p>\n\
 	<h5>Líneas de Metro/Ferrocarril</h5>\n\
 	<p>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.renfeA+'"></i></span> Renfe  Cercanías/Regional/Media Distancia<br>\n\
-	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+rutpam.colores.metro+'"></i></span> Metro Málaga<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+core.colores.renfeA+'"></i></span> Renfe  Cercanías/Regional/Media Distancia<br>\n\
+	<span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+core.colores.metro+'"></i></span> Metro Málaga<br>\n\
 	</p>\n\
 	<h4>Información de líneas</h4>\n\
 	<p>Las paradas pertenecen o bien a la EMT o bien al consorcio por lo que aparecen como EMT-XXXX o CTAN-XXXX y EXXXX o CXXXX en las versiones cortas</p>\n\
@@ -924,12 +924,12 @@ function getLineasEmt(){
 	//$("#getLineas").remove(); // Eliminamos el botón para pedir las líneas
 	// Petición AJAX
 	$.getJSON({
-		url: rutpam.url.emt+'/services/lineas/'
+		url: core.url.emt+'/services/lineas/'
 	}).done(function (response, status){
 		if(status === "success"){
 			for(let i = 0; i<response.length; i++){
 				addLineaEmt(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
-				rutpam.lineasCargadas++;
+				core.lineasCargadas++;
 			}
 			motor(); // Llamamos la primera vez al motor
 			start(); // Programamos que se ejecute periódicamente
@@ -953,7 +953,7 @@ function getTrazadosEmt(idLinea){
 	$("#botonVta"+idLinea).prop("indeterminate", false).prop("disabled", true).off('click');
 	// Llamada AJAX Ida
 	$.getJSON({
-		url: rutpam.url.emt+'/services/trazados/?codLinea='+codLinea(idLinea)+'&sentido=1'
+		url: core.url.emt+'/services/trazados/?codLinea='+codLinea(idLinea)+'&sentido=1'
 	}).done(function (response, status){
 		if(status === "success" && response.length > 0){
 			//let posLinea = findLinea(idLinea); // Almacenamos la posición en lineas[] para uso más cómodo
@@ -963,7 +963,7 @@ function getTrazadosEmt(idLinea){
 				trazado.push(new LatLong(response[a].latitud, response[a].longitud));  // Rellenamos con los datos de la respuesta
 			}
 			linea.trazadoIda = L.polyline(trazado, {
-				color: rutpam.colores.emtA, // Fijamos el color de la ida
+				color: core.colores.emtA, // Fijamos el color de la ida
 				opacity: 1.0, // Opacidad
 				weight: 3 // Grosor
 			});
@@ -982,7 +982,7 @@ function getTrazadosEmt(idLinea){
 	});
 	// Llamada AJAX Vuelta
 	$.getJSON({
-		url: rutpam.url.emt+'/services/trazados/?codLinea='+codLinea(idLinea)+'&sentido=2'
+		url: core.url.emt+'/services/trazados/?codLinea='+codLinea(idLinea)+'&sentido=2'
 	}).done(function (response, status){
 		if(status === "success" && response.length > 0){
 			//let posLinea = findLinea(idLinea); // Almacenamos la posición en lineas[] para uso más cómodo
@@ -992,7 +992,7 @@ function getTrazadosEmt(idLinea){
 				trazado.push(new LatLong(response[a].latitud, response[a].longitud)); // Rellenamos con los datos de la respuesta
 			}
 			linea.trazadoVuelta = L.polyline(trazado, {
-				color: rutpam.colores.emtB, // Fijamos el color de la vuelta
+				color: core.colores.emtB, // Fijamos el color de la vuelta
 				opacity: 1.0, // Opacidad
 				weight: 3 // Grosor
 			});
@@ -1015,7 +1015,7 @@ function getTrazadosEmt(idLinea){
 function getBusesEmt(){
 	$.getJSON({
 		//url: betteremt_api_url+'/buses/all'
-		url: rutpam.url.odm+'datastore_search_sql?sql=SELECT * from "9bc05288-1c11-4eec-8792-d74b679c8fcf" WHERE last_update=(SELECT MAX(last_update) from "9bc05288-1c11-4eec-8792-d74b679c8fcf")'
+		url: core.url.odm+'datastore_search_sql?sql=SELECT * from "9bc05288-1c11-4eec-8792-d74b679c8fcf" WHERE last_update=(SELECT MAX(last_update) from "9bc05288-1c11-4eec-8792-d74b679c8fcf")'
 	}).done(function (response, status){
 		if(status === "success"){
 			/* Limpieza Open Data Málaga */
@@ -1064,7 +1064,7 @@ function addBusEmt(bus){
 	// Añadimos el vehículo si la línea está siendo visualizada
 	let linea = lineas.buscar(vehiculo.linea);
 	if(linea.estado.getBuses){
-		vehiculo.marker.addTo(rutpam.map);
+		vehiculo.marker.addTo(core.map);
 	}
 	linea.numVehiculos++;
 }
@@ -1082,10 +1082,10 @@ function updateBusEmt(bus){
 	vehiculo.popup.setContent(busPopupContent(vehiculo));
 
 	if(lineas.buscar(vehiculo.linea).estado.getBuses){
-		vehiculo.marker.addTo(rutpam.map);
+		vehiculo.marker.addTo(core.map);
 	}
-	if(vehiculo.ttl < rutpam.ttl.default){
-		vehiculo.ttl = rutpam.ttl.default;
+	if(vehiculo.ttl < core.ttl.default){
+		vehiculo.ttl = core.ttl.default;
 		vehiculo.marker.setIcon(busIconContent(vehiculo, 0));
 	}
 }
@@ -1234,7 +1234,7 @@ function codLinea(idLinea){
 function getModos(){
 	// Petición AJAX
 	$.getJSON({
-		url: rutpam.url.ctan+'/modostransporte?lang=ES'
+		url: core.url.ctan+'/modostransporte?lang=ES'
 	}).done(function (response, status){
 		if(status === "success"){
             response = response.modosTransporte;
@@ -1251,7 +1251,7 @@ function getModos(){
 function getZonas(){
     // Petición AJAX
 	$.getJSON({
-		url: rutpam.url.ctan+'/zonas?lang=ES'
+		url: core.url.ctan+'/zonas?lang=ES'
 	}).done(function (response, status){
 		if(status === "success"){
             response = response.zonas;
@@ -1269,7 +1269,7 @@ function getZonas(){
 function getLineasCtan(){
     // Petición AJAX
 	$.getJSON({
-		url: rutpam.url.ctan+'/lineas?lang=ES'
+		url: core.url.ctan+'/lineas?lang=ES'
 	}).done(function (response, status){
 		if(status === "success"){
 			response = response.lineas;
@@ -1285,11 +1285,11 @@ function getLineasCtan(){
 function getLineaCompletaCtan(ctanId){
 	// Petición AJAX
 	$.getJSON({
-		url: rutpam.url.ctan+'/lineas/'+ctanId+'?lang=ES'
+		url: core.url.ctan+'/lineas/'+ctanId+'?lang=ES'
 	}).done(function (response, status){
 		if(status === "success"){
 			updateLineaCtan(response); // Pasamos la línea por addLinea()
-			rutpam.lineasCargadas++;
+			core.lineasCargadas++;
 		}
 	}).fail(function (response, status, error){
 		if(error === "Bad Request"){ //Si el servidor no ha atendido la petición, se vuelve a hacer con recursividad
@@ -1379,13 +1379,13 @@ function updateLineaCtan(lin){
 	let color;
 	switch(lin.modo){
 		case "Autobús":
-			color = rutpam.colores.ctmamA;
+			color = core.colores.ctmamA;
 			break;
 		case "Metro":
-			color = rutpam.colores.metro;
+			color = core.colores.metro;
 			break;
 		case "Tren":
-			color = rutpam.colores.renfeA;
+			color = core.colores.renfeA;
 			break;
 	}
 	linea.trazadoIda = L.polyline(trazadoIda, {
@@ -1404,7 +1404,7 @@ function updateLineaCtan(lin){
 	});
 	if(trazadoVuelta.length !== 0){
 		linea.trazadoVuelta = L.polyline(trazadoVuelta, {
-			color: rutpam.colores.ctmamB, // Fijamos el color de la vuelta (solo los buses tienen vuelta)
+			color: core.colores.ctmamB, // Fijamos el color de la vuelta (solo los buses tienen vuelta)
 			opacity: 1.0, // Opacidad
 			weight: 3 // Grosor
 		});
@@ -1423,7 +1423,7 @@ function updateLineaCtan(lin){
 function getParadasLineaCtan(id){
     // Petición AJAX
 	$.getJSON({
-		url: rutpam.url.ctan+'/lineas/'+idLinea(id)+'/paradas?lang=ES'
+		url: core.url.ctan+'/lineas/'+idLinea(id)+'/paradas?lang=ES'
 	}).done(function (response, status){
 		if(status === "success"){
 			let linea = lineas.buscar(id);
