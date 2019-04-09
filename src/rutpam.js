@@ -84,12 +84,86 @@ class Core {
         this.vehiculos = new Listado();
         // Interfaz
         this.ui = {
+            // Variables
             show: {
                 emt: false,
                 ctan: false,
                 metro: false,
                 renfe: false
+            },
+
+            // Textos
+            textos: {
+                ayuda: '<h4>Controles</h4>\n\
+                    <p>\n\
+                        <table>\n\
+                            <tbody>\n\
+                                <tr><th colspan="2">Mapa</th></tr>\n\
+                                <tr><td>-</td><td>Reducir Zoom</td></tr>\n\
+                                <tr><td>+</td><td>Aumentar Zoom</td></tr>\n\
+                                <tr><th colspan="2">Ventanas</th></tr>\n\
+                                <tr><td>Esc</td><td>Cierra todas las ventanas</td></tr>\n\
+                                <tr><td>?</td><td>Muestra la ventana de ayuda</td></tr>\n\
+                                <tr><th colspan="2">Redes</th></tr>\n\
+                                <tr><td>1</td><td>Muestra/oculta Red EMT</td></tr>\n\
+                                <tr><td>2</td><td>Muestra/oculta Red CTMAM</td></tr>\n\
+                                <tr><td>3</td><td>Muestra/oculta Red Metro</td></tr>\n\
+                                <tr><td>4</td><td>Muestra/oculta RENFE</td></tr>\n\
+                            </tbody>\n\
+                        </table>\n\
+                    </p>\n\
+                    <h4>Leyenda de colores</h4>\n\
+                    <p>Cada línea de autobús muestra un color en el disco con su código</p>\n\
+                    <h5>Líneas Urbanas</h5>\n\
+                    <p>\n\
+                    <span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+this.colores.emtA+'"></i></span> Líneas convencionales<br>\n\
+                    <span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+this.colores.emtC+'"></i></span> Líneas circulares EMT<br>\n\
+                    <span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+this.colores.emtN+'"></i></span> Líneas nocturnas<br>\n\
+                    </p>\n\
+                    <h5>Líneas Interurbanas</h5>\n\
+                    <p>\n\
+                    <span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+this.colores.ctmamA+'"></i></span> Líneas convencionales<br>\n\
+                    <span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+this.colores.ctmamN+'"></i></span> Líneas búho<br>\n\
+                    <span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+this.colores.ctmamT+'"></i></span> Líneas estacionales<br>\n\
+                    </p>\n\
+                    <h5>Líneas Especiales</h5>\n\
+                    <p>\n\
+                    <span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+this.colores.especial+'"></i></span> Líneas especiales/Servicios especiales<br>\n\
+                    <span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+this.colores.express+'"></i></span> Líneas express<br>\n\
+                    <span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+this.colores.lanzaderas+'"></i></span> Líneas lanzadera<br>\n\
+                    </p>\n\
+                    <h5>Líneas de Metro/Ferrocarril</h5>\n\
+                    <p>\n\
+                    <span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+this.colores.renfeA+'"></i></span> Renfe  Cercanías/Regional/Media Distancia<br>\n\
+                    <span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+this.colores.metro+'"></i></span> Metro Málaga<br>\n\
+                    </p>\n\
+                    <h4>Información de líneas</h4>\n\
+                    <p>Las paradas pertenecen o bien a la EMT o bien al consorcio por lo que aparecen como EMT-XXXX o CTAN-XXXX y EXXXX o CXXXX en las versiones cortas</p>\n\
+                    <p>En proceso...</p>\n\
+                    <h4>Información de paradas</h4>\n\
+                    <p>En proceso...</p>\n\
+                    <h4>Información de vehículos</h4>\n\
+                    <p>Los marcadores de cada vehículo muestran su código, la línea que están sirviendo, el destino y, si es posible, la última parada realizada. En los vehículos de la EMT también hay un enlace a Busca Bus para consultar la información relativa al vehículo<br>\n\
+                    Bus, Línea, Última Parada Realizada, Sentido, link a BuscaBus</p>',
+                copyright: 'R.U.T.P.A.M. v'+this.version+'<br>\n\
+                    Licencia MIT © Néstor M. Lora - 2018/2019<br>\n\
+                    <a href="mailto:nestorlora@geeklab.es">nestorlora@geeklab.es</a><br><br>\n\
+                    Datos cartográficos: <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i><i class="fab fa-creative-commons-sa"></i> Colaboradores de <a href="https://openstreetmap.org">OpenStreetMap</a><br>\n\
+                    <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i></i><i class="fab fa-creative-commons-sa"></i> Datos Abiertos del Ayuntamiento de Málaga<br>\n\
+                    Datos Abiertos de la Red de Consorcios de Transporte de Andalucía<br>\n\
+                    <br>\n\
+                    Construido con <i title="HTML 5" class="fab fa-html5 fa-2x fa-fw" style="color: orangered"></i> \n\
+                    <i title="CSS 3" class="fab fa-css3-alt fa-2x fa-fw" style="color: dodgerblue"></i> \n\
+                    <span title="JavaScript" class="fa-2x fa-layers fa-fw">\n\
+                    <i class="fas fa-square" style="color: black"></i>\n\
+                    <i class="fab fa-js" style="color: yellow"></i>\n\
+                    </span>\n\
+                    jQuery <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> \n\
+                    <i title="Font Awesome" class="fab fa-font-awesome fa-2x fa-fw" style="color: dodgerblue"></i><br>\n\
+                    Consulta el repositorio en <a href="https://github.com/nestorlora/RUTPAM">Github<i class="fab fa-github fa-fw" style="color: indigo"></i></a>'
             }
+            // Funciones
+
         }
     }
 }
