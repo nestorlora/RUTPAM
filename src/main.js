@@ -466,29 +466,6 @@ function hideParada(id){
 	}
 }
 
-/*
- * Busca la posición de una línea dentro de lineas[]
- * @param {Number} idLinea
- * @returns {Number} Posición en lineas[]
- * @deprecated
- *
-function findLinea(idLinea){
-	let pos = 0;
-	let found = false;
-	while(pos < lineas.length && !found){
-		if(lineas[pos].idLinea === idLinea){
-			found = true;
-		}else{
-			pos++;
-		}
-	}
-	if(pos >= lineas.length){
-		return null;
-	}else{
-		return pos;
-	}
-}*/
-
 /**
  * Busca la posición de un coche dentro de autobuses[]
  * @param {Number} codBus
@@ -510,49 +487,6 @@ function findBus(codBus){
 		return pos;
 	}
 }
-
-/*
- * Busca la posición de ua parada dentro de paradas[]
- * @param {Number} codPar
- * @returns {Number} Posición en paradas[]
- *
-function findParada(codPar){
-	let pos = 0;
-	let found = false;
-	while(pos < paradas.length && !found){
-		if(paradas[pos].codPar === codPar){
-			found = true;
-		}else{
-			pos++;
-		}
-	}
-	if(pos >= paradas.length){
-		return null;
-	}else{
-		return pos;
-	}
-}
-*/
-/*
- * @deprecated
- * @param {*} idModo 
- *
-function findModo(idModo){
-	let pos = 0;
-	let found = false;
-	while(pos < modos.length && !found){
-		if(modos[pos].idModo === idModo){
-			found = true;
-		}else{
-			pos++;
-		}
-	}
-	if(pos >= modos.length){
-		return null;
-	}else{
-		return pos;
-	}
-}*/
 
 /**
  * @description Calcula la distancia total de un trazado indicado
@@ -1106,31 +1040,6 @@ function getTrazadosEmt(idLinea){
 	});
 	return null;
 }
-/*
-/**
- * @deprecated
- * @param {String} idLinea 
- *
-function getUbicacionesEmt(idLinea){
-	$.getJSON({
-		//url: emt_proxy_url+'/services/buses/?codLinea='+codLinea
-		url: betteremt_api_url+'/buses/linea/'+codLinea(idLinea)
-	}).done(function (response, status){
-		if(status === "success"){
-			for(let x = 0; x < response.length; x++){
-                pos = findBus(response[x].codBus);
-                response[x].idLinea = "EMT-"+response[x].codLinea;
-				if(pos !== null){
-					updateBusEmt(response[x], pos);
-				}else{
-					addBusEmt(response[x]);
-				}
-			}
-			lineas[findLinea(idLinea)].numBuses = response.length;
-			$("#cont"+idLinea).text(response.length);
-		}		
-	});
-};*/
 
 function getBusesEmt(){
 	$.getJSON({
