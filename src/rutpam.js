@@ -35,9 +35,8 @@ const ttl_rate_default = 60; // TTL por defecto (en refrescos)
 
 class Rutpam {
     constructor(){
+        // Parámetros
         this.version = rutpam_version;
-        this.timer = undefined;
-        this.map = undefined;
         this.colores = {
             // EMT SAM + Urbanos Consorcio
             emtA: "#1E3180", // Primario, lineas regulares, sentido ida
@@ -81,8 +80,20 @@ class Rutpam {
             ctan: ctan_url,
             odm: odm_url
         }
+        // Variables
+        this.timer = undefined;
+        this.map = undefined;
         this.lineasCargadas = 0;
         this.paradasInicializadas = false;
+        // Interfaz
+        this.ui = {
+            show: {
+                emt: false,
+                ctan: false,
+                metro: false,
+                renfe: false
+            }
+        }
     }
 }
 
@@ -142,6 +153,7 @@ class Parada {
         this.marker = null;
         this.popup = null;
         this.vistas = 0;
+        // TO DO this.red = undefined; // 0 EMT 1 CTMAM
     }
 }
 
@@ -155,6 +167,7 @@ class Vehiculo {
         this.marker = null;
         this.popup = null;
         this.ttl = new Rutpam().ttl.new;
+        // TO DO this.red = undefined; // 0 EMT 1 CTMAM
     }
 }
 
@@ -188,6 +201,7 @@ class Listado extends Array {
      */
     buscar(id){
         return this.find(obj => obj.id === id);
+        // TO DO throw not found
     }
     push(obj){
         if(obj instanceof Modo||obj instanceof Zona||obj instanceof Linea||obj instanceof Parada||obj instanceof Vehiculo){
