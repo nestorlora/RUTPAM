@@ -27,11 +27,6 @@
 'use strict';
 
 var core = new Core();
-var modos = new Listado();
-var zonas = new Listado();
-var lineas = new Listado();
-var paradas = new Listado();
-var vehiculos = new Listado();
 
 /**
  * Función de puesta en marcha cuando finaliza la carga del DOM
@@ -77,12 +72,12 @@ function initKeys(){
 				closeInfo();
 				break;
 			case "Backspace":
-				for(var a = 0; a < lineas.length; a++){ // Para todas las líneas
-					if(lineas[a].trazadoIda !== null){ // Si está cargado su trazado
-						hideTrazado(lineas[a].id, 1);
+				for(var a = 0; a < core.lineas.length; a++){ // Para todas las líneas
+					if(core.lineas[a].trazadoIda !== null){ // Si está cargado su trazado
+						hideTrazado(core.lineas[a].id, 1);
 					}
-					if(lineas[a].trazadoVuelta !== null){
-						hideTrazado(lineas[a].id, 2);
+					if(core.lineas[a].trazadoVuelta !== null){
+						hideTrazado(core.lineas[a].id, 2);
 					}
 				}
 				break;
@@ -114,27 +109,27 @@ function initKeys(){
 function motor(){
 	getBusesEmt(); // Pedimos toda la información actualizada de los buses
 	let pos = 0; // Empezamos por el principio
-	while(pos < vehiculos.length){ // Para todos los autobuses
+	while(pos < core.vehiculos.length){ // Para todos los autobuses
 		//let poslinea = findLinea(vehiculos[pos].linea); // Extraemos la dirección de la línea en el array
-		let linea = lineas.buscar(vehiculos[pos].linea);
-		vehiculos[pos].ttl--; // Decrementar TTL
-		if(vehiculos[pos].ttl <= 0){ // SI su vida útil ha expirado
-			console.log("DROP "+vehiculos[pos].id); // Registramos que se pierde
-			vehiculos[pos].marker.remove(); // Quitamos el marcador del mapa
+		let linea = core.lineas.buscar(core.vehiculos[pos].linea);
+		core.vehiculos[pos].ttl--; // Decrementar TTL
+		if(core.vehiculos[pos].ttl <= 0){ // SI su vida útil ha expirado
+			console.log("DROP "+core.vehiculos[pos].id); // Registramos que se pierde
+			core.vehiculos[pos].marker.remove(); // Quitamos el marcador del mapa
 			linea.numVehiculos--; // Decrementamos el número de buses en la línea
-			vehiculos.splice(pos, 1); // Borramos el objeto del array
+			core.vehiculos.splice(pos, 1); // Borramos el objeto del array
 		}else if(linea.estado.getBuses === false){ // O SI no estamos haciendo un seguimiento de esa línea
-			vehiculos[pos].marker.remove(); // Quitamos el marcador del mapa
+			core.vehiculos[pos].marker.remove(); // Quitamos el marcador del mapa
 			pos++; // Avanzamos de posición
-		}else if(vehiculos[pos].ttl <= core.ttl.old){ // O SI el TTL es bajo y el bus lleva rato sin refrescarse
-			vehiculos[pos].marker.setIcon(busIconContent(vehiculos[pos], 2)); // Cambiamos el icono para que aparezca como no-actualizado
+		}else if(core.vehiculos[pos].ttl <= core.ttl.old){ // O SI el TTL es bajo y el bus lleva rato sin refrescarse
+			core.vehiculos[pos].marker.setIcon(busIconContent(core.vehiculos[pos], 2)); // Cambiamos el icono para que aparezca como no-actualizado
 			pos++; // Avanzamos de posición
 		}else{ // O Todo está bien
 			pos++; // Avanzamos de posición
 		}
 	}
-	for(let a = 0; a < lineas.length; a++){ // Para todas las líneas
-		$("#cont"+lineas[a].id).text(lineas[a].numVehiculos); // Actualizamos el indicador de buses en servicio
+	for(let a = 0; a < core.lineas.length; a++){ // Para todas las líneas
+		$("#cont"+core.lineas[a].id).text(core.lineas[a].numVehiculos); // Actualizamos el indicador de buses en servicio
 	}
 	return null;
 }
@@ -164,21 +159,21 @@ function start(){
 }
 
 function inicializarParadas(){
-	if(core.lineasCargadas < lineas.length || core.lineasCargadas < 80){
+	if(core.lineasCargadas < core.lineas.length || core.lineasCargadas < 80){
 		setTimeout(inicializarParadas, 1500);
 	}else{
 		$("#loader").remove();
-		for(let a = 0; a < paradas.length; a++){
-			paradas[a].marker = L.marker(paradas[a].ubicacion, {icon: paradaIconContent(paradas[a].id)});
-			paradas[a].popup = L.popup({autoPan: false, autoClose: false}).setContent(paradaPopupContent(paradas[a].id));
-			paradas[a].marker.bindPopup(paradas[a].popup);
+		for(let a = 0; a < core.paradas.length; a++){
+			core.paradas[a].marker = L.marker(core.paradas[a].ubicacion, {icon: paradaIconContent(core.paradas[a].id)});
+			core.paradas[a].popup = L.popup({autoPan: false, autoClose: false}).setContent(paradaPopupContent(core.paradas[a].id));
+			core.paradas[a].marker.bindPopup(core.paradas[a].popup);
 		}
 		core.paradasInicializadas = true;
 	}
 }
 
 function verInfoLinea(id){
-	let linea = lineas.buscar(id);
+	let linea = core.lineas.buscar(id);
 	$("#ventana").hide(); // Escondemos la ventana
 	$("#infoContent").empty(); // Eliminamos contenido anterior
 	//
@@ -261,11 +256,11 @@ function generarBotonToggleParadas(idLinea){
 	});
 	$(botonParadas).text("Mostrar/Ocultar paradas");
 	if(core.paradasInicializadas){// SI las paradas estan inicializadas
-		if(lineas.buscar(idLinea).estado.verParadas === true){ // SI estamos mostrando las paradas de esta línea
+		if(core.lineas.buscar(idLinea).estado.verParadas === true){ // SI estamos mostrando las paradas de esta línea
 			$(botonParadas).css("background-color", core.colores.especial); // Poner el botón en on
 		}
 		$(botonParadas).on("click", function(){
-			let linea = lineas.buscar(idLinea); // Sacamos la línea para trabajar con ella
+			let linea = core.lineas.buscar(idLinea); // Sacamos la línea para trabajar con ella
 			if(linea.estado.verParadas === true){ // SI estamos mostrando las paradas de esta línea
 				for(let a = 0; a < linea.paradasIda.length; a++){ // Ocultar todas las paradas a la ida
 					hideParada(linea.paradasIda[a].id);
@@ -325,7 +320,7 @@ function generarTablaParadas(linea){
 
 function generarFilaParada(div, idParada, idLinea){
 	if(idParada !== undefined && idParada !== null){
-		let nombre = paradas.buscar(idParada).nombre;
+		let nombre = core.paradas.buscar(idParada).nombre;
 		div.append($("<td>").append($("<a>", {text: idParada, href: "#!"}).click(function(){verInfoParada(idParada);})));
 		div.append($("<td>", {html: acortarParada(nombre)}));
 		div.append(extrarCorrespondencias($("<td>"),idParada, idLinea));
@@ -336,7 +331,7 @@ function generarFilaParada(div, idParada, idLinea){
 }
 
 function verInfoParada(id){
-	let parada = paradas.buscar(id);
+	let parada = core.paradas.buscar(id);
 	$("#ventana").hide();
 	$("#infoContent").empty();
 	$("#infoContent").append($("<h3>", {text: "Parada "+parada.id}).css("text-align", "center"));
@@ -349,7 +344,7 @@ function verInfoParada(id){
 	cabecera.append($("<th>", {text: "Servicios"}).prop("colspan", /*3*/2));
 	tabla.append(cabecera);
 	for(let a = 0; a < parada.servicios.length; a++){
-		let linea = lineas.buscar(parada.servicios[a].linea);
+		let linea = core.lineas.buscar(parada.servicios[a].linea);
 		let sentido;
 		switch (parada.servicios[a].sentido){
 			case 1:
@@ -375,7 +370,7 @@ function verInfoParada(id){
 }
 
 function enableBusUpdate(idLinea){
-	lineas.buscar(idLinea).estado.getBuses = true;
+	core.lineas.buscar(idLinea).estado.getBuses = true;
 	$("#botonBus"+idLinea).prop("checked", true);
 	$("#botonBus"+idLinea).unbind("click");
 	$("#botonBus"+idLinea).click(function(){
@@ -384,7 +379,7 @@ function enableBusUpdate(idLinea){
 }
 
 function disableBusUpdate(idLinea){
-	lineas.buscar(idLinea).estado.getBuses = false;
+	core.lineas.buscar(idLinea).estado.getBuses = false;
 	$("#botonBus"+idLinea).prop("checked", false);
 	$("#botonBus"+idLinea).unbind("click");
 	$("#botonBus"+idLinea).click(function(){
@@ -399,9 +394,9 @@ function disableBusUpdate(idLinea){
  */
 function showTrazado(idLinea, sentido){
 	if(sentido === 1){
-		lineas.buscar(idLinea).trazadoIda.addTo(core.map);
+		core.lineas.buscar(idLinea).trazadoIda.addTo(core.map);
 	}else if(sentido === 2){
-		lineas.buscar(idLinea).trazadoVuelta.addTo(core.map);
+		core.lineas.buscar(idLinea).trazadoVuelta.addTo(core.map);
 	}
 }
 
@@ -412,23 +407,23 @@ function showTrazado(idLinea, sentido){
  */
 function hideTrazado(idLinea, sentido){
 	if(sentido === 1){
-		lineas.buscar(idLinea).trazadoIda.remove();
+		core.lineas.buscar(idLinea).trazadoIda.remove();
 		$("#botonIda"+idLinea).prop("checked", false);
 	}else if(sentido === 2){
-		lineas.buscar(idLinea).trazadoVuelta.remove();
+		core.lineas.buscar(idLinea).trazadoVuelta.remove();
 		$("#botonVta"+idLinea).prop("checked", false);
 	}
 }
 
 function showParada(id){
-	let parada = paradas.buscar(id);
+	let parada = core.paradas.buscar(id);
 	if(parada.vistas++ === 0){ // SI nadie ha puesto antes el marcador (y lo incrementamos)
 		parada.marker.addTo(core.map); // Añadimos el marcador al mapa
 	}
 }
 
 function hideParada(id){
-	let parada = paradas.buscar(id);
+	let parada = core.paradas.buscar(id);
 	if(--parada.vistas === 0){ // (Reducimos contador) | SI nadie ha puesto antes el marcador... lo quitamos
 		parada.marker.remove(); // Quitamos el marcador del mapa
 	}
@@ -474,16 +469,16 @@ function distanciaTrazado(trazado){
 
 function extrarCorrespondencias(div, idParada, idLinea){
 	$(div).css("max-width", "73px");
-	let parada = paradas.buscar(idParada);
+	let parada = core.paradas.buscar(idParada);
 	for(let a = 0; a < parada.servicios.length; a++){
 		let servicio = parada.servicios[a].linea;
 		if(servicio !== idLinea){
 			if(a === 0){
-				let linea = lineas.buscar(servicio);
+				let linea = core.lineas.buscar(servicio);
 				let spanIcon = lineaIcon(linea.codigo, "2x", linea.id);
 				$(div).append(spanIcon);
 			}else if(servicio !== parada.servicios[a-1].idLinea){
-				let linea = lineas.buscar(servicio);
+				let linea = core.lineas.buscar(servicio);
 				let spanIcon = lineaIcon(linea.codigo, "2x", linea.id);
 				$(div).append(spanIcon);
 			}
@@ -561,7 +556,7 @@ function lineaIcon(userCodLinea, zoom, idLinea){
  * @returns {String}
  */
 function busPopupContent(vehiculo){
-	let linea = lineas.buscar(vehiculo.linea);
+	let linea = core.lineas.buscar(vehiculo.linea);
 	let codigo = vehiculo.id.replace(/^EMT-|^CTAN-/,"");
 	let sentido;
 	switch(vehiculo.sentido){
@@ -574,7 +569,7 @@ function busPopupContent(vehiculo){
 		default:
 			sentido = "¿? Desconocido ("+vehiculo.sentido+") ¿?";
 	}
-	let parada = paradas.buscar(vehiculo.paradaInicio);
+	let parada = core.paradas.buscar(vehiculo.paradaInicio);
 	let textoParada;
 	if(parada !== undefined){
 		textoParada = "Ult. Par. Realizada: <b>"+vehiculo.paradaInicio+"<br>"+parada.nombre+"</b>";
@@ -589,7 +584,7 @@ function busPopupContent(vehiculo){
 
 function paradaPopupContent(id){
 	let div = $("<div>");
-	let parada = paradas.buscar(id);
+	let parada = core.paradas.buscar(id);
 	$(div).append($("<h3>", {text: "Parada "+parada.id}).css("text-align", "center"));
 	$(div).append($("<h4>", {text: parada.nombre}).css("text-align", "center"));
 	let tabla = $("<table>");
@@ -597,7 +592,7 @@ function paradaPopupContent(id){
 	$(cabecera).append($("<th>", {text: "Servicios"}).prop("colspan", /*3 2));
 	$(tabla).append(cabecera);*/
 	for(let a = 0; a < parada.servicios.length; a++){
-		let linea = lineas.buscar(parada.servicios[a].linea);
+		let linea = core.lineas.buscar(parada.servicios[a].linea);
 		let sentido;
 		switch (parada.servicios[a].sentido){
 			case 1:
@@ -621,7 +616,7 @@ function paradaPopupContent(id){
 }
 
 function busIconContent(bus, estado){
-	let linea = lineas.buscar(bus.linea);
+	let linea = core.lineas.buscar(bus.linea);
 	let codigo = bus.id.replace(/^EMT-|^CTAN-/,"");
 	let html = linea.codigo+"<br>"+codigo;
 	let clase;
@@ -957,7 +952,7 @@ function getTrazadosEmt(idLinea){
 	}).done(function (response, status){
 		if(status === "success" && response.length > 0){
 			//let posLinea = findLinea(idLinea); // Almacenamos la posición en lineas[] para uso más cómodo
-			let linea = lineas.buscar(idLinea); // Referenciamos la línea con la que trabajamos
+			let linea = core.lineas.buscar(idLinea); // Referenciamos la línea con la que trabajamos
 			let trazado = []; // Creamos un array con los puntos de latitud y longitud del polígono
 			for(let a = 0; a < response.length; a++){
 				trazado.push(new LatLong(response[a].latitud, response[a].longitud));  // Rellenamos con los datos de la respuesta
@@ -986,7 +981,7 @@ function getTrazadosEmt(idLinea){
 	}).done(function (response, status){
 		if(status === "success" && response.length > 0){
 			//let posLinea = findLinea(idLinea); // Almacenamos la posición en lineas[] para uso más cómodo
-			let linea = lineas.buscar(idLinea); // Referenciamos la línea con la que trabajamos
+			let linea = core.lineas.buscar(idLinea); // Referenciamos la línea con la que trabajamos
 			let trazado = []; // Creamos un array con los puntos de latitud y longitud del polígono
 			for(let a = 0; a < response.length; a++){
 				trazado.push(new LatLong(response[a].latitud, response[a].longitud)); // Rellenamos con los datos de la respuesta
@@ -1033,7 +1028,7 @@ function getBusesEmt(){
 				response[x].codBus = "EMT-"+response[x].codBus;
 				response[x].codLinea = "EMT-"+response[x].codLinea;
 				response[x].codParIni = "EMT-"+response[x].codParIni;
-				if(vehiculos.buscar(response[x].codBus) !== undefined){
+				if(core.vehiculos.buscar(response[x].codBus) !== undefined){
 					updateBusEmt(response[x]);
 				}else{
 					addBusEmt(response[x]);
@@ -1059,10 +1054,10 @@ function addBusEmt(bus){
 	}).setContent(busPopupContent(vehiculo));
 	vehiculo.marker.bindPopup(vehiculo.popup); /* */
 	// Insertamos el vehículo
-	vehiculos.push(vehiculo);
+	core.vehiculos.push(vehiculo);
 	console.log("ADDED "+vehiculo.id);
 	// Añadimos el vehículo si la línea está siendo visualizada
-	let linea = lineas.buscar(vehiculo.linea);
+	let linea = core.lineas.buscar(vehiculo.linea);
 	if(linea.estado.getBuses){
 		vehiculo.marker.addTo(core.map);
 	}
@@ -1070,7 +1065,7 @@ function addBusEmt(bus){
 }
 
 function updateBusEmt(bus){
-	let vehiculo = vehiculos.buscar(bus.codBus);
+	let vehiculo = core.vehiculos.buscar(bus.codBus);
 	let posicion = new LatLong(bus.latitud, bus.longitud);
 	if(!vehiculo.marker.getLatLng().equals(posicion)){
 		vehiculo.marker.setLatLng(posicion)
@@ -1081,7 +1076,7 @@ function updateBusEmt(bus){
 	vehiculo.paradaInicio = bus.codParIni
 	vehiculo.popup.setContent(busPopupContent(vehiculo));
 
-	if(lineas.buscar(vehiculo.linea).estado.getBuses){
+	if(core.lineas.buscar(vehiculo.linea).estado.getBuses){
 		vehiculo.marker.addTo(core.map);
 	}
 	if(vehiculo.ttl < core.ttl.default){
@@ -1147,7 +1142,7 @@ function addLineaEmt(lin){
 		linea.paradasIda.push(new RelacionParadas(linea.paradasVuelta[0].id,linea.paradasIda.length));
 		linea.paradasVuelta.push(new RelacionParadas(linea.paradasIda[0].id,linea.paradasVuelta.length));
 	}
-	lineas.push(linea);
+	core.lineas.push(linea);
 	//getTrazados(linea.idLinea);
 	
 	// Creamos los elementos de la línea en la tabla de la GUI
@@ -1183,7 +1178,7 @@ function addLineaEmt(lin){
 }
 
 function addParadaEmt(par, idLinea, sentido){
-	let parada = paradas.buscar("EMT-"+par.codParada);
+	let parada = core.paradas.buscar("EMT-"+par.codParada);
 	if(parada === undefined){ // La parada no existe
 		// Creación de la parada
 		parada = new Parada();
@@ -1195,9 +1190,9 @@ function addParadaEmt(par, idLinea, sentido){
 		parada.ubicacion = new LatLong(par.latitud, par.longitud);
 		parada.modos.push(1); // Añadimos el elemento autobús
 		// Guardamos la parada
-		paradas.push(parada);
+		core.paradas.push(parada);
 	}
-	parada = paradas.buscar("EMT-"+par.codParada);
+	parada = core.paradas.buscar("EMT-"+par.codParada);
 	// Creamos el servicio
 	let servicio = new Servicio();
 	servicio.linea = idLinea;
@@ -1242,7 +1237,7 @@ function getModos(){
 				let modo = new Modo();
 				modo.id = parseInt(response[i].idModo);
 				modo.descripcion = response[i].descripcion;
-                modos.push(modo);
+                core.modos.push(modo);
 			}
 		}
 	});
@@ -1260,7 +1255,7 @@ function getZonas(){
 				zona.id = response[i].idZona;
 				zona.nombre = response[i].nombre;
 				zona.color = response[i].color;
-                zonas.push(zona);
+                core.zonas.push(zona);
 			}
 		}
 	});
@@ -1314,7 +1309,7 @@ function addLineaCtan(lin){
 	linea.modo = lin.modo;
 	linea.hayNoticia = lin.hayNoticia;
 	linea.operadores = (lin.operadores).replace(/, $/, "");
-    lineas.push(linea);
+    core.lineas.push(linea);
 
 	getParadasLineaCtan(linea.id);
 
@@ -1349,7 +1344,7 @@ function addLineaCtan(lin){
 }
 
 function updateLineaCtan(lin){
-	let linea = lineas.buscar("CTAN-"+lin.idLinea);
+	let linea = core.lineas.buscar("CTAN-"+lin.idLinea);
 	let id = linea.id;
 	linea.tieneIda = lin.tieneIda===1?true:false;
 	linea.tieneVuelta = lin.tieneVuelta===1?true:false;
@@ -1426,7 +1421,7 @@ function getParadasLineaCtan(id){
 		url: core.url.ctan+'/lineas/'+idLinea(id)+'/paradas?lang=ES'
 	}).done(function (response, status){
 		if(status === "success"){
-			let linea = lineas.buscar(id);
+			let linea = core.lineas.buscar(id);
 			let cabeceraIda, cabeceraVuelta;
 			response = response.paradas;
             for(let i = 0; i<response.length; i++){ // Por cada parada
@@ -1479,7 +1474,7 @@ function getParadasLineaCtan(id){
 }
 
 function addParadaCtan(par, idLinea){
-	let parada = paradas.buscar("CTAN-"+par.idParada);
+	let parada = core.paradas.buscar("CTAN-"+par.idParada);
 	if(parada === undefined){ // La parada no existe
 		// Creación de la parada
 		parada = new Parada();
@@ -1504,9 +1499,9 @@ function addParadaCtan(par, idLinea){
 				break;
 		}
 		// Guardamos la parada
-		paradas.push(parada);
+		core.paradas.push(parada);
 	}
-	parada = paradas.buscar("CTAN-"+par.idParada);
+	parada = core.paradas.buscar("CTAN-"+par.idParada);
 	// Creamos el servicio
 	let servicio = new Servicio();
 	servicio.linea = idLinea;

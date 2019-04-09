@@ -77,6 +77,11 @@ class Core {
         this.map = undefined;
         this.lineasCargadas = 0;
         this.paradasInicializadas = false;
+        this.modos = new Listado();
+        this.zonas = new Listado();
+        this.lineas = new Listado();
+        this.paradas = new Listado();
+        this.vehiculos = new Listado();
         // Interfaz
         this.ui = {
             show: {
