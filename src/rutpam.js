@@ -158,7 +158,7 @@ class Vehiculo {
         this.posicion = new LatLong();
         this.marker = null;
         this.popup = null;
-        this.ttl = new Rutpam().ttl.new;
+        this.ttl = new Core().ttl.new;
         // TO DO this.red = undefined; // 0 EMT 1 CTMAM
     }
 }
