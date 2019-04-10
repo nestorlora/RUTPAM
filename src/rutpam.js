@@ -161,9 +161,96 @@ class Core {
                     jQuery <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> \n\
                     <i title="Font Awesome" class="fab fa-font-awesome fa-2x fa-fw" style="color: dodgerblue"></i><br>\n\
                     Consulta el repositorio en <a href="https://github.com/nestorlora/RUTPAM">Github<i class="fab fa-github fa-fw" style="color: indigo"></i></a>'
-            }
+            },
             // Funciones
+            action: {
+                closeWindow: function(){
+                    $("#ventana").hide();
+                },
+                clearInfo: function(){
+                    $("#infoContent").empty();
+                }
+            },
+            // Inicializadores
+            init: {
+                controles: function(){
+                    let div = $("<div>");
+                    let titulo = $("<h2>", {"text":"RUTPAM"});
+                    let descripcion = $("<p>", {"text":"Información de transportes metropolitanos del área de Málaga"});
+                    let loader = $("<p>", {"id": "loader", "text": "Todavía cargando datos..."}).css("color", "white").css("background-color", "red");
+                    $(div).append(titulo).append(descripcion).append(loader);
+                    let botonEMT = $("<button>", {
+                        "id": "verEMT",
+                        "type": "button",
+                        "class": "boton",
+                        "text": "Red EMT"
+                    }).on("click", togglePanelEmt);
+                    let botonCTAN = $("<button>", {
+                        "id": "verCTAN",
+                        "type": "button",
+                        "class": "boton",
+                        "text": "Red CTMAM"
+                    }).on("click", togglePanelCtan);
+                    let botonRenfe = $("<button>", {
+                        "id": "verRenfe",
+                        "type": "button",
+                        "class": "boton",
+                        "text": "RENFE"
+                    }).on("click", togglePanelRenfe);
+                    let botonMetro = $("<button>", {
+                        "id": "verMetro",
+                        "type": "button",
+                        "class": "boton",
+                        "text": "Red Metro"
+                    }).on("click", togglePanelMetro);
+                    let play = $("<button>", {
+                        "id": "play",
+                        "type": "button",
+                        "class": "boton",
+                        "text": "Play"
+                    }).on("click", start).css("display", "none");
+                    let refresh = $("<button>", {
+                        "id": "refresh",
+                        "type": "button",
+                        "class": "boton",
+                        "text": "Refrescar"
+                    }).on("click", motor).css("display", "none");
+                    let pause = $("<button>", {
+                        "id": "pause",
+                        "type": "button",
+                        "class": "boton",
+                        "text": "Pausa"
+                    }).on("click", stop).css("display", "none");
+                    let controles = $("<p>", {id: "controles"}).append(botonEMT).append(botonCTAN).append(botonMetro).append(botonRenfe).append($("<br>")).append(play).append(refresh).append(pause);
+                    $(div).append(controles);
+                    /*var tiempoDatos = $("<p>", {id: "tiempoDatos", text: "Datos actualizados: "});
+                    $(mapDiv).append(tiempoDatos);*/
+                    let tablaEmt = $("<table>", {"id": "tablaLineasEMT"}).css("display", "none");
+                    let encabezadoEmt = $("<tr>");
+                    $(encabezadoEmt).html('<th>Ida</th><th>Vta</th><th>Bus</th><th colspan="2">Línea</th><th>NºB.</th>');
+                    $(tablaEmt).append(encabezadoEmt);
+                    $(div).append(tablaEmt);
+                    let tablaCtan = $("<table>", {"id": "tablaLineasCTAN"}).css("display", "none");
+                    let encabezadoCtan = $("<tr>");
+                    $(encabezadoCtan).html('<th>Ida</th><th>Vta</th><th colspan="2">Línea</th>');
+                    $(tablaCtan).append(encabezadoCtan);
+                    $(div).append(tablaCtan);
+                    let tablaMetro = $("<table>", {"id": "tablaLineasMetro"}).css("display", "none");
+                    let encabezadoMetro = $("<tr>");
+                    $(encabezadoMetro).html('<th></th><th colspan="2">Línea</th>');
+                    $(tablaMetro).append(encabezadoMetro);
+                    $(div).append(tablaMetro);
+                    let tablaRenfe = $("<table>", {"id": "tablaLineasRenfe"}).css("display", "none");
+                    let encabezadoRenfe = $("<tr>");
+                    $(encabezadoRenfe).html('<th></th><th colspan="2">Línea</th>');
+                    $(tablaRenfe).append(encabezadoRenfe);
+                    $(div).append(tablaRenfe);
+                    $(div).append('<br><small><a href="#!" onclick="verCopyright()">Acerca de RUTPAM</a></small>');
+                    $(div).append('<br><small><a href="#!" onclick="verAyuda()">Ayuda</a></small>');
 
+                    $("#control").html(div);
+                }
+            }
         }
     }
 }

@@ -32,7 +32,7 @@ var core = new Core();
  * Función de puesta en marcha cuando finaliza la carga del DOM
  */
 $(document).ready(function(){
-	$("#control").html(ControlRUTPAM($("<div>"))); // Rellenamos el div del panel de control con lo que devuelve ControlRUTPAM()
+	core.ui.init.controles(); // Rellenamos el div del panel de control con lo que devuelve ControlRUTPAM()
 	verCopyright(); // Mostramos el "Acerca de RUTPAM"
 	initMap(); // Inicializamos el mapa y todo el layout
 	document.title = "RUTPAM "+core.version; // Seteamos el título del documento
@@ -69,7 +69,7 @@ function initKeys(){
 	document.addEventListener('keydown', function(k){
 		switch(k.key){
 			case "Escape":
-				closeInfo();
+				core.ui.action.closeWindow();
 				break;
 			case "Backspace":
 				for(var a = 0; a < core.lineas.length; a++){ // Para todas las líneas
@@ -723,91 +723,10 @@ function togglePanelRenfe(){
 	}
 }
 
-/**
- * @description Recoge un elemento del DOM y lo devuelve rellenado con el HTML adecuado de la barra de control
- * @param {DOM_Element} mapDiv
- * @returns {DOM_Element}
- */
-function ControlRUTPAM(mapDiv){
-	let titulo = $("<h2>", {"text":"RUTPAM"});
-	let descripcion = $("<p>", {"text":"Información de transportes metropolitanos del área de Málaga"});
-	let loader = $("<p>", {"id": "loader", "text": "Todavía cargando datos..."}).css("color", "white").css("background-color", "red");
-	$(mapDiv).append(titulo).append(descripcion).append(loader);
-	let botonEMT = $("<button>", {
-		"id": "verEMT",
-		"type": "button",
-		"class": "boton",
-		"text": "Red EMT"
-	}).on("click", togglePanelEmt);
-	let botonCTAN = $("<button>", {
-		"id": "verCTAN",
-		"type": "button",
-		"class": "boton",
-		"text": "Red CTMAM"
-	}).on("click", togglePanelCtan);
-	let botonRenfe = $("<button>", {
-		"id": "verRenfe",
-		"type": "button",
-		"class": "boton",
-		"text": "RENFE"
-	}).on("click", togglePanelRenfe);
-	let botonMetro = $("<button>", {
-		"id": "verMetro",
-		"type": "button",
-		"class": "boton",
-		"text": "Red Metro"
-	}).on("click", togglePanelMetro);
-	let play = $("<button>", {
-		"id": "play",
-		"type": "button",
-		"class": "boton",
-		"text": "Play"
-	}).on("click", start).css("display", "none");
-	let refresh = $("<button>", {
-		"id": "refresh",
-		"type": "button",
-		"class": "boton",
-		"text": "Refrescar"
-	}).on("click", motor).css("display", "none");
-	let pause = $("<button>", {
-		"id": "pause",
-		"type": "button",
-		"class": "boton",
-		"text": "Pausa"
-	}).on("click", stop).css("display", "none");
-	let controles = $("<p>", {id: "controles"}).append(botonEMT).append(botonCTAN).append(botonMetro).append(botonRenfe).append($("<br>")).append(play).append(refresh).append(pause);
-	$(mapDiv).append(controles);
-	/*var tiempoDatos = $("<p>", {id: "tiempoDatos", text: "Datos actualizados: "});
-	$(mapDiv).append(tiempoDatos);*/
-	let tablaEmt = $("<table>", {"id": "tablaLineasEMT"}).css("display", "none");
-	let encabezadoEmt = $("<tr>");
-	$(encabezadoEmt).html('<th>Ida</th><th>Vta</th><th>Bus</th><th colspan="2">Línea</th><th>NºB.</th>');
-	$(tablaEmt).append(encabezadoEmt);
-	$(mapDiv).append(tablaEmt);
-	let tablaCtan = $("<table>", {"id": "tablaLineasCTAN"}).css("display", "none");
-	let encabezadoCtan = $("<tr>");
-	$(encabezadoCtan).html('<th>Ida</th><th>Vta</th><th colspan="2">Línea</th>');
-	$(tablaCtan).append(encabezadoCtan);
-	$(mapDiv).append(tablaCtan);
-	let tablaMetro = $("<table>", {"id": "tablaLineasMetro"}).css("display", "none");
-	let encabezadoMetro = $("<tr>");
-	$(encabezadoMetro).html('<th></th><th colspan="2">Línea</th>');
-	$(tablaMetro).append(encabezadoMetro);
-	$(mapDiv).append(tablaMetro);
-	let tablaRenfe = $("<table>", {"id": "tablaLineasRenfe"}).css("display", "none");
-	let encabezadoRenfe = $("<tr>");
-	$(encabezadoRenfe).html('<th></th><th colspan="2">Línea</th>');
-	$(tablaRenfe).append(encabezadoRenfe);
-	$(mapDiv).append(tablaRenfe);
-	$(mapDiv).append('<br><small><a href="#!" onclick="verCopyright()">Acerca de RUTPAM</a></small>');
-	$(mapDiv).append('<br><small><a href="#!" onclick="verAyuda()">Ayuda</a></small>');
-	return mapDiv;
-}
-
 function verCopyright(){
 	let rutpam_credits = core.ui.textos.copyright;
-	$("#ventana").hide();
-	$("#infoContent").empty();
+	core.ui.action.closeWindow();
+	core.ui.action.clearInfo();
 	$("#infoContent").append($("<h3>", {text: "Información"}).css("text-align", "center"));
 	$("#infoContent").append($("<p>", {html: rutpam_credits}).css("text-align", "center"));
 	$("#ventana").show();
@@ -815,15 +734,11 @@ function verCopyright(){
 
 function verAyuda(){
 	let ayuda = core.ui.textos.ayuda;
-	$("#ventana").hide();
-	$("#infoContent").empty();
+	core.ui.action.closeWindow();
+	core.ui.action.clearInfo();
 	$("#infoContent").append($("<h3>", {text: "Ayuda"}).css("text-align", "center"));
 	$("#infoContent").append($("<div>", {html: ayuda}));
 	$("#ventana").show();
-}
-
-function closeInfo(){
-	$("#ventana").hide();
 }
 
 
