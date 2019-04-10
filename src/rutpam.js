@@ -224,7 +224,7 @@ class Core {
                     let controles = $("<p>", {id: "controles"}).append(botonEMT).append(botonCTAN).append(botonMetro).append(botonRenfe).append($("<br>")).append(play).append(refresh).append(pause);
                     $(div).append(controles);
                     /*var tiempoDatos = $("<p>", {id: "tiempoDatos", text: "Datos actualizados: "});
-                    $(mapDiv).append(tiempoDatos);*/
+                    $(div).append(tiempoDatos);*/
                     let tablaEmt = $("<table>", {"id": "tablaLineasEMT"}).css("display", "none");
                     let encabezadoEmt = $("<tr>");
                     $(encabezadoEmt).html('<th>Ida</th><th>Vta</th><th>Bus</th><th colspan="2">Línea</th><th>NºB.</th>');
