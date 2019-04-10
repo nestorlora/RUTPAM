@@ -37,7 +37,7 @@ $(document).ready(function(){
 	initMap(); // Inicializamos el mapa y todo el layout
 	document.title = "RUTPAM "+core.version; // Seteamos el título del documento
 	initKeys(); // Inicializamos las teclas de control
-	getModos(); // Cargamos los modos de transporte
+	core.getModos(); // Cargamos los modos de transporte
 	core.getZonas(); // Cargamos las zonas
 	getLineasEmt(); // Cargamos las líneas de la EMT
 	getLineasCtan(); // Cargamos las líneas del CTAN
@@ -1075,23 +1075,6 @@ function codLinea(idLinea){
 
 
 
-
-function getModos(){
-	// Petición AJAX
-	$.getJSON({
-		url: core.url.ctan+'/modostransporte?lang=ES'
-	}).done(function (response, status){
-		if(status === "success"){
-            response = response.modosTransporte;
-            for(let i = 0; i<response.length; i++){
-				let modo = new Modo();
-				modo.id = parseInt(response[i].idModo);
-				modo.descripcion = response[i].descripcion;
-                core.modos.push(modo);
-			}
-		}
-	});
-}
 
 function getLineasCtan(){
     // Petición AJAX

@@ -272,6 +272,24 @@ class Core {
             throw {response, status, error};
         });
     }
+    getModos(){
+        // Petición AJAX
+        $.getJSON({
+            url: core.url.ctan+'/modostransporte?lang=ES'
+        }).done(function (response, status){
+            if(status === "success"){
+                response = response.modosTransporte;
+                for(let i = 0; i<response.length; i++){
+                    let modo = new Modo();
+                    modo.id = parseInt(response[i].idModo);
+                    modo.descripcion = response[i].descripcion;
+                    core.modos.push(modo);
+                }
+            }
+        }).fail(function(response, status, error){
+                throw {response, status, error};
+        });  
+    }
 }
 
 class Modo {
