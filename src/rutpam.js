@@ -269,7 +269,11 @@ class Core {
                 }
             }
         }).fail(function(response, status, error){
-            throw {response, status, error};
+            if(error === "Bad Request"){
+                core.getZonas();
+            }else{
+                throw {response, status, error};
+            }
         });
     }
     getModos(){
@@ -287,7 +291,11 @@ class Core {
                 }
             }
         }).fail(function(response, status, error){
+            if(error === "Bad Request"){
+                core.getModos();
+            }else{
                 throw {response, status, error};
+            }
         });  
     }
 }
