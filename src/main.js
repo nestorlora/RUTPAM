@@ -38,7 +38,7 @@ $(document).ready(function(){
 	document.title = "RUTPAM "+core.version; // Seteamos el título del documento
 	initKeys(); // Inicializamos las teclas de control
 	getModos(); // Cargamos los modos de transporte
-	getZonas(); // Cargamos las zonas
+	core.getZonas(); // Cargamos las zonas
 	getLineasEmt(); // Cargamos las líneas de la EMT
 	getLineasCtan(); // Cargamos las líneas del CTAN
 	inicializarParadas(); // Inicializamos los marcadores de las paradas
@@ -1088,24 +1088,6 @@ function getModos(){
 				modo.id = parseInt(response[i].idModo);
 				modo.descripcion = response[i].descripcion;
                 core.modos.push(modo);
-			}
-		}
-	});
-}
-
-function getZonas(){
-    // Petición AJAX
-	$.getJSON({
-		url: core.url.ctan+'/zonas?lang=ES'
-	}).done(function (response, status){
-		if(status === "success"){
-            response = response.zonas;
-            for(let i = 0; i<response.length; i++){
-				let zona = new Zona();
-				zona.id = response[i].idZona;
-				zona.nombre = response[i].nombre;
-				zona.color = response[i].color;
-                core.zonas.push(zona);
 			}
 		}
 	});

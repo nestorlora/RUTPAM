@@ -253,6 +253,25 @@ class Core {
             }
         }
     }
+    // Ingest de datos
+    getZonas(){
+        $.getJSON({
+            url: this.url.ctan+'/zonas?lang=ES'
+        }).done(function(response, status){
+            if(status === "success"){
+                response = response.zonas;
+                for(let i = 0; i<response.length; i++){
+                    let zona = new Zona();
+                    zona.id = response[i].idZona;
+                    zona.nombre = response[i].nombre;
+                    zona.color = response[i].color;
+                    core.zonas.push(zona);
+                }
+            }
+        }).fail(function(response, status, error){
+            throw {response, status, error};
+        });
+    }
 }
 
 class Modo {
