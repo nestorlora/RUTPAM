@@ -511,6 +511,9 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 		esNegro = true;
 	}else if(/^R-|^T-|^M-10[1-4]$/.test(userCodLinea)){ // Líneas Urbanas CTAN
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.emtA));
+	}else if(/^M-6[0-9]{2}/.test(userCodLinea)){ // Servicios Especiales CTAN (Semana Santa)
+		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.especial));
+		esNegro = true;
 	}else if(/^M-/.test(userCodLinea)){ // Líneas Interurbanas CTAN
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.ctmamA));
 	}else if(/^91$|^92$/.test(userCodLinea)){ // Servicios Turísticos
@@ -520,7 +523,7 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.metro));
 	}else if(/^C-[1-2]$/.test(userCodLinea)){ // Cercanías
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.renfeA));
-	}else if(/^12$|^16$|^26$|^64$|^M-6[0-9]{2}|^[A-Z]/.test(userCodLinea)){ // Servicios Especiales
+	}else if(/^12$|^16$|^26$|^64$|^[A-Z]/.test(userCodLinea)){ // Servicios Especiales EMT
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.especial));
 		esNegro = true;
 	}else{ // Líneas Urbanas EMT
