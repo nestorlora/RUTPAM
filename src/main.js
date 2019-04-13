@@ -523,7 +523,7 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.metro));
 	}else if(/^C-[1-2]$/.test(userCodLinea)){ // Cercanías
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.renfeA));
-	}else if(/^12$|^16$|^26$|^64$|^[A-Z]/.test(userCodLinea)){ // Servicios Especiales EMT
+	}else if(/^12$|^16$|^26$|^64$|^[0-9]{1,}.1$|^[0-9]{1,}.2$|^[A-Z]/.test(userCodLinea)){ // Servicios Especiales EMT
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.especial));
 		esNegro = true;
 	}else{ // Líneas Urbanas EMT
