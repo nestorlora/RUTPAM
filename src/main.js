@@ -429,29 +429,6 @@ function hideParada(id){
 	}
 }
 
-/*
- * Busca la posición de un coche dentro de autobuses[]
- * @param {Number} codBus
- * @returns {Number} Posición en autobuses[]
- * @deprecated
- *
-function findBus(codBus){
-	let pos = 0;
-	let found = false;
-	while(pos < autobuses.length && !found){
-		if(autobuses[pos].codBus === codBus){
-			found = true;
-		}else{
-			pos++;
-		}
-	}
-	if(pos >= autobuses.length){
-		return null;
-	}else{
-		return pos;
-	}
-}*/
-
 /**
  * @description Calcula la distancia total de un trazado indicado
  * @param {linea.trazado} trazado
@@ -491,46 +468,46 @@ function acortarParada(nombre){
 	return nombre.replace(/\s-\s/, "<br>");
 }
 
-function lineaIcon(userCodLinea, zoom, idLinea){
+function lineaIcon(codigo, zoom, idLinea){
 	let id = $('<span>').addClass('fa-layers fa-'+zoom);
 	let esNegro = false;
-	if(/^C[1-9]$|^29$/.test(userCodLinea)){ // Circulares EMT
+	if(/^C[1-9]$|^29$/.test(codigo)){ // Circulares EMT
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.emtC));
-	}else if(/^N[1-9]/.test(userCodLinea)){ // Nocturno EMT
+	}else if(/^N[1-9]/.test(codigo)){ // Nocturno EMT
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.emtN));
-	}else if(/^A$|^E$/.test(userCodLinea)){ // Lineas exprés
+	}else if(/^A$|^E$/.test(codigo)){ // Lineas exprés
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.express));
-	}else if(/^L$|^P$/.test(userCodLinea)){ // Lineas Lanzaderas
+	}else if(/^L$|^P$/.test(codigo)){ // Lineas Lanzaderas
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.lanzaderas));
-	}else if(/N[1-9]$|^M-168$|^M-155$|^M-168$/.test(userCodLinea)){ // Líneas Buho CTAN
+	}else if(/N[1-9]$|^M-168$|^M-155$|^M-168$/.test(codigo)){ // Líneas Buho CTAN
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.ctmamN));
-	}else if(/^M-5[0-9]{2}$/.test(userCodLinea)){ // Líneas Verano CTAN
+	}else if(/^M-5[0-9]{2}$/.test(codigo)){ // Líneas Verano CTAN
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.ctmamT));
-	}else if(/^M-114$|^M-116$|^M-143$|^M-166$/.test(userCodLinea)){ // Líneas Universitarias CTAN
+	}else if(/^M-114$|^M-116$|^M-143$|^M-166$/.test(codigo)){ // Líneas Universitarias CTAN
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.ctmamT));
 		esNegro = true;
-	}else if(/^R-|^T-|^M-10[1-4]$/.test(userCodLinea)){ // Líneas Urbanas CTAN
+	}else if(/^R-|^T-|^M-10[1-4]$/.test(codigo)){ // Líneas Urbanas CTAN
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.emtA));
-	}else if(/^M-6[0-9]{2}/.test(userCodLinea)){ // Servicios Especiales CTAN (Semana Santa)
+	}else if(/^M-6[0-9]{2}/.test(codigo)){ // Servicios Especiales CTAN (Semana Santa)
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.especial));
 		esNegro = true;
-	}else if(/^M-/.test(userCodLinea)){ // Líneas Interurbanas CTAN
+	}else if(/^M-/.test(codigo)){ // Líneas Interurbanas CTAN
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.ctmamA));
-	}else if(/^91$|^92$/.test(userCodLinea)){ // Servicios Turísticos
+	}else if(/^91$|^92$/.test(codigo)){ // Servicios Turísticos
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.especial));
 		esNegro = true;
-	}else if(/^METRO [1-2]$/.test(userCodLinea)){ // Metro
+	}else if(/^METRO [1-2]$/.test(codigo)){ // Metro
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.metro));
-	}else if(/^C-[1-2]$/.test(userCodLinea)){ // Cercanías
+	}else if(/^C-[1-2]$/.test(codigo)){ // Cercanías
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.renfeA));
-	}else if(/^12$|^16$|^26$|^64$|^[0-9]{1,}.1$|^[0-9]{1,}.2$|^[A-Z]/.test(userCodLinea)){ // Servicios Especiales EMT
+	}else if(/^12$|^16$|^26$|^64$|^[0-9]{1,}.1$|^[0-9]{1,}.2$|^[A-Z]/.test(codigo)){ // Servicios Especiales EMT
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.especial));
 		esNegro = true;
 	}else{ // Líneas Urbanas EMT
 		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.emtA));
 	}
 
-	let texto = userCodLinea.replace(/^M-/, "M\n").replace(/^R-/, "R").replace(/^T-/, "T").replace(/^METRO /, "").replace(/^C-/, "C");
+	let texto = codigo.replace(/^M-/, "M\n").replace(/^R-/, "R").replace(/^T-/, "T").replace(/^METRO /, "").replace(/^C-/, "C");
 	let textdiv;
 	if(texto.length < 3){
 		textdiv = $('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-6");
@@ -548,7 +525,9 @@ function lineaIcon(userCodLinea, zoom, idLinea){
 	}
 	id.append(textdiv);
 	if(idLinea !== undefined && idLinea !== null){
-		id.click(function(){verInfoLinea(idLinea);});
+		id.click(function(){
+			verInfoLinea(idLinea);
+		});
 	}
 	return id;
 }
