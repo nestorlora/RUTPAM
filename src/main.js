@@ -174,8 +174,8 @@ function inicializarParadas(){
 
 function verInfoLinea(id){
 	let linea = core.lineas.buscar(id);
-	$("#ventana").hide(); // Escondemos la ventana
-	$("#infoContent").empty(); // Eliminamos contenido anterior
+	core.ui.action.closeWindow(); // Escondemos la ventana
+	core.ui.action.clearInfo(); // Eliminamos contenido anterior
 	//
 	// Header
 	//
