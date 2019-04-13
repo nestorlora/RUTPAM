@@ -957,6 +957,7 @@ function addLineaEmt(lin){
 	linea.modo = 1 // Autobús
 	linea.operadores = "Empresa Malagueña de Transportes S.A.M.";
 	linea.hayNoticia = null;
+	linea.red = core.red.emt;
 	// Paradas
 	for(let a = 0; a < lin.paradas.length; a++){
 		addParadaEmt(lin.paradas[a].parada, linea.id, lin.paradas[a].sentido);
@@ -1151,12 +1152,15 @@ function addLineaCtan(lin){
     switch(linea.modo){
         case "Autobús":
 			$("#tablaLineasCTAN").append(fila);
+			linea.red = core.red.ctan;
 			break;
 		case "Metro":
 			$("#tablaLineasMetro").append(fila);
+			linea.red = core.red.metro;
 			break;
 		case "Tren":
 			$("#tablaLineasRenfe").append(fila);
+			linea.red = core.red.renfe;
 			break;
     }
 }

@@ -72,6 +72,12 @@ class Core {
             ctan: ctan_url,
             odm: odm_url
         }
+        this.red = {
+            emt: 1,
+            ctan: 2,
+            metro: 3,
+            renfe: 4
+        }
         // Variables
         this.timer = undefined;
         this.map = undefined;
@@ -339,7 +345,7 @@ class Linea {
         this.modo = undefined;
         this.operadores = undefined;
         this.hayNoticia = undefined;
-        //TO DO this.red = undefined; // 0 EMT 1 CTMAM
+        this.red = undefined;
     }
 };
 
