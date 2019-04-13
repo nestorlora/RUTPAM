@@ -1126,8 +1126,8 @@ function addLineaCtan(lin){
 	linea.estado.verParadas = false;
 	linea.numVehiculos = null;
 	linea.modo = lin.modo;
-	linea.hayNoticia = lin.hayNoticia;
 	linea.operadores = (lin.operadores).replace(/, $/, "");
+	linea.hayNoticia = lin.hayNoticia;
     core.lineas.push(linea);
 
 	getParadasLineaCtan(linea.id);
