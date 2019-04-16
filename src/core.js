@@ -8,41 +8,75 @@
 
 'use strict';
 
+/**@ignore */
 const rutpam_version = "5.0 @Dev";
+/**@ignore */
 const site_url = '/RUTPAM';
+/**@ignore */
 const emt_url = '/proxy/emt-core';
+/**@ignore */
 const betteremt_url = 'https://betteremt.edufdezsoy.es/api';
+/**@ignore */
 const ctan_url = 'http://api.ctan.es/v1/Consorcios/4';
+/**@ignore */
 const odm_url = 'https://datosabiertos.malaga.eu/api/3/action/';
+/**@ignore */
 const refresh_rate = 3; // Periodo entre refrescos (s)
+/**@ignore */
 const ttl_rate_default = 60; // TTL por defecto (en refrescos)
 
+/**
+ * @class Core
+ * @description Núcleo de la aplicación; almacena las constantes, variables y objetos globales; así como funciones generales.
+ * @since v5.0
+ * @property {string}   version     Versión de RUTPAM
+ * @property {enum}     colores     Colores estándar de las redes y sus elementos
+ * @property {enum}     ttl         Time-to-live estándar de los vehículos
+ */
 class Core {
     constructor(){
-        // Parámetros
+        // PARÁMETROS
+
+        /**
+         * @readonly
+         */
         this.version = rutpam_version;
+        /**
+         * @readonly
+         * @enum {string}
+         */
         this.colores = {
-            // EMT SAM + Urbanos Consorcio
-            emtA: "#1E3180", // Primario, lineas regulares, sentido ida
-            emtB: "#4876FE", // Secundario, sentido vuelta
-            emtC: "#F77F00", // Circulares
-            emtN: "#04141F", // Nocturnos
-            // Consorcio de Transportes
-            ctmamA: "#009639", // Oficial Primario, líneas regulares, sentido ida
-            ctmamB: "#11B237", // sentido vuelta
-            ctmamN: "#006983", // lineas buho
-            ctmamT: "#E4D77E", // Oficial Secundario, líneas estacionales
+            /**@description EMT: Primario, lineas regulares, sentido ida */
+            emtA: "#1E3180",
+            /**@description EMT: Secuntario, sentido vuelta */
+            emtB: "#4876FE",
+            /**@description EMT: Circulares */
+            emtC: "#F77F00",
+            /**@description EMT: Nocturnos */
+            emtN: "#04141F",
+            /**@description CTMAM: Oficial primario, líneas regulares, sentido ida */
+            ctmamA: "#009639",
+            /**@description CTMAM: Sentido vuelta */
+            ctmamB: "#11B237",
+            /**@description CTMAM: Líneas buho */
+            ctmamN: "#006983",
+            /**@description CTMAM: Oficial secundario, lineas estacionales */
+            ctmamT: "#E4D77E",
             //ctmamU: "#E4D77E", // líneas universitarias
             //ctmamV: "#71A9F7", // líneas de verano
-            // Renfe Operadora
-            renfeA: "#8A0072", // Oficial general
-            renfeB: "#EF3340", // Oficial cercanías
-            // Metro Málaga
-            metro: "#DC241F", // "Oficial"
+            /**@description Renfe: Oficial general */
+            renfeA: "#8A0072",
+            /**@description Renfe: Oficial cercanías*/
+            renfeB: "#EF3340",
+            /**@description Metro Málaga: Oficial*/
+            metro: "#DC241F",
             // Lineas especiales
-            especial: "#FCCC0A", // Líneas y servicios especiales
-            express: "#996633", // Servicios exprés
-            lanzaderas: "#808183" // Lanzadera
+            /**@description RUTPAM: Líneas y servicios especiales */
+            especial: "#FCCC0A",
+            /**@description RUTPAM: Servicios exprés */
+            express: "#996633",
+            /**@description RUTPAM: Lanzaderas */
+            lanzaderas: "#808183"
         };
         this.ttl = {
             default: ttl_rate_default/refresh_rate,
