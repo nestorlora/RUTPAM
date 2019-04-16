@@ -18,6 +18,7 @@
  * @property {enum}     url         URLs de la aplicación y de recursos externos
  * @property {enum}     red         Identificadores de las diferentes redes de pasajeros
  * 
+ * @todo Añadir controles para prevenir modificaciones
  */
 class Parametros {
     constructor(){
@@ -67,7 +68,7 @@ class Parametros {
             lanzaderas: "#808183"
         };
         
-        let refresh_rate = 3; // Periodo entre refrescos (s)
+        this.refresh_rate = 3; // Periodo entre refrescos (s)
         let ttl_rate_default = 60; // TTL por defecto (en refrescos)
         
         /**
