@@ -22,8 +22,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-/* Este script necesia los archivos ctan.js y emt.js para poder funcionar correctamente */
 'use strict';
 
 var core = new Core();
