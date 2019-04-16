@@ -8,29 +8,12 @@
 
 'use strict';
 
-/**@ignore */
-let rutpam_version = "5.0 @Dev";
-/**@ignore */
-let site_url = '/RUTPAM';
-/**@ignore */
-let emt_url = '/proxy/emt-core';
-/**@ignore */
-let betteremt_url = 'https://betteremt.edufdezsoy.es/api';
-/**@ignore */
-let ctan_url = 'http://api.ctan.es/v1/Consorcios/4';
-/**@ignore */
-let odm_url = 'https://datosabiertos.malaga.eu/api/3/action/';
-/**@ignore */
-let refresh_rate = 3; // Periodo entre refrescos (s)
-/**@ignore */
-let ttl_rate_default = 60; // TTL por defecto (en refrescos)
-
 class Parametros {
     constructor(){
         /**
          * @readonly
          */
-        this.version = rutpam_version;
+        this.version = "5.0 @Dev";
         /**
          * @readonly
          * @enum {string}
@@ -68,17 +51,19 @@ class Parametros {
             /**@description RUTPAM: Lanzaderas */
             lanzaderas: "#808183"
         };
+        let refresh_rate = 3; // Periodo entre refrescos (s)
+        let ttl_rate_default = 60; // TTL por defecto (en refrescos)
         this.ttl = {
             default: ttl_rate_default/refresh_rate,
             new: (ttl_rate_default+10)/refresh_rate,
             old: (ttl_rate_default-15)/refresh_rate
         }
         this.url = {
-            site: site_url,
-            emt: emt_url,
-            betteremt: betteremt_url,
-            ctan: ctan_url,
-            odm: odm_url
+            site: '/RUTPAM',
+            emt: '/proxy/emt-core',
+            betteremt: 'https://betteremt.edufdezsoy.es/api',
+            ctan: 'http://api.ctan.es/v1/Consorcios/4',
+            odm: 'https://datosabiertos.malaga.eu/api/3/action/'
         }
         this.red = {
             emt: 1,
