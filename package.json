@@ -1,0 +1,22 @@
+{
+  "name": "rutpam",
+  "version": "5.0.0",
+  "description": "Red Unificada de Transportes de Pasajeros del Área de Málaga",
+  "main": "index.html",
+  "directories": {
+    /*"doc": "docs"*/
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nestorlora/RUTPAM.git"
+  },
+  "author": "Néstor Manuel Lora Romero <nestorlora@geeklab.es>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nestorlora/RUTPAM/issues"
+  },
+  "homepage": "https://github.com/nestorlora/RUTPAM#readme"
+}
