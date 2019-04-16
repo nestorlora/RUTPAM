@@ -4,6 +4,7 @@
 #-------------------------
 /nbproject/
 .idea/*
+.vscode/*
 
 ## Sublime Text cache files
 *.tmlanguage.cache
@@ -13,3 +14,6 @@
 *.sublime-project
 /tests/tests/
 /tests/results/
+
+## Auto-generated docs
+/docs/*
