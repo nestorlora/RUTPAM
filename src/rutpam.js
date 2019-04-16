@@ -347,6 +347,18 @@ class Linea {
         this.hayNoticia = undefined;
         this.red = undefined;
     }
+    distanciaTrazado(selector){
+        if((selector === 1||selector === 2)&&this.estado.getIda){
+            let distancia = 0;
+            let trazado = selector===1?this.trazadoIda:this.trazadoVuelta;
+            for(let pos = 1; pos < trazado.getLatLngs().length; pos++){
+                distancia = distancia + core.map.distance(trazado.getLatLngs()[pos-1], trazado.getLatLngs()[pos]);
+            }
+            return distancia;
+        }else{
+            return null;
+        }
+    }
 };
 
 class Parada {
