@@ -72,7 +72,7 @@ class UI {
             <h4>Información de vehículos</h4>\n\
             <p>Los marcadores de cada vehículo muestran su código, la línea que están sirviendo, el destino y, si es posible, la última parada realizada. En los vehículos de la EMT también hay un enlace a Busca Bus para consultar la información relativa al vehículo<br>\n\
             Bus, Línea, Última Parada Realizada, Sentido, link a BuscaBus</p>',
-        copyright: 'R.U.T.P.A.M. v'+this.version+'<br>\n\
+        copyright: 'R.U.T.P.A.M. v'+new Parametros().version+'<br>\n\
             Licencia MIT © Néstor M. Lora - 2018/2019<br>\n\
             <a href="mailto:nestorlora@geeklab.es">nestorlora@geeklab.es</a><br><br>\n\
             Datos cartográficos: <i class="fab fa-creative-commons"></i><i class="fab fa-creative-commons-by"></i><i class="fab fa-creative-commons-sa"></i> Colaboradores de <a href="https://openstreetmap.org">OpenStreetMap</a><br>\n\
