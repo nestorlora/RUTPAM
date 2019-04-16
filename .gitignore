@@ -17,3 +17,6 @@
 
 ## Auto-generated docs
 /docs/*
+
+## Node.js dev tools
+/node_modules/*

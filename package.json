@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/nestorlora/RUTPAM/issues"
   },
-  "homepage": "https://github.com/nestorlora/RUTPAM#readme"
+  "homepage": "https://github.com/nestorlora/RUTPAM#readme",
+  "dependencies": {
+    "foodoc": "0.0.9"
+  }
 }
