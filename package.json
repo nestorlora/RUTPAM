@@ -3,9 +3,7 @@
   "version": "5.0.0",
   "description": "Red Unificada de Transportes de Pasajeros del Área de Málaga",
   "main": "index.html",
-  "directories": {
-    /*"doc": "docs"*/
-  },
+  "directories": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
