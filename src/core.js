@@ -8,8 +8,6 @@
 
 'use strict';
 
-
-
 /**
  * @class Core
  * @description Núcleo de la aplicación; almacena las constantes, variables y objetos globales; así como funciones generales.
