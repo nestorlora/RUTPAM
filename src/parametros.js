@@ -12,11 +12,12 @@
  * @class Parametros
  * @description Núcleo de la aplicación; almacena las constantes, variables y objetos globales; así como funciones generales.
  * @since v5.0
- * @property {string}   version     Versión de RUTPAM
- * @property {enum}     colores     Colores estándar de las redes y sus elementos
- * @property {enum}     ttl         Time-to-live estándar de los vehículos
- * @property {enum}     url         URLs de la aplicación y de recursos externos
- * @property {enum}     red         Identificadores de las diferentes redes de pasajeros
+ * @property {string}   version         Versión de RUTPAM
+ * @property {enum}     colores         Colores estándar de las redes y sus elementos
+ * @property {int}      refresh_rate    Periodo entre refresco de ubicaciones (s)
+ * @property {enum}     ttl             Time-to-live estándar de los vehículos
+ * @property {enum}     url             URLs de la aplicación y de recursos externos
+ * @property {enum}     red             Identificadores de las diferentes redes de pasajeros
  * 
  * @todo Añadir controles para prevenir modificaciones
  */
@@ -68,6 +69,10 @@ class Parametros {
             lanzaderas: "#808183"
         };
         
+        /**
+         * @description Periodo entre refresco de ubicaciones (s)
+         * @readonly
+         */
         this.refresh_rate = 3; // Periodo entre refrescos (s)
         let ttl_rate_default = 60; // TTL por defecto (en refrescos)
         
