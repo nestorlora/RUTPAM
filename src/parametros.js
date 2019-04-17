@@ -83,11 +83,11 @@ class Parametros {
          */
         this.ttl = {
             /**@description TTL por defencto para los vehículos en la aplicación */
-            default: ttl_rate_default/refresh_rate,
+            default: ttl_rate_default/this.refresh_rate,
             /**@description TTL para los nuevos vehículos */
-            new: (ttl_rate_default+10)/refresh_rate,
+            new: (ttl_rate_default+10)/this.refresh_rate,
             /**@description TTL que indica que el vehículo lleva mucho tiempo perdido */
-            old: (ttl_rate_default-15)/refresh_rate
+            old: (ttl_rate_default-15)/this.refresh_rate
         }
 
         /**
