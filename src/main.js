@@ -133,7 +133,7 @@ function stop(){
  * @returns {null}
  */
 function start(){
-	core.timer = setInterval(motor, refresh_rate*1000);
+	core.timer = setInterval(motor, new Parametros().refresh_rate*1000);
 	$("#pause").prop("disabled", false);
 	$("#play").prop("disabled", true);
 	$("#refresh").prop("disabled", true);
