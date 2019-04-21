@@ -16,7 +16,7 @@ var core = new Core();
 $(document).ready(function(){
 	core.ui.init.controles(); // Rellenamos el div del panel de control con lo que devuelve ControlRUTPAM()
 	verCopyright(); // Mostramos el "Acerca de RUTPAM"
-	initMap(); // Inicializamos el mapa y todo el layout
+	core.ui.init.mapa(); // Inicializamos el mapa y todo el layout
 	document.title = "RUTPAM "+core.version; // Seteamos el título del documento
 	initKeys(); // Inicializamos las teclas de control
 	core.getModos(); // Cargamos los modos de transporte
@@ -25,23 +25,6 @@ $(document).ready(function(){
 	getLineasCtan(); // Cargamos las líneas del CTAN
 	inicializarParadas(); // Inicializamos los marcadores de las paradas
 });
-
-/**
- * @description Puesta en marcha del mapa y los elementos que se le superponen
- * @returns {null}
- */
-function initMap() {
-	let osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'; // URL del servidor cartográfico
-	let osm = new L.TileLayer(osmUrl); // Creamos la capa de cartografía
-	core.map = L.map('map', {
-		center: [36.7121977, -4.4370495], // Centro del mapa sobre málaga
-		zoom: 13, // Nivel de zoom para ver todo el área metropolitana
-		closePopupOnClick: false, // Deshabilitamos que los popups se cierren al hacer click en cualquier otro sitio fuera
-		layers: osm, // Añadimos la capa de cartografía
-		attributionControl: false // Deshabilitamos el footer de copyright porque ya tenemos una ventana para ello
-	});
-	return null;
-}
 
 /**
  * @description Pone en marcha los triggers adecuados para las teclas de control

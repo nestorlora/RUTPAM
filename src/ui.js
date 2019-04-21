@@ -174,6 +174,17 @@ class UI {
             $(div).append('<br><small><a href="#!" onclick="verAyuda()">Ayuda</a></small>');
 
             $("#control").html(div);
+        },
+        mapa: function(){
+            let osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'; // URL del servidor cartográfico
+            let osm = new L.TileLayer(osmUrl); // Creamos la capa de cartografía
+            core.map = L.map('map', {
+                center: [36.7121977, -4.4370495], // Centro del mapa sobre málaga
+                zoom: 13, // Nivel de zoom para ver todo el área metropolitana
+                closePopupOnClick: false, // Deshabilitamos que los popups se cierren al hacer click en cualquier otro sitio fuera
+                layers: osm, // Añadimos la capa de cartografía
+                attributionControl: false // Deshabilitamos el footer de copyright porque ya tenemos una ventana para ello
+            });
         }
     };
 }
