@@ -46,4 +46,18 @@ class Linea {
             return null;
         }
     }
+    normalizaId(){
+        switch(this.red){
+            case core.red.emt:
+                return this.id.replace(/^EMT-/, "");
+            case core.red.ctan:
+                return this.id.replace(/^CTAN-/, "");
+            case core.red.metro:
+                return this.id.replace(/^CTAN-/, "");
+            case core.red.renfe:
+                return this.id.replace(/^CTAN-/, "");
+            default:
+                throw("normalizarId() red no definida");
+        }
+    }
 }

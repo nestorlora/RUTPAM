@@ -704,7 +704,7 @@ function getTrazadosEmt(idLinea){
 	$("#botonVta"+idLinea).prop("indeterminate", false).prop("disabled", true).off('click');
 	// Llamada AJAX Ida
 	$.getJSON({
-		url: core.url.emt+'/services/trazados/?codLinea='+codLinea(idLinea)+'&sentido=1'
+		url: core.url.emt+'/services/trazados/?codLinea='+core.lineas.buscar(idLinea).normalizaId()+'&sentido=1'
 	}).done(function (response, status){
 		if(status === "success" && response.length > 0){
 			//let posLinea = findLinea(idLinea); // Almacenamos la posición en lineas[] para uso más cómodo
@@ -733,7 +733,7 @@ function getTrazadosEmt(idLinea){
 	});
 	// Llamada AJAX Vuelta
 	$.getJSON({
-		url: core.url.emt+'/services/trazados/?codLinea='+codLinea(idLinea)+'&sentido=2'
+		url: core.url.emt+'/services/trazados/?codLinea='+core.lineas.buscar(idLinea).normalizaId()+'&sentido=2'
 	}).done(function (response, status){
 		if(status === "success" && response.length > 0){
 			//let posLinea = findLinea(idLinea); // Almacenamos la posición en lineas[] para uso más cómodo
@@ -958,11 +958,6 @@ function addParadaEmt(par, idLinea, sentido){
 	parada.servicios.push(servicio);
 }
 
-function codLinea(idLinea){
-    return idLinea.replace(/^EMT-/, "");
-}
-
-
 
 
 
@@ -1144,7 +1139,7 @@ function updateLineaCtan(lin){
 function getParadasLineaCtan(id){
     // Petición AJAX
 	$.getJSON({
-		url: core.url.ctan+'/lineas/'+idLinea(id)+'/paradas?lang=ES'
+		url: core.url.ctan+'/lineas/'+core.lineas.buscar(id).normalizaId()+'/paradas?lang=ES'
 	}).done(function (response, status){
 		if(status === "success"){
 			let linea = core.lineas.buscar(id);
@@ -1234,8 +1229,4 @@ function addParadaCtan(par, idLinea){
 	servicio.sentido = Number(par.sentido);
 	// Guardamos el servicio
 	parada.servicios.push(servicio);
-}
-
-function idLinea(id){
-    return id.replace(/^CTAN-/, "");
 }
