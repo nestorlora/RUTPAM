@@ -93,6 +93,9 @@ class UI {
         closeWindow: function(){
             $("#ventana").hide();
         },
+        openWindow: function(){
+            $("#ventana").show();
+        },
         clearInfo: function(){
             $("#infoContent").empty();
         },
