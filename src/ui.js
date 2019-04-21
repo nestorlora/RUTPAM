@@ -144,6 +144,22 @@ class UI {
             }
         }
     };
+    ver = {
+        copyright: function (){
+            core.ui.action.closeWindow();
+            core.ui.action.clearInfo();
+            $("#infoContent").append($("<h3>", {text: "Información"}).css("text-align", "center"));
+            $("#infoContent").append($("<p>", {html: core.ui.textos.copyright}).css("text-align", "center"));
+            core.ui.action.openWindow();
+        },
+        ayuda: function(){
+            core.ui.action.closeWindow();
+            core.ui.action.clearInfo();
+            $("#infoContent").append($("<h3>", {text: "Ayuda"}).css("text-align", "center"));
+            $("#infoContent").append($("<div>", {html: core.ui.textos.ayuda}));
+            core.ui.action.openWindow();
+        }
+    };
     init = {
         controles: function(){
             let div = $("<div>");
@@ -217,8 +233,8 @@ class UI {
             $(encabezadoRenfe).html('<th></th><th colspan="2">Línea</th>');
             $(tablaRenfe).append(encabezadoRenfe);
             $(div).append(tablaRenfe);
-            $(div).append('<br><small><a href="#!" onclick="verCopyright()">Acerca de RUTPAM</a></small>');
-            $(div).append('<br><small><a href="#!" onclick="verAyuda()">Ayuda</a></small>');
+            $(div).append('<br><small><a href="#!" onclick="core.ui.ver.copyright()">Acerca de RUTPAM</a></small>');
+            $(div).append('<br><small><a href="#!" onclick="core.ui.ver.ayuda()">Ayuda</a></small>');
 
             $("#control").html(div);
         },
@@ -250,7 +266,7 @@ class UI {
                         }
                         break;
                     case "?":
-                        verAyuda();
+                        core.ui.ver.ayuda();
                         break;
                     case "1":
                         core.ui.action.togglePanel(core.red.emt);

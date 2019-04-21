@@ -15,7 +15,7 @@ var core = new Core();
  */
 $(document).ready(function(){
 	core.ui.init.controles(); // Rellenamos el div del panel de control con lo que devuelve ControlRUTPAM()
-	verCopyright(); // Mostramos el "Acerca de RUTPAM"
+	core.ui.ver.copyright(); // Mostramos el "Acerca de RUTPAM"
 	core.ui.init.mapa(); // Inicializamos el mapa y todo el layout
 	document.title = "RUTPAM "+core.version; // Seteamos el título del documento
 	core.ui.init.teclas(); // Inicializamos las teclas de control
@@ -579,24 +579,6 @@ function paradaIconContent(id){
 			html: id.replace(/^EMT-/, "")
 		});
 	}
-}
-
-function verCopyright(){
-	let rutpam_credits = core.ui.textos.copyright;
-	core.ui.action.closeWindow();
-	core.ui.action.clearInfo();
-	$("#infoContent").append($("<h3>", {text: "Información"}).css("text-align", "center"));
-	$("#infoContent").append($("<p>", {html: rutpam_credits}).css("text-align", "center"));
-	$("#ventana").show();
-}
-
-function verAyuda(){
-	let ayuda = core.ui.textos.ayuda;
-	core.ui.action.closeWindow();
-	core.ui.action.clearInfo();
-	$("#infoContent").append($("<h3>", {text: "Ayuda"}).css("text-align", "center"));
-	$("#infoContent").append($("<div>", {html: ayuda}));
-	$("#ventana").show();
 }
 
 
