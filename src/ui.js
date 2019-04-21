@@ -185,6 +185,42 @@ class UI {
                 layers: osm, // Añadimos la capa de cartografía
                 attributionControl: false // Deshabilitamos el footer de copyright porque ya tenemos una ventana para ello
             });
+        },
+        teclas: function(){
+            document.addEventListener('keydown', function(k){
+                switch(k.key){
+                    case "Escape":
+                        core.ui.action.closeWindow();
+                        break;
+                    case "Backspace":
+                        for(var a = 0; a < core.lineas.length; a++){ // Para todas las líneas
+                            if(core.lineas[a].trazadoIda !== null){ // Si está cargado su trazado
+                                hideTrazado(core.lineas[a].id, 1);
+                            }
+                            if(core.lineas[a].trazadoVuelta !== null){
+                                hideTrazado(core.lineas[a].id, 2);
+                            }
+                        }
+                        break;
+                    case "?":
+                        verAyuda();
+                        break;
+                    case "1":
+                        togglePanelEmt();
+                        break;
+                    case "2":
+                        togglePanelCtan();
+                        break;
+                    case "3":
+                        togglePanelMetro();
+                        break;
+                    case "4":
+                        togglePanelRenfe();
+                        break;
+                    default:
+                        break;
+                }
+            });
         }
     };
 }

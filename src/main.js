@@ -18,54 +18,13 @@ $(document).ready(function(){
 	verCopyright(); // Mostramos el "Acerca de RUTPAM"
 	core.ui.init.mapa(); // Inicializamos el mapa y todo el layout
 	document.title = "RUTPAM "+core.version; // Seteamos el título del documento
-	initKeys(); // Inicializamos las teclas de control
+	core.ui.init.teclas(); // Inicializamos las teclas de control
 	core.getModos(); // Cargamos los modos de transporte
 	core.getZonas(); // Cargamos las zonas
 	getLineasEmt(); // Cargamos las líneas de la EMT
 	getLineasCtan(); // Cargamos las líneas del CTAN
 	inicializarParadas(); // Inicializamos los marcadores de las paradas
 });
-
-/**
- * @description Pone en marcha los triggers adecuados para las teclas de control
- * @returns {null}
- */
-function initKeys(){
-	document.addEventListener('keydown', function(k){
-		switch(k.key){
-			case "Escape":
-				core.ui.action.closeWindow();
-				break;
-			case "Backspace":
-				for(var a = 0; a < core.lineas.length; a++){ // Para todas las líneas
-					if(core.lineas[a].trazadoIda !== null){ // Si está cargado su trazado
-						hideTrazado(core.lineas[a].id, 1);
-					}
-					if(core.lineas[a].trazadoVuelta !== null){
-						hideTrazado(core.lineas[a].id, 2);
-					}
-				}
-				break;
-			case "?":
-				verAyuda();
-				break;
-			case "1":
-				togglePanelEmt();
-				break;
-			case "2":
-				togglePanelCtan();
-				break;
-			case "3":
-				togglePanelMetro();
-				break;
-			case "4":
-				togglePanelRenfe();
-				break;
-			default:
-				break;
-		}
-	});
-}
 
 /**
  * @description Función asíncrona para refrescar los datos periódicamente
