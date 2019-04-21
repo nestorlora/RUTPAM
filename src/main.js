@@ -581,54 +581,6 @@ function paradaIconContent(id){
 	}
 }
 
-function togglePanelEmt(){
-	if(core.ui.show.emt){
-		$("#tablaLineasEMT").css("display", "none");
-		$("#verEMT").css("color", "black").css("background-color", "white");
-		core.ui.show.emt = false;
-	}else{
-		$("#tablaLineasEMT").css("display", "block");
-		$("#verEMT").css("color", "white").css("background-color", core.colores.emtA);
-		core.ui.show.emt = true;
-	}
-}
-
-function togglePanelCtan(){
-	if(core.ui.show.ctan){
-		$("#tablaLineasCTAN").css("display", "none");
-		$("#verCTAN").css("color", "black").css("background-color", "white");
-		core.ui.show.ctan = false;
-	}else{
-		$("#tablaLineasCTAN").css("display", "block");
-		$("#verCTAN").css("color", "white").css("background-color", core.colores.ctmamA);
-		core.ui.show.ctan = true;
-	}
-}
-
-function togglePanelMetro(){
-	if(core.ui.show.metro){
-		$("#tablaLineasMetro").css("display", "none");
-		$("#verMetro").css("color", "black").css("background-color", "white");
-		core.ui.show.metro = false;
-	}else{
-		$("#tablaLineasMetro").css("display", "block");
-		$("#verMetro").css("color", "white").css("background-color", core.colores.metro);
-		core.ui.show.metro = true;
-	}
-}
-
-function togglePanelRenfe(){
-	if(core.ui.show.renfe){
-		$("#tablaLineasRenfe").css("display", "none");
-		$("#verRenfe").css("color", "black").css("background-color", "white");
-		core.ui.show.renfe = false;
-	}else{
-		$("#tablaLineasRenfe").css("display", "block");
-		$("#verRenfe").css("color", "white").css("background-color", core.colores.renfeA);
-		core.ui.show.renfe = true;
-	}
-}
-
 function verCopyright(){
 	let rutpam_credits = core.ui.textos.copyright;
 	core.ui.action.closeWindow();

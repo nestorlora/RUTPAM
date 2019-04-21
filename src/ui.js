@@ -95,6 +95,50 @@ class UI {
         },
         clearInfo: function(){
             $("#infoContent").empty();
+        },
+        togglePanel: function(selector){
+            if(selector.data !== undefined){
+                selector = selector.data;
+            }
+            let tabla;
+            let boton;
+            let color;
+            let nuevoEstado;
+            switch(selector){
+                case core.red.emt:
+                    tabla = "#tablaLineasEMT";
+                    boton = "#verEMT";
+                    color = core.colores.emtA;
+                    nuevoEstado = core.ui.show.emt = !core.ui.show.emt; // Le da la vuelta al estado y lo almacena
+                    break;
+                case core.red.ctan:
+                    tabla = "#tablaLineasCTAN";
+                    boton = "#verCTAN";
+                    color = core.colores.ctmamA;
+                    nuevoEstado = core.ui.show.ctan = !core.ui.show.ctan;
+                    break;
+                case core.red.metro:
+                    tabla = "#tablaLineasMetro";
+                    boton = "#verMetro";
+                    color = core.colores.metro;
+                    nuevoEstado = core.ui.show.metro = !core.ui.show.metro;
+                    break;
+                case core.red.renfe:
+                    tabla = "#tablaLineasRenfe";
+                    boton = "#verRenfe";
+                    color = core.colores.renfeA;
+                    nuevoEstado = core.ui.show.renfe = !core.ui.show.renfe;
+                    break;
+                default:
+                    throw("UI.action.togglePanel() selector no definido");
+            }
+            if(nuevoEstado){
+                $(tabla).css("display", "block");
+		        $(boton).css("color", "white").css("background-color", color);
+            }else{
+                $(tabla).css("display", "none");
+		        $(boton).css("color", "black").css("background-color", "white");
+            }
         }
     };
     init = {
@@ -109,25 +153,25 @@ class UI {
                 "type": "button",
                 "class": "boton",
                 "text": "Red EMT"
-            }).on("click", togglePanelEmt);
+            }).on("click", null, core.red.emt, core.ui.action.togglePanel);
             let botonCTAN = $("<button>", {
                 "id": "verCTAN",
                 "type": "button",
                 "class": "boton",
                 "text": "Red CTMAM"
-            }).on("click", togglePanelCtan);
+            }).on("click", null, core.red.ctan, core.ui.action.togglePanel);
             let botonRenfe = $("<button>", {
                 "id": "verRenfe",
                 "type": "button",
                 "class": "boton",
                 "text": "RENFE"
-            }).on("click", togglePanelRenfe);
+            }).on("click", null, core.red.renfe, core.ui.action.togglePanel);
             let botonMetro = $("<button>", {
                 "id": "verMetro",
                 "type": "button",
                 "class": "boton",
                 "text": "Red Metro"
-            }).on("click", togglePanelMetro);
+            }).on("click", null, core.red.metro, core.ui.action.togglePanel);
             let play = $("<button>", {
                 "id": "play",
                 "type": "button",
@@ -206,16 +250,16 @@ class UI {
                         verAyuda();
                         break;
                     case "1":
-                        togglePanelEmt();
+                        core.ui.action.togglePanel(core.red.emt);
                         break;
                     case "2":
-                        togglePanelCtan();
+                        core.ui.action.togglePanel(core.red.ctan);
                         break;
                     case "3":
-                        togglePanelMetro();
+                        core.ui.action.togglePanel(core.red.metro);
                         break;
                     case "4":
-                        togglePanelRenfe();
+                        core.ui.action.togglePanel(core.red.renfe);
                         break;
                     default:
                         break;
