@@ -1031,6 +1031,7 @@ function addLineaCtan(lin){
 	linea.modo = lin.modo;
 	linea.operadores = (lin.operadores).replace(/, $/, "");
 	linea.hayNoticia = lin.hayNoticia;
+	linea.red = core.red.ctan;
     core.lineas.push(linea);
 
 	getParadasLineaCtan(linea.id);
