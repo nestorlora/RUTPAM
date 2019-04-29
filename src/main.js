@@ -949,7 +949,7 @@ function addLineaCtan(lin){
 	let linea = new Linea();
 	linea.id = "CTAN-"+lin.idLinea;
 	linea.codigo = lin.codigo.replace(/^0066$/,"M");
-	linea.nombre = lin.nombre;
+	linea.nombre = lin.nombre.replace(/^M /, "");
 	linea.trazadoIda = null;
 	linea.trazadoVuelta = null;
 	linea.estado.getBuses = false;
