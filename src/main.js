@@ -778,8 +778,8 @@ function updateBusEmt(bus){
 function addLineaEmt(lin){
 	let linea = new Linea();
 	linea.id = "EMT-"+lin.codLinea;
-	linea.codigo = lin.userCodLinea.replace(/^F-/, "F");
-	linea.nombre = lin.nombreLinea.replace(/(\(F\))|(\(?F-[0-9A-Z]{1,2}\)$)/, "");
+	linea.codigo = lin.userCodLinea.replace(/^F-/, "F"); // Sanitalizamos
+	linea.nombre = lin.nombreLinea.replace(/(\(F\))|(\(?F-[0-9A-Z]{1,2}\)$)/, ""); // Sanitalizamos
 	linea.cabeceraIda = lin.cabeceraIda;
 	linea.cabeceraVuelta = lin.cabeceraVuelta;
 	linea.trazadoIda = null;
@@ -948,7 +948,7 @@ function getLineaCompletaCtan(ctanId){
 function addLineaCtan(lin){
 	let linea = new Linea();
 	linea.id = "CTAN-"+lin.idLinea;
-	linea.codigo = lin.codigo;
+	linea.codigo = lin.codigo.replace(/^0066$/,"M");
 	linea.nombre = lin.nombre;
 	linea.trazadoIda = null;
 	linea.trazadoVuelta = null;
