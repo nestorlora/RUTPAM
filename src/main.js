@@ -282,7 +282,7 @@ function verInfoParada(id){
 				break;
 		}
 		let fila = $("<tr>");
-		fila.append($("<td>", {html: lineaIcon(linea.codigo, "3x", linea.id)}));
+		fila.append($("<td>", {html: linea.generarIcon(3)}));
 		fila.append($("<td>", {text: sentido}));
 		//fila.append($("<td>", {text: "??? min."}).css("text-align", "right"));
 		tabla.append(fila);
@@ -376,11 +376,11 @@ function extrarCorrespondencias(div, idParada, idLinea){
 		if(servicio !== idLinea){
 			if(a === 0){
 				let linea = core.lineas.buscar(servicio);
-				let spanIcon = lineaIcon(linea.codigo, "2x", linea.id);
+				let spanIcon = linea.generarIcon(2);
 				$(div).append(spanIcon);
-			}else if(servicio !== parada.servicios[a-1].idLinea){
+			}else if(servicio !== parada.servicios[a-1].linea){
 				let linea = core.lineas.buscar(servicio);
-				let spanIcon = lineaIcon(linea.codigo, "2x", linea.id);
+				let spanIcon = linea.generarIcon(2);
 				$(div).append(spanIcon);
 			}
 		}
@@ -392,69 +392,6 @@ function acortarParada(nombre){
 	return nombre.replace(/\s-\s/, "<br>");
 }
 
-function lineaIcon(codigo, zoom, idLinea){
-	let id = $('<span>').addClass('fa-layers fa-'+zoom);
-	let esNegro = false;
-	if(/^C[1-9]$|^29$/.test(codigo)){ // Circulares EMT
-		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.emtC));
-	}else if(/^N[1-9]/.test(codigo)){ // Nocturno EMT
-		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.emtN));
-	}else if(/^A$|^E$/.test(codigo)){ // Lineas exprés
-		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.express));
-	}else if(/^L$|^P$/.test(codigo)){ // Lineas Lanzaderas
-		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.lanzaderas));
-	}else if(/N[1-9]$|^M-168$|^M-155$|^M-168$/.test(codigo)){ // Líneas Buho CTAN
-		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.ctmamN));
-	}else if(/^M-5[0-9]{2}$/.test(codigo)){ // Líneas Verano CTAN
-		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.ctmamT));
-	}else if(/^M-114$|^M-116$|^M-143$|^M-166$/.test(codigo)){ // Líneas Universitarias CTAN
-		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.ctmamT));
-		esNegro = true;
-	}else if(/^R-|^T-|^M-10[1-4]$/.test(codigo)){ // Líneas Urbanas CTAN
-		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.emtA));
-	}else if(/^M-6[0-9]{2}/.test(codigo)){ // Servicios Especiales CTAN (Semana Santa)
-		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.especial));
-		esNegro = true;
-	}else if(/^M-/.test(codigo)){ // Líneas Interurbanas CTAN
-		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.ctmamA));
-	}else if(/^91$|^92$/.test(codigo)){ // Servicios Turísticos
-		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.especial));
-		esNegro = true;
-	}else if(/^METRO [1-2]$/.test(codigo)){ // Metro
-		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.metro));
-	}else if(/^C-[1-2]$/.test(codigo)){ // Cercanías
-		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.renfeA));
-	}else if(/^12$|^16$|^26$|^64$|^[0-9]{1,}.1$|^[0-9]{1,}.2$|^[A-Z]/.test(codigo)){ // Servicios Especiales EMT
-		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.especial));
-		esNegro = true;
-	}else{ // Líneas Urbanas EMT
-		id.append($('<i>').addClass('fas fa-circle').css("color", core.colores.emtA));
-	}
-
-	let texto = codigo.replace(/^M-/, "M\n").replace(/^R-/, "R").replace(/^T-/, "T").replace(/^METRO /, "").replace(/^C-/, "C");
-	let textdiv;
-	if(texto.length < 3){
-		textdiv = $('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-6");
-	}else if(texto.length < 5){
-		textdiv = $('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-8");
-	}else if(texto.length < 6){
-		textdiv = $('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-10");
-	}else if(texto.length < 7){
-		textdiv = $('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-11");
-	}else{
-		textdiv = $('<span>').addClass("fa-layers-text fa-inverse").text(texto).attr("data-fa-transform", "shrink-12");
-	}
-	if(esNegro){
-		textdiv.css("color", "black");
-	}
-	id.append(textdiv);
-	if(idLinea !== undefined && idLinea !== null){
-		id.click(function(){
-			verInfoLinea(idLinea);
-		});
-	}
-	return id;
-}
 
 /**
  * Devuelve el contenido HTML de una ventana de información adicional de autobús
@@ -512,7 +449,7 @@ function paradaPopupContent(id){
 				break;
 		}
 		let fila = $("<tr>");
-		$(fila).append($("<td>", {html: lineaIcon(linea.codigo, "2x", linea.id)}));
+		$(fila).append($("<td>", {html: linea.generarIcon(2)}));
 		$(fila).append($("<td>", {text: sentido}));
 		//fila.append($("<td>", {text: "??? min."}).css("text-align", "right"));
 		$(tabla).append(fila);
@@ -861,7 +798,7 @@ function addLineaEmt(lin){
 	$(fila).append($("<td>").append(botonIda));
 	$(fila).append($("<td>").append(botonVta));
 	$(fila).append($("<td>").append(botonBus));
-	$(fila).append($("<td>").append(lineaIcon(linea.codigo, "3x")));
+	$(fila).append($("<td>").append(linea.generarIcon(3)));
 	$(fila).append($("<td>").append($("<a>", {text: linea.nombre, href: "#!"}).click(function(){verInfoLinea(linea.id);})));
 	$(fila).append($("<td>").append($("<p>").attr('id', "cont"+linea.id)));
 
@@ -989,7 +926,7 @@ function addLineaCtan(lin){
 	if(linea.modo !== "Tren" && linea.modo !== "Metro"){
 		$(fila).append($("<td>").append(botonVta));
 	}
-	$(fila).append($("<td>").append(lineaIcon(linea.codigo, "3x")));
+	$(fila).append($("<td>").append(linea.generarIcon(3)));
 	$(fila).append($("<td>").append($("<a>", {text: linea.nombre, href: "#!"}).click(function(){verInfoLinea(linea.id);})));
 
 	switch(linea.red){
