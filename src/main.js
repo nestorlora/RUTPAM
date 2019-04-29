@@ -960,7 +960,17 @@ function addLineaCtan(lin){
 	linea.modo = lin.modo;
 	linea.operadores = (lin.operadores).replace(/, $/, "");
 	linea.hayNoticia = lin.hayNoticia;
-	linea.red = core.red.ctan;
+	switch(linea.modo){
+        case "Autobús":
+			linea.red = core.red.ctan;
+			break;
+		case "Metro":
+			linea.red = core.red.metro;
+			break;
+		case "Tren":
+			linea.red = core.red.renfe;
+			break;
+	}
     core.lineas.push(linea);
 
 	getParadasLineaCtan(linea.id);
@@ -982,20 +992,17 @@ function addLineaCtan(lin){
 	$(fila).append($("<td>").append(lineaIcon(linea.codigo, "3x")));
 	$(fila).append($("<td>").append($("<a>", {text: linea.nombre, href: "#!"}).click(function(){verInfoLinea(linea.id);})));
 
-    switch(linea.modo){
-        case "Autobús":
+	switch(linea.red){
+        case core.red.ctan:
 			$("#tablaLineasCTAN").append(fila);
-			linea.red = core.red.ctan;
 			break;
-		case "Metro":
+		case core.red.metro:
 			$("#tablaLineasMetro").append(fila);
-			linea.red = core.red.metro;
 			break;
-		case "Tren":
+		case core.red.renfe:
 			$("#tablaLineasRenfe").append(fila);
-			linea.red = core.red.renfe;
 			break;
-    }
+	}
 }
 
 function updateLineaCtan(lin){
