@@ -351,21 +351,6 @@ function hideParada(id){
 	}
 }
 
-/**
- * @description Calcula la distancia total de un trazado indicado
- * @param {linea.trazado} trazado
- * @returns {Float}
- */
-function distanciaTrazado(trazado){
-	let total = 0;
-	if(trazado !== null){
-		for(let pos = 1; pos < trazado.getLatLngs().length; pos++){
-			total = total + core.map.distance(trazado.getLatLngs()[pos-1], trazado.getLatLngs()[pos]);
-		}
-	}
-	return total;
-}
-
 function extrarCorrespondencias(div, idParada, idLinea){
 	$(div).css("max-width", "73px");
 	let parada = core.paradas.buscar(idParada);
