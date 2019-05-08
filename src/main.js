@@ -128,7 +128,7 @@ function verInfoLinea(id){
 	let distanciaIda = 0, distanciaVuelta = 0, tiempoIda = 0,tiempoVuelta = 0; // Creamos variables para los datos numéricos
 	let datosTrazado = $("<table>"); // Tabla para los datos numéricos del trazado
 	if(linea.estado.getIda){ // SI se ha cargado el trazado de ida
-		distanciaIda = Math.floor(distanciaTrazado(linea.trazadoIda)); // Calcular la distancia de la ruta
+		distanciaIda = Math.floor(linea.distanciaTrazado(1)); // Calcular la distancia de la ruta
 		tiempoIda = Math.floor(distanciaIda/1000/13.5*60); // Estimar el tiempo de viaje
 		if(/^EMT-/.test(id)){
 			datosTrazado.append($("<tr>").append($("<td>")).append($("<th>", {text: "Longitud"})).append($("<th>", {text: "Tiempo de viaje (estimado)"}))); // Cabecera de la tabla para los datos numéricos del trazado
@@ -139,7 +139,7 @@ function verInfoLinea(id){
 		}
 	}
 	if(linea.estado.getVuelta){ // SI se ha cargado el trazado de vuelta (también se ha cargado el de ida)
-		distanciaVuelta = Math.floor(distanciaTrazado(linea.trazadoVuelta)); // Calcular la distancia de la ruta
+		distanciaVuelta = Math.floor(linea.distanciaTrazado(2)); // Calcular la distancia de la ruta
 		tiempoVuelta = Math.floor(distanciaVuelta/1000/13.5*60); // Estimar el tiempo de viaje
 		if(/^EMT-/.test(id)){
 			datosTrazado.append($("<tr>").append($("<th>", {text: "Vuelta"})).append($("<td>", {text: distanciaVuelta+" m"})).append($("<td>", {text: tiempoVuelta+" min"}))); // Añadimos los datos de la vuelta
