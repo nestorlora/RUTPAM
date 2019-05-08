@@ -25,7 +25,7 @@ class Parada {
     }
     inicializar(){
         this.marker = L.marker((this.ubicacion), {icon: this.generarIconMap()});
-        this.popup = L.popup({autoPan: false, autoClose: false}).setContent(paradaPopupContent(this.id));
+        this.popup = L.popup({autoPan: false, autoClose: false}).setContent(this.generarPopup());
         this.marker.bindPopup(this.popup);
     }
     normalizaId(){
@@ -60,5 +60,36 @@ class Parada {
                 html: this.normalizaId()
             });
         }
+    }
+    generarPopup(){
+        let div = $("<div>");
+        $(div).append($("<h3>", {text: "Parada "+this.id}).css("text-align", "center"));
+        $(div).append($("<h4>", {text: this.nombre}).css("text-align", "center"));
+        let tabla = $("<table>");
+        /*var cabecera = $("<tr>");
+        $(cabecera).append($("<th>", {text: "Servicios"}).prop("colspan", /*3 2));
+        $(tabla).append(cabecera);*/
+        for(let a = 0; a < this.servicios.length; a++){
+            let linea = core.lineas.buscar(this.servicios[a].linea);
+            let sentido;
+            switch (this.servicios[a].sentido){
+                case 1:
+                    sentido = linea.cabeceraVuelta;
+                    break;
+                case 2:
+                    sentido = linea.cabeceraIda;
+                    break;
+                default:
+                    sentido = "-";
+                    break;
+            }
+            let fila = $("<tr>");
+            $(fila).append($("<td>", {html: linea.generarIcon(2)}));
+            $(fila).append($("<td>", {text: sentido}));
+            //fila.append($("<td>", {text: "??? min."}).css("text-align", "right"));
+            $(tabla).append(fila);
+        }
+        $(div).append(tabla);
+        return $(div).html();
     }
 }

@@ -423,39 +423,6 @@ function busPopupContent(vehiculo){
 	"<a href='http://buscabus.tk/bus/?bus="+codigo+"' target='_blank'>Ver en BuscaBus</a>";
 }
 
-function paradaPopupContent(id){
-	let div = $("<div>");
-	let parada = core.paradas.buscar(id);
-	$(div).append($("<h3>", {text: "Parada "+parada.id}).css("text-align", "center"));
-	$(div).append($("<h4>", {text: parada.nombre}).css("text-align", "center"));
-	let tabla = $("<table>");
-	/*var cabecera = $("<tr>");
-	$(cabecera).append($("<th>", {text: "Servicios"}).prop("colspan", /*3 2));
-	$(tabla).append(cabecera);*/
-	for(let a = 0; a < parada.servicios.length; a++){
-		let linea = core.lineas.buscar(parada.servicios[a].linea);
-		let sentido;
-		switch (parada.servicios[a].sentido){
-			case 1:
-				sentido = linea.cabeceraVuelta;
-				break;
-			case 2:
-				sentido = linea.cabeceraIda;
-				break;
-			default:
-				sentido = "-";
-				break;
-		}
-		let fila = $("<tr>");
-		$(fila).append($("<td>", {html: linea.generarIcon(2)}));
-		$(fila).append($("<td>", {text: sentido}));
-		//fila.append($("<td>", {text: "??? min."}).css("text-align", "right"));
-		$(tabla).append(fila);
-	}
-	$(div).append(tabla);
-	return $(div).html();
-}
-
 function busIconContent(bus, estado){
 	let linea = core.lineas.buscar(bus.linea);
 	let codigo = bus.id.replace(/^EMT-|^CTAN-/,"");
