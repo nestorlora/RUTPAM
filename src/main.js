@@ -815,6 +815,7 @@ function addParadaEmt(par, idLinea, sentido){
 		parada.zona = "A";
 		parada.ubicacion = new LatLong(par.latitud, par.longitud);
 		parada.modos.push(1); // Añadimos el elemento autobús
+		parada.red = core.red.emt;
 		// Guardamos la parada
 		core.paradas.push(parada);
 	}
@@ -1095,6 +1096,7 @@ function addParadaCtan(par, idLinea){
 				parada.modos.push(4);
 				break;
 		}
+		parada.red = core.lineas.buscar(idLinea).red;
 		// Guardamos la parada
 		core.paradas.push(parada);
 	}

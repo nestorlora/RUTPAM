@@ -21,7 +21,7 @@ class Parada {
         this.marker = null;
         this.popup = null;
         this.vistas = 0;
-        // TO DO this.red = undefined; // 0 EMT 1 CTMAM
+        this.red = undefined;
     }
     inicializar(){
         this.marker = L.marker((this.ubicacion), {icon: paradaIconContent(this.id)});
