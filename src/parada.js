@@ -42,4 +42,23 @@ class Parada {
                 throw("normalizarId() red no definida");
         }
     }
+    generarIconMap(){
+        if(this.red === core.red.emt){
+            return L.divIcon({
+                className: 'marker paradaE',
+                iconSize: [36, 15],
+                iconAnchor: [18, 7],
+                popupAnchor: [0, -7],
+                html: this.normalizaId()
+            }); 
+        }else{
+            return L.divIcon({
+                className: 'marker paradaC',
+                iconSize: [36, 15],
+                iconAnchor: [60, 10],
+                popupAnchor: [-42, -10],
+                html: this.normalizaId()
+            });
+        }
+    }
 }
