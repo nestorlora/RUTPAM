@@ -88,7 +88,7 @@ class Linea {
                 }else if(/^[0-9]{1,}.[0-9]$/.test(this.codigo)){ // Especiales (Superlíneas divididas)
                     color = core.colores.especial;
                     esNegro = true;
-                }else if(/^[A-Z]/.test(this.codigo)){ // Especiales (Feria y otros)
+                }else if(/^64$|^[A-Z]/.test(this.codigo)){ // Especiales (Feria y otros)
                     color = core.colores.especial;
                     esNegro = true;
                 }else if(/^91$|^92$/.test(this.codigo)){ // Turísticas
