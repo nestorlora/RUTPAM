@@ -496,26 +496,6 @@ function busIconContent(bus, estado){
 	});
 }
 
-function paradaIconContent(id){
-	if(/^CTAN-/.test(id)){
-		return L.divIcon({
-			className: 'marker paradaC',
-			iconSize: [36, 15],
-			iconAnchor: [60, 10],
-			popupAnchor: [-42, -10],
-			html: id.replace(/^CTAN-/, "")
-		});
-	}else{
-		return L.divIcon({
-			className: 'marker paradaE',
-			iconSize: [36, 15],
-			iconAnchor: [18, 7],
-			popupAnchor: [0, -7],
-			html: id.replace(/^EMT-/, "")
-		});
-	}
-}
-
 
 
 

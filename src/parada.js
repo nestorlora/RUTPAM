@@ -24,7 +24,7 @@ class Parada {
         this.red = undefined;
     }
     inicializar(){
-        this.marker = L.marker((this.ubicacion), {icon: paradaIconContent(this.id)});
+        this.marker = L.marker((this.ubicacion), {icon: this.generarIconMap()});
         this.popup = L.popup({autoPan: false, autoClose: false}).setContent(paradaPopupContent(this.id));
         this.marker.bindPopup(this.popup);
     }
