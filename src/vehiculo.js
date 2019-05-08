@@ -18,6 +18,6 @@ class Vehiculo {
         this.marker = null;
         this.popup = null;
         this.ttl = new Core().ttl.new;
-        // TO DO this.red = undefined; // 0 EMT 1 CTMAM
+        this.red = undefined;
     }
 }

@@ -678,6 +678,7 @@ function addBusEmt(bus){
 		autoClose: false
 	}).setContent(busPopupContent(vehiculo));
 	vehiculo.marker.bindPopup(vehiculo.popup);
+	vehiculo.red = core.red.emt;
 	// Insertamos el vehículo
 	core.vehiculos.push(vehiculo);
 	console.log("ADDED "+vehiculo.id);
