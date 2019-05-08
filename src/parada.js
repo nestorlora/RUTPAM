@@ -23,4 +23,9 @@ class Parada {
         this.vistas = 0;
         // TO DO this.red = undefined; // 0 EMT 1 CTMAM
     }
+    inicializar(){
+        this.marker = L.marker((this.ubicacion), {icon: paradaIconContent(this.id)});
+        this.popup = L.popup({autoPan: false, autoClose: false}).setContent(paradaPopupContent(this.id));
+        this.marker.bindPopup(this.popup);
+    }
 }

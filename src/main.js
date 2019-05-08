@@ -88,9 +88,7 @@ function inicializarParadas(){
 	}else{
 		$("#loader").remove();
 		for(let a = 0; a < core.paradas.length; a++){
-			core.paradas[a].marker = L.marker(core.paradas[a].ubicacion, {icon: paradaIconContent(core.paradas[a].id)});
-			core.paradas[a].popup = L.popup({autoPan: false, autoClose: false}).setContent(paradaPopupContent(core.paradas[a].id));
-			core.paradas[a].marker.bindPopup(core.paradas[a].popup);
+			core.paradas[a].inicializar();
 		}
 		core.paradasInicializadas = true;
 	}
