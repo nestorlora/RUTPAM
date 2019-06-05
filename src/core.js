@@ -84,4 +84,18 @@ class Core {
             }
         });  
     }
+    getLineasEmt(){
+        //$("#getLineas").remove(); // Eliminamos el botón para pedir las líneas
+        // Petición AJAX
+        $.getJSON({
+            url: core.url.emt+'/services/lineas/'
+        }).done(function (response, status){
+            if(status === "success"){
+                for(let i = 0; i<response.length; i++){
+                    addLineaEmt(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
+                    core.lineasCargadas++;
+                }
+            }
+        });
+    }
 }

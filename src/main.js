@@ -21,9 +21,15 @@ $(document).ready(function(){
 	core.ui.init.teclas(); // Inicializamos las teclas de control
 	core.getModos(); // Cargamos los modos de transporte
 	core.getZonas(); // Cargamos las zonas
-	getLineasEmt(); // Cargamos las líneas de la EMT
+	core.getLineasEmt(); // Cargamos las líneas de la EMT
 	getLineasCtan(); // Cargamos las líneas del CTAN
 	inicializarParadas(); // Inicializamos los marcadores de las paradas
+	motor(); // Llamamos la primera vez al motor
+	start(); // Programamos que se ejecute periódicamente
+	// Mostramos la botoner de control del motor
+	$("#play").css("display", "inline-block");
+	$("#refresh").css("display", "inline-block");
+	$("#pause").css("display", "inline-block");
 });
 
 /**
@@ -468,31 +474,7 @@ function busIconContent(bus, estado){
 
 
 
-/**
- * @description Función que llama a la API para cargar las líneas. Cambia algunos elementos para preparar la interfaz.
- * @returns {null}
- */
-function getLineasEmt(){
-	//$("#getLineas").remove(); // Eliminamos el botón para pedir las líneas
-	// Petición AJAX
-	$.getJSON({
-		url: core.url.emt+'/services/lineas/'
-	}).done(function (response, status){
-		if(status === "success"){
-			for(let i = 0; i<response.length; i++){
-				addLineaEmt(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
-				core.lineasCargadas++;
-			}
-			motor(); // Llamamos la primera vez al motor
-			start(); // Programamos que se ejecute periódicamente
-			// Mostramos la botoner de control del motor
-			$("#play").css("display", "inline-block");
-			$("#refresh").css("display", "inline-block");
-			$("#pause").css("display", "inline-block");
-		}
-	});
-	return null;
-};
+
 
 /**
  * @description Función que llama a la API para cargar los trazados de una linea dada. A continuación los muestra sobre el mapa según el usuario lo haya indicado
