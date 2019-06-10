@@ -52,7 +52,7 @@ function motor(){
 			core.vehiculos[pos].marker.remove(); // Quitamos el marcador del mapa
 			pos++; // Avanzamos de posición
 		}else if(core.vehiculos[pos].ttl <= core.ttl.old){ // O SI el TTL es bajo y el bus lleva rato sin refrescarse
-			core.vehiculos[pos].marker.setIcon(busIconContent(core.vehiculos[pos], 2)); // Cambiamos el icono para que aparezca como no-actualizado
+			core.vehiculos[pos].marker.setIcon(core.vehiculos[pos].generarIconMap(2)); // Cambiamos el icono para que aparezca como no-actualizado
 			pos++; // Avanzamos de posición
 		}else{ // O Todo está bien
 			pos++; // Avanzamos de posición
@@ -412,46 +412,6 @@ function busPopupContent(vehiculo){
 	textoParada+"<br>"+
 	"Sentido: <b>"+sentido+"</b><br>"+
 	"<a href='http://buscabus.tk/bus/?bus="+codigo+"' target='_blank'>Ver en BuscaBus</a>";
-}
-
-function busIconContent(bus, estado){
-	let linea = core.lineas.buscar(bus.linea);
-	let codigo = bus.id.replace(/^EMT-|^CTAN-/,"");
-	let html = linea.codigo+"<br>"+codigo;
-	let clase;
-	switch (bus.sentido){
-		case 1:
-			clase = 'marker ida';
-			break;
-		case 2:
-			if(linea.tieneVuelta){
-				clase = 'marker vta';
-			}else{
-				clase = 'marker ida';
-			}
-			break;
-		default:
-			clase = 'marker desconocido';
-			break;
-	}
-	switch (estado){
-		case 1:
-			clase += ' bus-new';
-			break;
-		case 2:
-			clase += ' bus-lost';
-			break;
-		default:
-			clase += ' bus-normal';
-			break;
-	}
-	return L.divIcon({
-		className: clase,
-		iconSize: [32, 30],
-		iconAnchor: [0, 0],
-		popupAnchor: [16, 0],
-		html: html
-	});
 }
 
 

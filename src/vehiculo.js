@@ -20,6 +20,45 @@ class Vehiculo {
         this.ttl = new Core().ttl.new;
         this.red = undefined;
     }
+    generarIconMap(estado){
+        let linea = core.lineas.buscar(this.linea);
+        let codigo = this.id.replace(/^EMT-|^CTAN-/,"");
+        let html = linea.codigo+"<br>"+codigo;
+        let clase;
+        switch (this.sentido){
+            case 1:
+                clase = 'marker ida';
+                break;
+            case 2:
+                if(linea.tieneVuelta){
+                    clase = 'marker vta';
+                }else{
+                    clase = 'marker ida';
+                }
+                break;
+            default:
+                clase = 'marker desconocido';
+                break;
+        }
+        switch (estado){
+            case 1:
+                clase += ' bus-new';
+                break;
+            case 2:
+                clase += ' bus-lost';
+                break;
+            default:
+                clase += ' bus-normal';
+                break;
+        }
+        return L.divIcon({
+            className: clase,
+            iconSize: [32, 30],
+            iconAnchor: [0, 0],
+            popupAnchor: [16, 0],
+            html: html
+        });
+    }
     nuevoEmt(respuesta){
         this.id = respuesta.codBus;
         this.linea = respuesta.codLinea;
@@ -27,7 +66,7 @@ class Vehiculo {
         this.paradaInicio = respuesta.codParIni;
         this.posicion = new LatLong(respuesta.latitud, respuesta.longitud);
         this.marker = L.marker(this.posicion, {
-            icon: busIconContent(this, 1)
+            icon: this.generarIconMap(1)
         });
         this.popup = L.popup({
             autoPan: false,
@@ -52,7 +91,7 @@ class Vehiculo {
         }
         if(this.ttl < core.ttl.default){
             this.ttl = core.ttl.default;
-            this.marker.setIcon(busIconContent(this, 0));
+            this.marker.setIcon(this.generarIconMap());
         }
     }
 }
