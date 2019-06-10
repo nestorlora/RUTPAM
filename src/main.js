@@ -568,7 +568,7 @@ function getBusesEmt(){
 				response[x].codLinea = "EMT-"+response[x].codLinea;
 				response[x].codParIni = "EMT-"+response[x].codParIni;
 				if(core.vehiculos.buscar(response[x].codBus) !== undefined){
-					updateBusEmt(response[x]);
+					core.vehiculos.buscar(response[x].codBus).refrescarEmt(response[x]);
 				}else{
 					addBusEmt(response[x]);
 				}
@@ -589,27 +589,6 @@ function addBusEmt(bus){
 		vehiculo.marker.addTo(core.map);
 	}
 	linea.numVehiculos++;
-}
-
-function updateBusEmt(bus){
-	let vehiculo = core.vehiculos.buscar(bus.codBus);
-	let posicion = new LatLong(bus.latitud, bus.longitud);
-	if(!vehiculo.marker.getLatLng().equals(posicion)){
-		vehiculo.marker.setLatLng(posicion)
-		vehiculo.posicion = posicion;
-	}
-	vehiculo.linea = bus.codLinea;
-	vehiculo.sentido = bus.sentido;
-	vehiculo.paradaInicio = bus.codParIni
-	vehiculo.popup.setContent(busPopupContent(vehiculo));
-
-	if(core.lineas.buscar(vehiculo.linea).estado.getBuses){
-		vehiculo.marker.addTo(core.map);
-	}
-	if(vehiculo.ttl < core.ttl.default){
-		vehiculo.ttl = core.ttl.default;
-		vehiculo.marker.setIcon(busIconContent(vehiculo, 0));
-	}
 }
 
 function addParadaEmt(par, idLinea, sentido){

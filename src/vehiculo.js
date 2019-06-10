@@ -36,4 +36,23 @@ class Vehiculo {
         this.marker.bindPopup(this.popup);
         this.red = core.red.emt;
     }
+    refrescarEmt(bus){
+        let posicion = new LatLong(bus.latitud, bus.longitud);
+        if(!this.marker.getLatLng().equals(posicion)){
+            this.marker.setLatLng(posicion)
+            this.posicion = posicion;
+        }
+        this.linea = bus.codLinea;
+        this.sentido = bus.sentido;
+        this.paradaInicio = bus.codParIni
+        this.popup.setContent(busPopupContent(this));
+
+        if(core.lineas.buscar(this.linea).estado.getBuses){
+            this.marker.addTo(core.map);
+        }
+        if(this.ttl < core.ttl.default){
+            this.ttl = core.ttl.default;
+            this.marker.setIcon(busIconContent(this, 0));
+        }
+    }
 }
