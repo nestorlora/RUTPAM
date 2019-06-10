@@ -59,6 +59,32 @@ class Vehiculo {
             html: html
         });
     }
+    generarPopup(){
+        let linea = core.lineas.buscar(this.linea);
+        let codigo = this.id.replace(/^EMT-|^CTAN-/,"");
+        let sentido;
+        switch(this.sentido){
+            case 1: // Ida
+                sentido = linea.cabeceraVuelta;
+                break;
+            case 2: // Vuelta
+                sentido = linea.cabeceraIda;
+                break;
+            default:
+                sentido = "¿? Desconocido ("+this.sentido+") ¿?";
+        }
+        let parada = core.paradas.buscar(this.paradaInicio);
+        let textoParada;
+        if(parada !== undefined){
+            textoParada = "Ult. Par. Realizada: <b>"+this.paradaInicio+"<br>"+parada.nombre+"</b>";
+        }else{
+            textoParada = "Ult. Par. Realizada: <b>"+this.paradaInicio+"</b>";
+        }
+        return "Bus: <b>"+this.id+"</b>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspLínea: <b>"+linea.codigo+"</b><br>"+
+        textoParada+"<br>"+
+        "Sentido: <b>"+sentido+"</b><br>"+
+        "<a href='http://buscabus.tk/bus/?bus="+codigo+"' target='_blank'>Ver en BuscaBus</a>";
+    }
     nuevoEmt(respuesta){
         this.id = respuesta.codBus;
         this.linea = respuesta.codLinea;
@@ -71,7 +97,7 @@ class Vehiculo {
         this.popup = L.popup({
             autoPan: false,
             autoClose: false
-        }).setContent(busPopupContent(this));
+        }).setContent(this.generarPopup());
         this.marker.bindPopup(this.popup);
         this.red = core.red.emt;
     }
@@ -84,7 +110,7 @@ class Vehiculo {
         this.linea = bus.codLinea;
         this.sentido = bus.sentido;
         this.paradaInicio = bus.codParIni
-        this.popup.setContent(busPopupContent(this));
+        this.popup.setContent(this.generarPopup());
 
         if(core.lineas.buscar(this.linea).estado.getBuses){
             this.marker.addTo(core.map);

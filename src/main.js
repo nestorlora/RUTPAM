@@ -382,40 +382,6 @@ function acortarParada(nombre){
 }
 
 
-/**
- * Devuelve el contenido HTML de una ventana de información adicional de autobús
- * @param {Bus} vehiculo
- * @returns {String}
- */
-function busPopupContent(vehiculo){
-	let linea = core.lineas.buscar(vehiculo.linea);
-	let codigo = vehiculo.id.replace(/^EMT-|^CTAN-/,"");
-	let sentido;
-	switch(vehiculo.sentido){
-		case 1: // Ida
-			sentido = linea.cabeceraVuelta;
-			break;
-		case 2: // Vuelta
-			sentido = linea.cabeceraIda;
-			break;
-		default:
-			sentido = "¿? Desconocido ("+vehiculo.sentido+") ¿?";
-	}
-	let parada = core.paradas.buscar(vehiculo.paradaInicio);
-	let textoParada;
-	if(parada !== undefined){
-		textoParada = "Ult. Par. Realizada: <b>"+vehiculo.paradaInicio+"<br>"+parada.nombre+"</b>";
-	}else{
-		textoParada = "Ult. Par. Realizada: <b>"+vehiculo.paradaInicio+"</b>";
-	}
-	return "Bus: <b>"+vehiculo.id+"</b>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspLínea: <b>"+linea.codigo+"</b><br>"+
-	textoParada+"<br>"+
-	"Sentido: <b>"+sentido+"</b><br>"+
-	"<a href='http://buscabus.tk/bus/?bus="+codigo+"' target='_blank'>Ver en BuscaBus</a>";
-}
-
-
-
 
 
 
