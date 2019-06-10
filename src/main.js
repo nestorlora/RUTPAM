@@ -630,14 +630,7 @@ function addParadaEmt(par, idLinea, sentido){
 	if(parada === undefined){ // La parada no existe
 		// Creación de la parada
 		parada = new Parada();
-		parada.id = "EMT-"+par.codParada;
-		parada.nombre = par.nombreParada;
-		parada.direccion = par.direccion;
-		parada.nucleo = 0;
-		parada.zona = "A";
-		parada.ubicacion = new LatLong(par.latitud, par.longitud);
-		parada.modos.push(1); // Añadimos el elemento autobús
-		parada.red = core.red.emt;
+		parada.nuevaEmt(par);
 		// Guardamos la parada
 		core.paradas.push(parada);
 	}

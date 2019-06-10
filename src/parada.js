@@ -22,6 +22,8 @@ class Parada {
         this.popup = null;
         this.vistas = 0;
         this.red = undefined;
+        // TODO Añadir paradas parejas
+        // TODO Añadir paradas enlazadas
     }
     inicializar(){
         this.marker = L.marker((this.ubicacion), {icon: this.generarIconMap()});
@@ -91,5 +93,15 @@ class Parada {
         }
         $(div).append(tabla);
         return $(div).html();
+    }
+    nuevaEmt(respuesta){
+        this.id = "EMT-"+respuesta.codParada;
+		this.nombre = respuesta.nombreParada;
+		this.direccion = respuesta.direccion;
+		this.nucleo = 0;
+		this.zona = "A";
+		this.ubicacion = new LatLong(respuesta.latitud, respuesta.longitud);
+		this.modos.push(1); // Añadimos el elemento autobús
+		this.red = core.red.emt;
     }
 }
