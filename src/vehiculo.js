@@ -20,4 +20,20 @@ class Vehiculo {
         this.ttl = new Core().ttl.new;
         this.red = undefined;
     }
+    nuevoEmt(respuesta){
+        this.id = respuesta.codBus;
+        this.linea = respuesta.codLinea;
+        this.sentido = respuesta.sentido;
+        this.paradaInicio = respuesta.codParIni;
+        this.posicion = new LatLong(respuesta.latitud, respuesta.longitud);
+        this.marker = L.marker(this.posicion, {
+            icon: busIconContent(this, 1)
+        });
+        this.popup = L.popup({
+            autoPan: false,
+            autoClose: false
+        }).setContent(busPopupContent(this));
+        this.marker.bindPopup(this.popup);
+        this.red = core.red.emt;
+    }
 }

@@ -579,20 +579,7 @@ function getBusesEmt(){
 
 function addBusEmt(bus){
 	let vehiculo = new Vehiculo();
-	vehiculo.id = bus.codBus;
-	vehiculo.linea = bus.codLinea;
-	vehiculo.sentido = bus.sentido;
-	vehiculo.paradaInicio = bus.codParIni;
-	vehiculo.posicion = new LatLong(bus.latitud, bus.longitud);
-	vehiculo.marker = L.marker(vehiculo.posicion, {
-		icon: busIconContent(vehiculo, 1)
-	});
-	vehiculo.popup = L.popup({
-		autoPan: false,
-		autoClose: false
-	}).setContent(busPopupContent(vehiculo));
-	vehiculo.marker.bindPopup(vehiculo.popup);
-	vehiculo.red = core.red.emt;
+	vehiculo.nuevoEmt(bus);
 	// Insertamos el vehículo
 	core.vehiculos.push(vehiculo);
 	console.log("ADDED "+vehiculo.id);
