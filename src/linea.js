@@ -33,6 +33,8 @@ class Linea {
         this.operadores = undefined;
         this.hayNoticia = undefined;
         this.red = undefined;
+        // TODO - Implementar línea diurna/nocturna
+        // TODO - Implementar línea permanente/especial
     }
     normalizaId(){
         switch(this.red){
@@ -158,5 +160,25 @@ class Linea {
         }else{
             return null;
         }
+    }
+    nuevaEmt(respuesta){
+        this.id = "EMT-"+respuesta.codLinea;
+        this.codigo = respuesta.userCodLinea.replace(/^F-/, "F"); // Sanitalizamos
+        this.nombre = respuesta.nombreLinea.replace(/(\(F\))|(\(?F-[0-9A-Z]{1,2}\)$)/, ""); // Sanitalizamos
+        this.cabeceraIda = respuesta.cabeceraIda;
+        this.cabeceraVuelta = respuesta.cabeceraVuelta;
+        this.trazadoIda = null;
+        this.trazadoVuelta = null;
+        this.estado = {
+            getBuses: false,
+            getIda: false,
+            getVuelta: false,
+            verParadas: false,
+        };
+        this.numVehiculos = 0;
+        this.modo = 1 // Autobús
+        this.operadores = "Empresa Malagueña de Transportes S.A.M.";
+        this.hayNoticia = null;
+        this.red = core.red.emt;
     }
 }

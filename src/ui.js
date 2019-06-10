@@ -143,6 +143,43 @@ class UI {
                     $(tabla).css("display", "none");
                     $(boton).css("color", "black").css("background-color", "white");
                 }
+            },
+            addLinea: function(linea){
+                switch(linea.red){
+                    case core.red.emt:
+                        let fila = $("<tr>");
+                        let botonIda = $("<input>", {
+                            "type": "checkbox",
+                            "id": "botonIda"+linea.id
+                        }).prop('checked', false).prop("indeterminate", true).click(function(){
+                            getTrazadosEmt(linea.id);
+                        });
+                        let botonVta = $("<input>", {
+                            "type": "checkbox",
+                            "id": "botonVta"+linea.id,
+                            "checked": true
+                        }).prop('checked', false).prop("indeterminate", true).click(function(){
+                            getTrazadosEmt(linea.id);
+                        });
+                        let botonBus = $("<input>", {
+                            "type": "checkbox",
+                            "id": "botonBus"+linea.id
+                        }).prop('checked', false).click(function(){
+                            enableBusUpdate(linea.id);
+                        });
+                        // Añadimos la línea a la tabla de líneas de la GUI
+                        $(fila).append($("<td>").append(botonIda));
+                        $(fila).append($("<td>").append(botonVta));
+                        $(fila).append($("<td>").append(botonBus));
+                        $(fila).append($("<td>").append(linea.generarIcon(3)));
+                        $(fila).append($("<td>").append($("<a>", {text: linea.nombre, href: "#!"}).click(function(){verInfoLinea(linea.id);})));
+                        $(fila).append($("<td>").append($("<p>").attr('id', "cont"+linea.id)));
+        
+                        $("#tablaLineasEMT").append(fila);
+                        break;
+                    default:
+                        break;
+                }
             }
         };
         this.ver = {

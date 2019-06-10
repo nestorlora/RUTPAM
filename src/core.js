@@ -92,7 +92,52 @@ class Core {
         }).done(function (response, status){
             if(status === "success"){
                 for(let i = 0; i<response.length; i++){
-                    addLineaEmt(response[i]); // Para cada línea de la respuesta la pasamos por addLinea()
+                    let datos = response[i];
+                    // Creamos la línea e introducimos sus datos
+                    let linea = new Linea();
+                    linea.nuevaEmt(datos);
+                    // Paradas
+                    for(let a = 0; a < datos.paradas.length; a++){
+                        addParadaEmt(datos.paradas[a].parada, linea.id, datos.paradas[a].sentido);
+                        let relacion = new RelacionParadas(
+                            "EMT-"+datos.paradas[a].parada.codParada,
+                            datos.paradas[a].orden
+                        );
+                        if(datos.paradas[a].sentido === 1){
+                            linea.paradasIda.push(relacion);
+                        }else if(datos.paradas[a].sentido === 2){
+                            linea.paradasVuelta.push(relacion);
+                        }
+                    }
+                    // TODO Implementar en clase Línea
+                    // Arreglos de direcciones y destinos
+                    if(linea.paradasIda.length > 1){
+                        linea.tieneIda = true;
+                    }
+                    if(linea.paradasVuelta.length > 1){
+                        linea.tieneVuelta = true;
+                    }else{
+                        linea.tieneVuelta = false;
+                        linea.esCircular = true;
+                        linea.cabeceraIda = "Circular";
+                        linea.cabeceraVuelta = "Circular";
+                    }
+                    // TODO Implementar en clase Línea
+                    // Corrección en orden de paradas
+                    let maxIda = linea.paradasIda.length;
+                    for(let x = 0; x < linea.paradasVuelta.length; x++){
+                        linea.paradasVuelta[x].orden -= maxIda;
+                    }
+                    // TODO Implementar en clase Línea
+                    // Corrección en cabeceras si tiene vuelta
+                    if(linea.tieneVuelta){
+                        linea.paradasIda.push(new RelacionParadas(linea.paradasVuelta[0].id,linea.paradasIda.length));
+                        linea.paradasVuelta.push(new RelacionParadas(linea.paradasIda[0].id,linea.paradasVuelta.length));
+                    }
+                    core.lineas.push(linea);
+                    //getTrazados(linea.idLinea);
+                    // Añadimos la línea al panel
+                    core.ui.action.addLinea(linea);
                     core.lineasCargadas++;
                 }
             }
