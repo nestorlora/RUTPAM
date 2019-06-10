@@ -29,6 +29,7 @@ class UI {
                             <tr><th colspan="2">Mapa</th></tr>\n\
                             <tr><td>-</td><td>Reducir Zoom</td></tr>\n\
                             <tr><td>+</td><td>Aumentar Zoom</td></tr>\n\
+                            <tr><td>Retr.</td><td>Borra los trazados del mapa</td></tr>\n\
                             <tr><th colspan="2">Ventanas</th></tr>\n\
                             <tr><td>Esc</td><td>Cierra todas las ventanas</td></tr>\n\
                             <tr><td>?</td><td>Muestra la ventana de ayuda</td></tr>\n\
@@ -66,8 +67,7 @@ class UI {
                 <span class="fa-layers fa-2x"><i class="fas fa-circle" style="color:'+new Parametros().colores.metro+'"></i></span> Metro Málaga<br>\n\
                 </p>\n\
                 <h4>Información de líneas</h4>\n\
-                <p>Las paradas pertenecen o bien a la EMT o bien al consorcio por lo que aparecen como EMT-XXXX o CTAN-XXXX y EXXXX o CXXXX en las versiones cortas</p>\n\
-                <p>En proceso...</p>\n\
+                <p>Las paradas pertenecen o bien a la EMT o bien al consorcio por lo que aparecen como EMT-XXXX o CTAN-XXXX o bien XXXX con fondo azul o verde respectivamente</p>\n\
                 <h4>Información de paradas</h4>\n\
                 <p>En proceso...</p>\n\
                 <h4>Información de vehículos</h4>\n\
