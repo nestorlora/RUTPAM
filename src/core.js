@@ -136,6 +136,7 @@ class Core {
                     }
                     core.lineas.push(linea);
                     //getTrazados(linea.idLinea);
+                    // TODO implementar la carga automática de trazados
                     // Añadimos la línea al panel
                     core.ui.action.addLinea(linea);
                     core.lineasCargadas++;
