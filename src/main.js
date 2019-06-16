@@ -564,25 +564,8 @@ function getLineasCtan(){
 			response = response.lineas;
             for(let i = 0; i<response.length; i++){
 				addLineaCtan(response[i]);
-				setTimeout(getLineaCompletaCtan, 1000+(90*i), response[i].idLinea);
+				setTimeout(core.completarLineaCtan, 1000+(90*i), response[i].idLinea);
 			}
-		}
-	});
-	return null;
-}
-
-function getLineaCompletaCtan(ctanId){
-	// Petición AJAX
-	$.getJSON({
-		url: core.url.ctan+'/lineas/'+ctanId+'?lang=ES'
-	}).done(function (response, status){
-		if(status === "success"){
-			updateLineaCtan(response); // Pasamos la línea por addLinea()
-			core.lineasCargadas++;
-		}
-	}).fail(function (response, status, error){
-		if(error === "Bad Request"){ //Si el servidor no ha atendido la petición, se vuelve a hacer con recursividad
-			getLineaCompletaCtan(ctanId);
 		}
 	});
 	return null;
@@ -623,11 +606,6 @@ function addLineaCtan(lin){
 			$("#tablaLineasRenfe").append(fila);
 			break;
 	}
-}
-
-function updateLineaCtan(lin){
-	let linea = core.lineas.buscar("CTAN-"+lin.idLinea);
-	linea.completarCtan(lin);
 }
 
 function getParadasLineaCtan(id){

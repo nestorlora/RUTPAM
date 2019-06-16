@@ -144,4 +144,20 @@ class Core {
             }
         });
     }
+    completarLineaCtan(ctanId){
+        // Petición AJAX
+        $.getJSON({
+            url: core.url.ctan+'/lineas/'+ctanId+'?lang=ES'
+        }).done(function (response, status){
+            if(status === "success"){
+                let linea = core.lineas.buscar("CTAN-"+response.idLinea);
+                linea.completarCtan(response);
+                core.lineasCargadas++;
+            }
+        }).fail(function (response, status, error){
+            if(error === "Bad Request"){ //Si el servidor no ha atendido la petición, se vuelve a hacer con recursividad
+                core.completarLineaCtan(ctanId);
+            }
+        });
+    }
 }
