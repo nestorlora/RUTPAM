@@ -145,39 +145,70 @@ class UI {
                 }
             },
             addLinea: function(linea){
+                let fila = $("<tr>");
+                let botonIda, botonVta, botonBus;
                 switch(linea.red){
                     case core.red.emt:
-                        let fila = $("<tr>");
-                        let botonIda = $("<input>", {
+                        botonIda = $("<input>", {
                             "type": "checkbox",
                             "id": "botonIda"+linea.id
                         }).prop('checked', false).prop("indeterminate", true).click(function(){
                             getTrazadosEmt(linea.id);
                         });
-                        let botonVta = $("<input>", {
+                        botonVta = $("<input>", {
                             "type": "checkbox",
                             "id": "botonVta"+linea.id,
                             "checked": true
                         }).prop('checked', false).prop("indeterminate", true).click(function(){
                             getTrazadosEmt(linea.id);
                         });
-                        let botonBus = $("<input>", {
+                        botonBus = $("<input>", {
                             "type": "checkbox",
                             "id": "botonBus"+linea.id
                         }).prop('checked', false).click(function(){
                             enableBusUpdate(linea.id);
                         });
-                        // Añadimos la línea a la tabla de líneas de la GUI
+                        // Ponemos los botones en la línea
                         $(fila).append($("<td>").append(botonIda));
                         $(fila).append($("<td>").append(botonVta));
                         $(fila).append($("<td>").append(botonBus));
-                        $(fila).append($("<td>").append(linea.generarIcon(3)));
-                        $(fila).append($("<td>").append($("<a>", {text: linea.nombre, href: "#!"}).click(function(){verInfoLinea(linea.id);})));
+                        break;
+                    case core.red.ctan:
+                    case core.red.metro:
+                    case core.red.renfe:
+                        botonIda = $("<input>", {
+                            "type": "checkbox",
+                            "id": "botonIda"+linea.id
+                        }).prop('checked', false).prop("indeterminate", true).prop("disabled", true);
+                        botonVta = $("<input>", {
+                            "type": "checkbox",
+                            "id": "botonVta"+linea.id,
+                            "checked": true
+                        }).prop('checked', false).prop("indeterminate", true).prop("disabled", true);
+                        // Ponemos los botones en la línea
+                        $(fila).append($("<td>").append(botonIda));
+                        if(linea.modo !== "Tren" && linea.modo !== "Metro"){
+                            $(fila).append($("<td>").append(botonVta));
+                        }
+                        break;
+                }
+                // Añadimos a la fila el icono y nombre de la línea
+                $(fila).append($("<td>").append(linea.generarIcon(3)));
+                $(fila).append($("<td>").append($("<a>", {text: linea.nombre, href: "#!"}).click(function(){verInfoLinea(linea.id);})));
+                // Añadimos la fila a la tabla (y también el Nº de buses si es de la EMT)
+                switch(linea.red){
+                    case core.red.emt:
                         $(fila).append($("<td>").append($("<p>").attr('id', "cont"+linea.id)));
-        
                         $("#tablaLineasEMT").append(fila);
                         break;
-                    default:
+                    case core.red.ctan:
+                        $("#tablaLineasCTAN").append(fila);
+                        break;
+                    case core.red.metro:
+                        $("#tablaLineasMetro").append(fila);
+                        break;
+                    case core.red.renfe:
+                        $("#tablaLineasRenfe").append(fila);
                         break;
                 }
             }
