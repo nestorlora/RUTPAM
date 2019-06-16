@@ -157,36 +157,7 @@ class Core {
                     linea.nuevaCtan(lin);
                     core.lineas.push(linea);
                     getParadasLineaCtan(linea.id);
-                    
-                    let fila = $("<tr>");
-                    let botonIda = $("<input>", {
-                        "type": "checkbox",
-                        "id": "botonIda"+linea.id
-                    }).prop('checked', false).prop("indeterminate", true).prop("disabled", true);
-                    let botonVta = $("<input>", {
-                        "type": "checkbox",
-                        "id": "botonVta"+linea.id,
-                        "checked": true
-                    }).prop('checked', false).prop("indeterminate", true).prop("disabled", true);
-                    $(fila).append($("<td>").append(botonIda));
-                    if(linea.modo !== "Tren" && linea.modo !== "Metro"){
-                        $(fila).append($("<td>").append(botonVta));
-                    }
-                    $(fila).append($("<td>").append(linea.generarIcon(3)));
-                    $(fila).append($("<td>").append($("<a>", {text: linea.nombre, href: "#!"}).click(function(){verInfoLinea(linea.id);})));
-
-                    switch(linea.red){
-                        case core.red.ctan:
-                            $("#tablaLineasCTAN").append(fila);
-                            break;
-                        case core.red.metro:
-                            $("#tablaLineasMetro").append(fila);
-                            break;
-                        case core.red.renfe:
-                            $("#tablaLineasRenfe").append(fila);
-                            break;
-                    }
-
+                    core.ui.action.addLinea(linea);
                     setTimeout(core.completarLineaCtan, 1000+(90*i), lin.idLinea);
                 }
             }
