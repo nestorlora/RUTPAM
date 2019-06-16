@@ -590,30 +590,7 @@ function getLineaCompletaCtan(ctanId){
 
 function addLineaCtan(lin){
 	let linea = new Linea();
-	linea.id = "CTAN-"+lin.idLinea;
-	linea.codigo = lin.codigo.replace(/^0066$/,"M");
-	linea.nombre = lin.nombre.replace(/^M /, "");
-	linea.trazadoIda = null;
-	linea.trazadoVuelta = null;
-	linea.estado.getBuses = false;
-	linea.estado.getIda = false;
-	linea.estado.getVuelta = false;
-	linea.estado.verParadas = false;
-	linea.numVehiculos = null;
-	linea.modo = lin.modo;
-	linea.operadores = (lin.operadores).replace(/, $/, "");
-	linea.hayNoticia = lin.hayNoticia;
-	switch(linea.modo){
-        case "Autobús":
-			linea.red = core.red.ctan;
-			break;
-		case "Metro":
-			linea.red = core.red.metro;
-			break;
-		case "Tren":
-			linea.red = core.red.renfe;
-			break;
-	}
+	linea.nuevaCtan(lin);
     core.lineas.push(linea);
 
 	getParadasLineaCtan(linea.id);

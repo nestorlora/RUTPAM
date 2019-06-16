@@ -162,6 +162,7 @@ class Linea {
         }
     }
     nuevaEmt(respuesta){
+        //TODO Definir un archivo de configuración para los regexps
         this.id = "EMT-"+respuesta.codLinea;
         this.codigo = respuesta.userCodLinea.replace(/^F-/, "F"); // Sanitalizamos
         this.nombre = respuesta.nombreLinea.replace(/(\(F\))|(\(?F-[0-9A-Z]{1,2}\)$)/, ""); // Sanitalizamos
@@ -180,5 +181,31 @@ class Linea {
         this.operadores = "Empresa Malagueña de Transportes S.A.M.";
         this.hayNoticia = null;
         this.red = core.red.emt;
+    }
+    nuevaCtan(respuesta){
+        this.id = "CTAN-"+respuesta.idLinea;
+        this.codigo = respuesta.codigo.replace(/^0066$/,"M");
+        this.nombre = respuesta.nombre.replace(/^M /, "");
+        this.trazadoIda = null;
+        this.trazadoVuelta = null;
+        this.estado.getBuses = false;
+        this.estado.getIda = false;
+        this.estado.getVuelta = false;
+        this.estado.verParadas = false;
+        this.numVehiculos = null;
+        this.modo = respuesta.modo;
+        this.operadores = (respuesta.operadores).replace(/, $/, "");
+        this.hayNoticia = respuesta.hayNoticia;
+        switch(this.modo){
+            case "Autobús":
+                this.red = core.red.ctan;
+                break;
+            case "Metro":
+                this.red = core.red.metro;
+                break;
+            case "Tren":
+                this.red = core.red.renfe;
+                break;
+        } 
     }
 }
