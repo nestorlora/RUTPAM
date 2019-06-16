@@ -22,7 +22,7 @@ $(document).ready(function(){
 	core.getModos(); // Cargamos los modos de transporte
 	core.getZonas(); // Cargamos las zonas
 	core.getLineasEmt(); // Cargamos las líneas de la EMT
-	getLineasCtan(); // Cargamos las líneas del CTAN
+	core.getLineasCtan(); // Cargamos las líneas del CTAN
 	inicializarParadas(); // Inicializamos los marcadores de las paradas
 	motor(); // Llamamos la primera vez al motor
 	start(); // Programamos que se ejecute periódicamente
@@ -554,59 +554,6 @@ function addParadaEmt(par, idLinea, sentido){
 
 
 
-
-function getLineasCtan(){
-    // Petición AJAX
-	$.getJSON({
-		url: core.url.ctan+'/lineas?lang=ES'
-	}).done(function (response, status){
-		if(status === "success"){
-			response = response.lineas;
-            for(let i = 0; i<response.length; i++){
-				addLineaCtan(response[i]);
-				setTimeout(core.completarLineaCtan, 1000+(90*i), response[i].idLinea);
-			}
-		}
-	});
-	return null;
-}
-
-function addLineaCtan(lin){
-	let linea = new Linea();
-	linea.nuevaCtan(lin);
-    core.lineas.push(linea);
-
-	getParadasLineaCtan(linea.id);
-
-    let fila = $("<tr>");
-    let botonIda = $("<input>", {
-		"type": "checkbox",
-		"id": "botonIda"+linea.id
-	}).prop('checked', false).prop("indeterminate", true).prop("disabled", true);
-	let botonVta = $("<input>", {
-		"type": "checkbox",
-		"id": "botonVta"+linea.id,
-		"checked": true
-    }).prop('checked', false).prop("indeterminate", true).prop("disabled", true);
-   	$(fila).append($("<td>").append(botonIda));
-	if(linea.modo !== "Tren" && linea.modo !== "Metro"){
-		$(fila).append($("<td>").append(botonVta));
-	}
-	$(fila).append($("<td>").append(linea.generarIcon(3)));
-	$(fila).append($("<td>").append($("<a>", {text: linea.nombre, href: "#!"}).click(function(){verInfoLinea(linea.id);})));
-
-	switch(linea.red){
-        case core.red.ctan:
-			$("#tablaLineasCTAN").append(fila);
-			break;
-		case core.red.metro:
-			$("#tablaLineasMetro").append(fila);
-			break;
-		case core.red.renfe:
-			$("#tablaLineasRenfe").append(fila);
-			break;
-	}
-}
 
 function getParadasLineaCtan(id){
     // Petición AJAX
