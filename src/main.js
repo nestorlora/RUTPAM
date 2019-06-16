@@ -627,74 +627,7 @@ function addLineaCtan(lin){
 
 function updateLineaCtan(lin){
 	let linea = core.lineas.buscar("CTAN-"+lin.idLinea);
-	let id = linea.id;
-	linea.tieneIda = lin.tieneIda===1?true:false;
-	linea.tieneVuelta = lin.tieneVuelta===1?true:false;
-	linea.esCircular = null; // PROVISONAL
-	if(lin.tieneVuelta){
-		linea.cabeceraIda = /*paradas[findParada(lineas[posLinea].paradasIda[0].codPar)].nombreParada*/"Vuelta";
-		linea.cabeceraVuelta = /*paradas[findParada(lineas[posLinea].paradasVta[0].codPar)].nombreParada*/"Ida";
-	}else{
-		linea.cabeceraIda = /*paradas[findParada(lineas[posLinea].paradasIda[0].codPar)].nombreParada*/"Ida";
-		linea.cabeceraVuelta = "Ida";
-	}
-	// Polilíneas de trazado
-	let trazadoIda = []; // Creamos un array con los puntos de latitud y longitud del polígono
-	let trazadoVuelta = []; // Creamos un array con los puntos de latitud y longitud del polígono
-	for(let a = 0; a < lin.polilinea.length; a++){
-		let lat, lon, sentido;
-		let punto = lin.polilinea[a][0].split(","); // Parseamos el string con la información del punto
-		lat = punto[0];
-		lon = punto[1];
-		sentido = punto[2];
-		if(sentido === "1" || sentido === undefined){
-			trazadoIda.push(new LatLong(lat, lon)); // Rellenamos con los datos de la respuesta
-		}else if(sentido === "2"){
-			trazadoVuelta.push(new LatLong(lat, lon));  // Rellenamos con los datos de la respuesta
-		}
-	}
-	let color;
-	switch(lin.modo){
-		case "Autobús":
-			color = core.colores.ctmamA;
-			break;
-		case "Metro":
-			color = core.colores.metro;
-			break;
-		case "Tren":
-			color = core.colores.renfeA;
-			break;
-	}
-	linea.trazadoIda = L.polyline(trazadoIda, {
-		color: color, // Fijamos el color de la ida
-		opacity: 1.0, // Opacidad
-		weight: 3 // Grosor
-	});
-	$("#botonIda"+id).prop("indeterminate", false).prop("disabled", false); // Cambiamos el estado del botón a habilitado
-	$("#botonIda"+id).change(function(){
-		let isChecked = $(this).is(':checked');
-		if(isChecked){
-			showTrazado(id, 1); // Mostramos el trazado
-		}else{
-			hideTrazado(id, 1); // Ocultamos el trazado
-		}
-	});
-	if(trazadoVuelta.length !== 0){
-		linea.trazadoVuelta = L.polyline(trazadoVuelta, {
-			color: core.colores.ctmamB, // Fijamos el color de la vuelta (solo los buses tienen vuelta)
-			opacity: 1.0, // Opacidad
-			weight: 3 // Grosor
-		});
-		$("#botonVta"+id).prop("indeterminate", false).prop("disabled", false); // Cambiamos el estado del botón a habilitado
-		$("#botonVta"+id).change(function(){
-			let isChecked = $(this).is(':checked');
-			if(isChecked){
-				showTrazado(id, 2); // Mostramos el trazado
-			}else{
-				hideTrazado(id, 2); // Ocultamos el trazado
-			}
-		});
-	}
+	linea.completarCtan(lin);
 }
 
 function getParadasLineaCtan(id){
