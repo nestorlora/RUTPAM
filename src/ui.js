@@ -241,6 +241,46 @@ class UI {
                 core.ui.action.openWindow();
             } 
         };
+        this.generar = {
+            botonToggleParadas(linea){
+                let id = linea.id;
+                let botonParadas = $("<button>", {
+                    "type": "button",
+                    "class": "boton"
+                });
+                $(botonParadas).text("Mostrar/Ocultar paradas");
+                if(core.paradasInicializadas){// SI las paradas estan inicializadas
+                    if(core.lineas.buscar(id).estado.verParadas === true){ // SI estamos mostrando las paradas de esta línea
+                        $(botonParadas).css("background-color", core.colores.especial); // Poner el botón en on
+                    }
+                    $(botonParadas).on("click", function(){
+                        let linea = core.lineas.buscar(id); // Sacamos la línea para trabajar con ella
+                        if(linea.estado.verParadas === true){ // SI estamos mostrando las paradas de esta línea
+                            for(let a = 0; a < linea.paradasIda.length; a++){ // Ocultar todas las paradas a la ida
+                                hideParada(linea.paradasIda[a].id);
+                            }
+                            for(let a = 0; a < linea.paradasVuelta.length; a++){ // Ocultar todas las paradas a al vuelta
+                                hideParada(linea.paradasVuelta[a].id);
+                            }
+                            $(this).css("background-color", "white"); // Ponemos el botón en off
+                            linea.estado.verParadas = false; // Setear que NO se están mostrando las paradas
+                        }else if(linea.estado.verParadas === false){ // SI NO estamos mostrando las paradas de esta línea
+                            for(let a = 0; a < linea.paradasIda.length; a++){ // Mostrar todas las paradas a la ida
+                                showParada(linea.paradasIda[a].id);
+                            }
+                            for(let a = 0; a < linea.paradasVuelta.length; a++){ // Mostrar todas las paradas a la vuelta
+                                showParada(linea.paradasVuelta[a].id);
+                            }
+                            $(this).css("background-color", core.colores.especial); // Ponemos el botón en on
+                            linea.estado.verParadas = true; // Setear que se están mostrando las paradas
+                        }
+                    });
+                }else{ // SI NO están inicializadas las paradas
+                    $(botonParadas).prop("disabled", true);
+                }
+                return botonParadas;
+            }
+        };
         this.init = {
             controles: function(){
                 let div = $("<div>");
