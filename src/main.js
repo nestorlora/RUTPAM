@@ -70,9 +70,7 @@ function motor(){
  */
 function stop(){
 	clearInterval(core.timer);
-	$("#pause").prop("disabled", true);
-	$("#play").prop("disabled", false);
-	$("#refresh").prop("disabled", false);
+	core.ui.action.motor.stop();
 	return null;
 }
 
@@ -82,9 +80,7 @@ function stop(){
  */
 function start(){
 	core.timer = setInterval(motor, new Parametros().refresh_rate*1000);
-	$("#pause").prop("disabled", false);
-	$("#play").prop("disabled", true);
-	$("#refresh").prop("disabled", true);
+	core.ui.action.motor.start();
 	return null;
 }
 

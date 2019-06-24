@@ -211,6 +211,18 @@ class UI {
                         $("#tablaLineasRenfe").append(fila);
                         break;
                 }
+            },
+            motor: {
+                start: function(){
+                    $("#pause").prop("disabled", false);
+                    $("#play").prop("disabled", true);
+                    $("#refresh").prop("disabled", true);
+                },
+                stop: function(){
+                    $("#pause").prop("disabled", true);
+                    $("#play").prop("disabled", false);
+                    $("#refresh").prop("disabled", false);
+                }
             }
         };
         this.ver = {
