@@ -167,53 +167,10 @@ function verInfoLinea(id){
 	// Paradas
 	//
 	if(linea.paradasIda.length > 0){
-		$("#infoContent").append($("<p>").append(generarTablaParadas(linea)));
+		$("#infoContent").append($("<p>").append(core.ui.generar.tablaParadas(linea)));
 	}
 	$("#ventana").show();
 	return null;
-}
-
-function generarTablaParadas(linea){
-	let tabla = $("<table>"); // Creamos la tabla de paradas
-	let cabecera = $("<tr>"); // Creamos una cabecera
-	if(linea.tieneVuelta){ // SI la línea es de ida y vuelta
-		cabecera.append($("<th>", {text: "Sentido"}).prop("colspan", 3).append($("<br>")).append(linea.cabeceraVuelta)); // Columna sentido ida
-		cabecera.append($("<th>", {text: "Sentido"}).prop("colspan", 3).append($("<br>")).append(linea.cabeceraIda)); // Columna sentido vuelta
-	}else{ // ELSE la línea es monodireccional o circular
-		cabecera.append($("<th>", {text: "Sentido"}).prop("colspan", 3).append($("<br>")).append(linea.cabeceraIda)); // Columna sentido único
-	}
-	tabla.append(cabecera); // Añadimos la cabecera a la tabla
-	for(let a = 0; a < Math.max(linea.paradasIda.length, linea.paradasVuelta.length); a++){ // PARA el máximo de paradas entre ida y vuelta
-		let fila = $("<tr>"); // Creamos una fila
-		if(a < linea.paradasIda.length){
-			let id = linea.paradasIda[a].id;
-			fila = generarFilaParada(fila, id, linea.id);
-		}else{
-			fila = generarFilaParada(fila);
-		}
-		if(linea.tieneVuelta){
-			if(a < linea.paradasVuelta.length){
-				let id = linea.paradasVuelta[a].id;
-				fila = generarFilaParada(fila, id, linea.id);
-			}else{
-				fila = generarFilaParada(fila);
-			}
-		}
-		tabla.append(fila); // Añadimos la fila
-	}
-	return tabla;
-}
-
-function generarFilaParada(div, idParada, idLinea){
-	if(idParada !== undefined && idParada !== null){
-		let nombre = core.paradas.buscar(idParada).nombre;
-		div.append($("<td>").append($("<a>", {text: idParada, href: "#!"}).click(function(){verInfoParada(idParada);})));
-		div.append($("<td>", {html: acortarParada(nombre)}));
-		div.append(extrarCorrespondencias($("<td>"),idParada, idLinea));
-	}else{
-		div.append($("<td>")).append($("<td>")).append($("<td>"));
-	}
-	return div;
 }
 
 function verInfoParada(id){
@@ -315,19 +272,19 @@ function hideParada(id){
 	}
 }
 
-function extrarCorrespondencias(div, idParada, idLinea){
+function extrarCorrespondencias(div, parada, linea){
 	$(div).css("max-width", "73px");
-	let parada = core.paradas.buscar(idParada);
+	let idLinea = linea.id;
 	for(let a = 0; a < parada.servicios.length; a++){
 		let servicio = parada.servicios[a].linea;
 		if(servicio !== idLinea){
 			if(a === 0){
-				let linea = core.lineas.buscar(servicio);
-				let spanIcon = linea.generarIcon(2);
+				let correspondencia = core.lineas.buscar(servicio);
+				let spanIcon = correspondencia.generarIcon(2);
 				$(div).append(spanIcon);
 			}else if(servicio !== parada.servicios[a-1].linea){
-				let linea = core.lineas.buscar(servicio);
-				let spanIcon = linea.generarIcon(2);
+				let correspondencia = core.lineas.buscar(servicio);
+				let spanIcon = correspondencia.generarIcon(2);
 				$(div).append(spanIcon);
 			}
 		}

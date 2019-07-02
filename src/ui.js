@@ -242,6 +242,47 @@ class UI {
             } 
         };
         this.generar = {
+            tablaParadas(linea){
+                let tabla = $("<table>"); // Creamos la tabla de paradas
+                let cabecera = $("<tr>"); // Creamos una cabecera
+                if(linea.tieneVuelta){ // SI la línea es de ida y vuelta
+                    cabecera.append($("<th>", {text: "Sentido"}).prop("colspan", 3).append($("<br>")).append(linea.cabeceraVuelta)); // Columna sentido ida
+                    cabecera.append($("<th>", {text: "Sentido"}).prop("colspan", 3).append($("<br>")).append(linea.cabeceraIda)); // Columna sentido vuelta
+                }else{ // ELSE la línea es monodireccional o circular
+                    cabecera.append($("<th>", {text: "Sentido"}).prop("colspan", 3).append($("<br>")).append(linea.cabeceraIda)); // Columna sentido único
+                }
+                tabla.append(cabecera); // Añadimos la cabecera a la tabla
+                for(let a = 0; a < Math.max(linea.paradasIda.length, linea.paradasVuelta.length); a++){ // PARA el máximo de paradas entre ida y vuelta
+                    let fila = $("<tr>"); // Creamos una fila
+                    if(a < linea.paradasIda.length){
+                        let parada = core.paradas.buscar(linea.paradasIda[a].id);
+                        fila = core.ui.generar.filaParadas(fila, parada, linea);
+                    }else{
+                        fila = core.ui.generar.filaParadas(fila);
+                    }
+                    if(linea.tieneVuelta){
+                        if(a < linea.paradasVuelta.length){
+                            let parada = core.paradas.buscar(linea.paradasVuelta[a].id);
+                            fila = core.ui.generar.filaParadas(fila, parada, linea);
+                        }else{
+                            fila = core.ui.generar.filaParadas(fila);
+                        }
+                    }
+                    tabla.append(fila); // Añadimos la fila
+                }
+                return tabla;
+            },
+            // TODO Implementar verificación de tipos en los parámetros (sanitalizar)
+            filaParadas(div, parada, linea){
+                if(linea !== undefined && parada !== undefined){
+                    div.append($("<td>").append($("<a>",{text:parada.id,href:"#!"}).click(function(){verInfoParada(parada.id);})));
+                    div.append($("<td>", {html: acortarParada(parada.nombre)}));
+                    div.append(extrarCorrespondencias($("<td>"),parada,linea));                    
+                }else{
+                    div.append($("<td>")).append($("<td>")).append($("<td>"));
+                }
+                return div;
+            },
             botonToggleParadas(linea){
                 let id = linea.id;
                 let botonParadas = $("<button>", {
