@@ -93,6 +93,7 @@ class Linea {
                 texto = texto.replace(/^M-/, "M\n");
                 if(/N[1-9]$|^M-138$|^M-155$|^M-168$/.test(this.codigo)){ // Buho
                     color = core.colores.ctmamN;
+                    texto = texto.replace("N", " N").replace("M", "M\n").replace("M\n\n", "M\n");
                 }else if(/^M-114$|^M-116$|^M-143$|^M-166$/.test(this.codigo)){ // Universitarias
                     color = core.colores.ctmamT;
                     esNegro = true;
@@ -117,7 +118,7 @@ class Linea {
             case core.red.metro: // Red Metro
                 $(i).addClass('fas fa-square');
                 color = core.colores.metro;
-                texto = texto.replace(/^METRO /, "");
+                texto = texto.replace(/ /,"").replace(/^METRO/, "");
             break;
             case core.red.renfe: // Red Renfe
                 $(i).addClass('fas fa-square');
