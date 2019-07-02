@@ -183,6 +183,7 @@ class Linea {
         this.hayNoticia = null;
         this.red = core.red.emt;
     }
+    // TODO fichero con JSONs de sanitalización
     nuevaCtan(respuesta){
         this.id = "CTAN-"+respuesta.idLinea;
         this.codigo = respuesta.codigo.replace(/^0066$/,"M");
