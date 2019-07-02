@@ -272,25 +272,6 @@ function hideParada(id){
 	}
 }
 
-function extrarCorrespondencias(div, parada, linea){
-	$(div).css("max-width", "73px");
-	let idLinea = linea.id;
-	for(let a = 0; a < parada.servicios.length; a++){
-		let servicio = parada.servicios[a].linea;
-		if(servicio !== idLinea){
-			if(a === 0){
-				let correspondencia = core.lineas.buscar(servicio);
-				let spanIcon = correspondencia.generarIcon(2);
-				$(div).append(spanIcon);
-			}else if(servicio !== parada.servicios[a-1].linea){
-				let correspondencia = core.lineas.buscar(servicio);
-				let spanIcon = correspondencia.generarIcon(2);
-				$(div).append(spanIcon);
-			}
-		}
-	}
-	return div;
-}
 
 
 

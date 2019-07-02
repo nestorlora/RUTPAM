@@ -107,4 +107,20 @@ class Parada {
     get nombreCorto(){
         return this.nombre.replace(/\s-\s/, "<br>");
     }
+    extraerConexiones(linea){
+        let transbordo = [];
+        for(let a = 0; a < this.servicios.length; a++){
+            let servicio = this.servicios[a].linea;
+            if(servicio !== linea.id){ // Si el servicio es distinto a la linea que tenemos
+                if(a === 0){ // En el primer servicio no hay ducplicidades
+                    transbordo.push(servicio);
+                }else if(this.servicios[a-1].linea !== linea.id){ // En los siguientes servicios verificamos que no sean el mismo que el anterior
+                    transbordo.push(servicio);
+                }
+            }
+        }
+        // let correspondencias = new Array();
+        // Igual que los transbordos pero con otras paradas de la zona
+        return {transbordos: transbordo, correspondencias: []};
+    }
 }

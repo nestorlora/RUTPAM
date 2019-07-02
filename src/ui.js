@@ -277,9 +277,20 @@ class UI {
                 if(linea !== undefined && parada !== undefined){
                     div.append($("<td>").append($("<a>",{text:parada.id,href:"#!"}).click(function(){verInfoParada(parada.id);})));
                     div.append($("<td>", {html: parada.nombreCorto}));
-                    div.append(extrarCorrespondencias($("<td>"),parada,linea));                    
+                    div.append(core.ui.generar.correspondencias($("<td>"),parada,linea));                    
                 }else{
                     div.append($("<td>")).append($("<td>")).append($("<td>"));
+                }
+                return div;
+            },
+            correspondencias(div, parada, linea){
+                $(div).css("max-width", "76px");
+                let conexiones = parada.extraerConexiones(linea);
+                for(let a = 0; a < conexiones.transbordos.length; a++){
+                    let transbordo = conexiones.transbordos[a];
+                    let linea = core.lineas.buscar(transbordo);
+                    let icon = linea.generarIcon(2);
+                    $(div).append(icon);
                 }
                 return div;
             },
