@@ -276,7 +276,7 @@ class UI {
             filaParadas(div, parada, linea){
                 if(linea !== undefined && parada !== undefined){
                     div.append($("<td>").append($("<a>",{text:parada.id,href:"#!"}).click(function(){verInfoParada(parada.id);})));
-                    div.append($("<td>", {html: acortarParada(parada.nombre)}));
+                    div.append($("<td>", {html: parada.nombreCorto}));
                     div.append(extrarCorrespondencias($("<td>"),parada,linea));                    
                 }else{
                     div.append($("<td>")).append($("<td>")).append($("<td>"));

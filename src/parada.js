@@ -104,4 +104,7 @@ class Parada {
 		this.modos.push(1); // Añadimos el elemento autobús
 		this.red = core.red.emt;
     }
+    get nombreCorto(){
+        return this.nombre.replace(/\s-\s/, "<br>");
+    }
 }

@@ -292,10 +292,6 @@ function extrarCorrespondencias(div, parada, linea){
 	return div;
 }
 
-function acortarParada(nombre){
-	return nombre.replace(/\s-\s/, "<br>");
-}
-
 
 
 
