@@ -99,7 +99,7 @@ class Linea {
                 }else if(/^M-4[0-9]{2}/.test(this.codigo)){ // Servicios Especiales (Feria)
                     color = core.colores.especial
                     esNegro = true;
-                }else if(/^M-5[0-9]{2}/.test(this.codigo)){ // Verano
+                }else if(/^M-5[0-9]{2}|^M-136$|^M-140$/.test(this.codigo)){ // Verano
                     color = core.colores.ctmamT;
                     esNegro = true;
                 }else if(/^M-6[0-9]{2}/.test(this.codigo)){ // Servicios Especiales (Semana Santa)
